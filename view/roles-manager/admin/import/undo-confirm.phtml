@@ -1,0 +1,9 @@
+<?php
+$translate = $this->plugin('translate');
+$this->form->setButtonLabel('Confirm'); // @translate
+?>
+<div id="sidebar-confirm">
+    <h3><?= $translate('Undo import') ?></h3>
+    <p><?= sprintf($translate('Are you sure you would like to undo import entries from the file %s?'), $file) ?></p>
+    <?= $this->form($this->form) ?>
+</div>

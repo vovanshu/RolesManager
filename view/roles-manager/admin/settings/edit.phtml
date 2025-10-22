@@ -1,0 +1,30 @@
+<?php
+
+$plugins = $this->getHelperPluginManager();
+$common = $this->RolesManagerCommon();
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+
+$this->htmlElement('body')->appendAttribute('class', 'settings edit');
+
+$form->prepare();
+?>
+<?= $this->pageTitle($translate('Settings'), 1, $translate('Roles Manager')) ?>
+<?= $this->form()->openTag($form) ?>
+
+<div id="page-actions">
+    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'browse')): ?>
+        <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?php endif; ?>
+<?php if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'backups')): ?>
+    <?= $hyperlink($translate('Backups'), $this->url('admin/roles-manager-settings', ['action' => 'backups'], true), ['class' => 'button']) ?>
+<?php endif; ?>
+<?php if ($common->getConf('developing') && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')): ?>
+    <?= $hyperlink($translate('Update Doctrine'), $this->url('admin/roles-manager-settings', ['action' => 'updoctrine'], true), ['class' => 'button']) ?>
+<?php endif; ?>
+
+    <button type="submit"><?= $translate('Save') ?></button>
+</div>
+
+<?= $this->formCollection($form, false) ?>
+<?= $this->form()->closeTag() ?>

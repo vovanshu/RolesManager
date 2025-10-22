@@ -1,0 +1,88 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \RolesManager\Form\PermissionForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+
+$this->htmlElement('body')->appendAttribute('class', 'permissions import');
+?>
+
+<?= $this->pageTitle($translate('Import'), 1, $translate('Roles Manager')) ?>
+
+<div id="page-actions">
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
+    <?= $this->hyperlink($translate('Upload'), '#', ['class' => 'button sidebar-content', 'data-sidebar-selector' => '#upload-sidebar']) ?>
+</div>
+
+
+<?php if (empty($list)): ?>
+<div class="no-resources">
+    <p><?= $translate('Files for importing no found.') ?></p>
+</div>
+
+<?php else: ?>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
+        <tr>
+            <th><?= $translate('Name') ?></th>
+            <th><?= $translate('Actions') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($list as $file): ?>
+        <tr>
+            <td>
+                <span class="list-name"><?= $file['filename'] ?></span>
+            </td>
+            <td>
+            <ul class="actions">
+                    <li><a href="<?= $this->url('admin/roles-manager-import', ['action' => 'config', 'name' => $file['filename']]) ?>"
+                        class="o-icon-edit"
+                        aria-label="<?= $escape($translate('Import')) ?>"
+                        title="<?= $escape($translate('Import')) ?>"></a></li>
+                    <?php if(!empty($listImported[$file['filename']])): ?>
+                    <li><?php echo $this->hyperlink('', '#', [
+                        'data-sidebar-selector' => '#sidebar',
+                        'data-sidebar-content-url' => $this->url('admin/roles-manager-import', ['action' => 'undo-confirm', 'name' => $file['filename']]),
+                        'class' => 'o-icon-edit fa-reply sidebar-content',
+                        'title' => $translate('Undo import'),
+                    ]); ?></li>
+                    <?php endif; ?>
+                    <li><?php echo $this->hyperlink('', '#', [
+                        'data-sidebar-selector' => '#sidebar',
+                        'data-sidebar-content-url' => $this->url('admin/roles-manager-import', ['action' => 'delete-confirm', 'name' => $file['filename']]),
+                        'class' => 'o-icon-delete sidebar-content',
+                        'title' => $translate('Delete'),
+                    ]); ?></li>
+                </ul>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<div id="sidebar" class="sidebar">
+    <?php echo $this->hyperlink('', '#', [
+        'class' => 'sidebar-close o-icon-close',
+        'title' => $translate('Close'),
+    ]); ?>
+    <div class="sidebar-content"></div>
+</div>
+
+<?php endif; ?>
+
+<?php if ($this->userIsAllowed('Omeka\Api\Adapter\AssetAdapter', 'upload')): ?>
+<div id="upload-sidebar" class="sidebar">
+    <?php echo $this->hyperlink('', '#', [
+        'class' => 'sidebar-close o-icon-close',
+        'title' => $translate('Close'),
+    ]); ?>
+    <?php echo $this->partial('roles-manager/admin/import/upload'); ?>
+</div>
+<?php endif; ?>

@@ -1,0 +1,619 @@
+msgid ""
+msgstr ""
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
+"POT-Creation-Date: 2025-09-30 10:40+0300\n"
+"Project-Id-Version: RolesManager\n"
+"X-Domain: RolesManager\n"
+"X-Generator: LanguagesManager\n"
+
+#: modules/RolesManager/Module.php:382
+msgid "Enable reCAPTCHA on Login page"
+msgstr ""
+
+#: modules/RolesManager/Module.php:396
+msgid "Enable reCAPTCHA on Forgot Password page"
+msgstr ""
+
+#: modules/RolesManager/Module.php:410
+msgid "IP whitelist for reCAPTCHA"
+msgstr ""
+
+#: modules/RolesManager/config/module.config.php:77
+#: modules/RolesManager/view/roles-manager/admin/import/browse.phtml:15
+#: modules/RolesManager/view/roles-manager/admin/import/config.phtml:11
+#: modules/RolesManager/view/roles-manager/admin/import/import.phtml:11
+#: modules/RolesManager/view/roles-manager/admin/import/prepare.phtml:11
+#: modules/RolesManager/view/roles-manager/admin/role/import.phtml:14
+#: modules/RolesManager/view/roles-manager/admin/settings/backups.phtml:15
+#: modules/RolesManager/view/roles-manager/admin/settings/edit.phtml:12
+#: modules/RolesManager/view/roles-manager/admin/settings/restore.phtml:14
+msgid "Roles Manager"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/CustomVocab.php:13
+#: modules/RolesManager/config/permissions/Omeka.php:32
+msgid "Edit your owned"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/CustomVocab.php:14
+#: modules/RolesManager/config/permissions/Omeka.php:33
+msgid "Delete your owned"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:7
+msgid "Annotation"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:28
+msgid "Show all"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:38
+msgid "Can assign items"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:39
+msgid "Settings theme"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:40
+msgid "Add page"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:41
+msgid "Add visualization"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:48
+msgid "Add new property row"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:50
+msgid "Show himself"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:51
+msgid "Edit himself"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:52
+msgid "Edit others"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:53
+msgid "Change password himself"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:54
+msgid "Change password others"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:55
+msgid "Change Api-keys himself"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:56
+msgid "Change Api-keys others"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:57
+msgid "Delete himself"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:58
+msgid "Delete others"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:59
+msgid "Change role"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:60
+msgid "Change role himself"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:61
+msgid "Change role for admin"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/Omeka.php:62
+msgid "Activate user"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/RolesManager.php:14
+#: modules/RolesManager/view/roles-manager/admin/role/browse.phtml:59
+msgid "Change native"
+msgstr ""
+
+#: modules/RolesManager/config/permissions/RolesManager.php:16
+#: modules/RolesManager/view/roles-manager/admin/settings/edit.phtml:23
+msgid "Update Doctrine"
+msgstr ""
+
+#: modules/RolesManager/src/Api/Adapter/RoleAdapter.php:270
+#, php-format
+msgid "The name \"%s\" is already taken."
+msgstr ""
+
+#: modules/RolesManager/src/Api/Adapter/RoleAdapter.php:293
+#, php-format
+msgid "The name \"%s\" contains forbidden characters."
+msgstr ""
+
+#: modules/RolesManager/src/Api/Adapter/RoleAdapter.php:299
+#: modules/RolesManager/src/Api/Adapter/RoleAdapter.php:307
+msgid "o:name"
+msgstr ""
+
+#: modules/RolesManager/src/Api/Adapter/RoleAdapter.php:299
+msgid "A name can’t contain only numbers."
+msgstr ""
+
+#: modules/RolesManager/src/Api/Adapter/RoleAdapter.php:307
+msgid "A name cannot be a reserved word."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:73
+msgid "File for import"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:83
+msgid "Select type data for import"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:89
+msgid "Type import"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:99
+msgid "Select role will be default for users or template for roles."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:105
+msgid "Parent role"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:290
+msgid "Parent Role as Template"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:365
+msgid "Search Item Sets by"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:366
+msgid "Select property to use for searching Item Sets."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:381
+msgid "Search Role by"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:382
+msgid "Select property to use for searching Role."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:427
+msgid "Relation to value"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:649
+msgid "File successfully uploaded."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:683
+msgid "File successfully deleted."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/ImportController.php:753
+msgid "Entries was undo import."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:99
+msgid "Permission successfully deleted."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:153
+msgid "You must select at least one permission to batch delete."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:164
+msgid "Permissions successfully deleted."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:175
+msgid "Delete of all permissions is not supported currently."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:363
+msgid "Update exist and add new entries"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:364
+msgid "Add new entries"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:381
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:397
+msgid "You must select a action."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:396
+#: modules/RolesManager/view/roles-manager/admin/role/edit.phtml:22
+msgid "Permissions"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/PermissionController.php:406
+msgid "Simulate"
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/RoleController.php:79
+msgid "Role successfully deleted."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/RoleController.php:135
+msgid "You must select at least one role to batch delete."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/RoleController.php:145
+msgid "Roles successfully deleted."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/RoleController.php:157
+msgid "Delete of all roles is not supported currently."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/SettingsController.php:225
+msgid "Restore successfully."
+msgstr ""
+
+#: modules/RolesManager/src/Controller/Admin/SettingsController.php:263
+msgid "File backup successfully deleted."
+msgstr ""
+
+#: modules/RolesManager/src/Form/Element/ParentRoleSelect.php:93
+#: modules/RolesManager/src/Form/Element/RoleSelect.php:88
+msgid "Select roles…"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleAddForm.php:36
+msgid "Choose what Role Selector will be using"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleAddForm.php:38
+#: modules/RolesManager/src/Form/RoleAddForm.php:57
+#: modules/RolesManager/src/Form/RoleEditForm.php:99
+msgid "Parent Role"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleAddForm.php:53
+#: modules/RolesManager/src/Form/RoleAddForm.php:70
+#: modules/RolesManager/src/Form/RoleEditForm.php:95
+msgid "Select Role..."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleAddForm.php:58
+msgid "Select Parent Role for create associated permissions and copy options."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleAddForm.php:75
+msgid "Role as Template"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleAddForm.php:76
+msgid "Select this if you want new role copy permissions."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:298
+msgid "Allowed resource template"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:323
+msgid "Allowed item sets for items"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:340
+msgid "Allowed sites for items"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:349
+msgid "Hide Api KEYs"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:350
+msgid "If need hide Api KEYs on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:362
+msgid "Hide default resource template selector"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:363
+msgid "If need hide default resource template selector on page user edit."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:375
+msgid "Hide site selector on pages"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:376
+msgid "If need hide Site selector on pages create/edit items, users."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:388
+msgid "List site selector without owner"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:403
+msgid "Remove Site browse default sort"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:404
+msgid "If need remove Site browse default sort on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:416
+msgid "Remove Site browse columns"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:417
+msgid "If need remove Site browse columns on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:429
+msgid "Hide Item Set select on pages"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:430
+msgid "If need hide Item Set select on pages create/edit items, users."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:442
+msgid "List item set selector without owner"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:457
+msgid "Remove Item Set browse default sort"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:458
+msgid "If need remove Item Set browse default sort on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:470
+msgid "Remove Item Set browse columns"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:471
+msgid "If need remove Item Set browse columns on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:483
+msgid "Remove Item browse columns"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:484
+msgid "If need remove Item browse columns on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:496
+msgid "Remove Item browse defaults"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:497
+msgid "If need remove Item browse defaults on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:509
+msgid "Hide advanced settings Item"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:510
+msgid "If need hide advanced settings on page add/edit Items."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:522
+msgid "Remove Media browse columns"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:523
+msgid "If need remove Media browse columns on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:535
+msgid "Remove Media browse defaults"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:536
+msgid "If need remove Media browse defaults on page edit user."
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:549
+msgid "Select media types"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:555
+msgid "List media types"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:566
+msgid "List disallowed media types"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:567
+msgid "If checked List media types is list disallowed elements"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:633
+msgid "Set all for it class"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:635
+#: modules/RolesManager/src/Form/RoleEditForm.php:670
+msgid "No change"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:636
+#: modules/RolesManager/src/Form/RoleEditForm.php:671
+msgid "Allow"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:637
+#: modules/RolesManager/src/Form/RoleEditForm.php:672
+msgid "Deny"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleEditForm.php:638
+msgid "Specified separately"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleModForm.php:34
+msgid "Select role for edit permissions"
+msgstr ""
+
+#: modules/RolesManager/src/Form/RoleModForm.php:41
+msgid "Select role for modification his options and permissions."
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/browse.phtml:18
+#: modules/RolesManager/view/roles-manager/admin/import/config.phtml:16
+#: modules/RolesManager/view/roles-manager/admin/import/import.phtml:17
+#: modules/RolesManager/view/roles-manager/admin/import/prepare.phtml:16
+#: modules/RolesManager/view/roles-manager/admin/role/add.phtml:14
+#: modules/RolesManager/view/roles-manager/admin/role/browse.phtml:42
+#: modules/RolesManager/view/roles-manager/admin/role/edit.phtml:30
+#: modules/RolesManager/view/roles-manager/admin/role/edit.phtml:33
+#: modules/RolesManager/view/roles-manager/admin/role/import.phtml:17
+#: modules/RolesManager/view/roles-manager/admin/role/mod.phtml:16
+#: modules/RolesManager/view/roles-manager/admin/role/show.phtml:16
+#: modules/RolesManager/view/roles-manager/admin/settings/backuping.phtml:17
+#: modules/RolesManager/view/roles-manager/admin/settings/backups.phtml:18
+#: modules/RolesManager/view/roles-manager/admin/settings/edit.phtml:17
+#: modules/RolesManager/view/roles-manager/admin/settings/restore.phtml:17
+#: modules/RolesManager/view/roles-manager/admin/settings/test.phtml:13
+#: modules/RolesManager/view/roles-manager/admin/settings/test.phtml:16
+msgid "Roles"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/browse.phtml:26
+#: modules/RolesManager/view/roles-manager/admin/role/import.phtml:25
+msgid "Files for importing no found."
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/browse.phtml:34
+#: modules/RolesManager/view/roles-manager/admin/role/import.phtml:33
+#: modules/RolesManager/view/roles-manager/admin/settings/backups.phtml:34
+msgid "Actions"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/browse.phtml:54
+msgid "Undo import"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/config.phtml:11
+msgid "Config for import"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/prepare.phtml:11
+msgid "Prepare for import"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/import/upload.phtml:6
+msgid "Upload new file"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/add.phtml:14
+msgid "New role"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/batch-delete-confirm.phtml:12
+msgid "Delete roles"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/batch-delete-confirm.phtml:13
+msgid "Are you sure you would like to delete the selected roles?"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/browse.phtml:30
+msgid "Total users"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/browse.phtml:81
+msgid "There are no roles."
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/browse.phtml:114
+#: modules/RolesManager/view/roles-manager/admin/role/browse.phtml:115
+msgid "Edit name"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/edit.phtml:23
+msgid "No display values"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/edit.phtml:24
+msgid "Hide properties in item form"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/edit.phtml:30
+msgid "Edit role"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/mod.phtml:16
+msgid "Change native role"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/show-details.phtml:25
+msgid "Count"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/show.phtml:21
+msgid "Back to role list"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/role/show.phtml:34
+msgid "Internal id"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/backuping.phtml:14
+msgid "Backup permissions"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/backuping.phtml:14
+msgid "Permission"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/backuping.phtml:19
+#: modules/RolesManager/view/roles-manager/admin/settings/backups.phtml:15
+#: modules/RolesManager/view/roles-manager/admin/settings/edit.phtml:20
+#: modules/RolesManager/view/roles-manager/admin/settings/restore.phtml:14
+#: modules/RolesManager/view/roles-manager/admin/settings/restore.phtml:19
+msgid "Backups"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/backups.phtml:20
+msgid "Backuping"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/backups.phtml:26
+msgid "Backups file no found."
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/details.phtml:5
+msgid "Details backup"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/details.phtml:6
+#, php-format
+msgid "File %s backup content"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/restore-confirm.phtml:3
+msgid "Confirm restore"
+msgstr ""
+
+#: modules/RolesManager/view/roles-manager/admin/settings/test.phtml:13
+msgid "TEST"
+msgstr ""

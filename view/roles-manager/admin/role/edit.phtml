@@ -1,0 +1,60 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \RolesManager\Form\RoleEditForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+$formElement = $this->plugin('formElement');
+$assetUrl = $plugins->get('assetUrl');
+
+$this->htmlElement('body')->appendAttribute('class', 'roles edit');
+
+$this->headLink()->appendStylesheet($assetUrl('css/roles.css', 'RolesManager'));
+$this->headScript()->appendFile($assetUrl('js/roles.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
+
+// $this->headScript()->appendFile($this->assetUrl('js/advanced-search.js', 'Omeka'), 'text/javascript', ['defer' => 'defer']);
+$form->prepare();
+$sectionNavs = [
+    'general' => $translate('General'),
+    'permissions' => $translate('Permissions'),
+    'filter-display-values' => $translate('No display values'),
+    'hide-properties-in-item-form' => $translate('Hide properties in item form'),
+];
+if(!empty($parent)){
+    unset($sectionNavs['permissions']);
+}
+?>
+<?= $this->pageTitle($translate($data['o:label']), 1, $translate('Roles'), $translate('Edit role')) ?>
+<?= $this->form()->openTag($form) ?>
+<div id="page-actions">
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', [], false), ['class' => 'button']) ?>
+    <button type="submit"><?= $translate('Save') ?></button>
+</div>
+<?php echo $this->sectionNav($sectionNavs, 'view.edit.section_nav' ); ?>
+<fieldset id="general" class="section active">
+    <?php /*echo $this->formCollection($form, false);*/ ?>
+    <?= $this->formCollection($form->get('role'), false) ?>
+    <?= $this->formCollectionElementGroups($form->get('options'), false) ?>
+</fieldset>
+<?PHP if(empty($parent)): ?>
+<fieldset id="permissions" class="section">
+    <?= $this->formCollectionElementGroupsCollapsible($form->get('permissions'), false) ?>
+</fieldset>
+<?PHP endif; ?>
+<fieldset id="filter-display-values" class="section">
+    <div id="filter-display-values-list" data-filter-display-values="<?php echo $this->escapeHtml(json_encode(!empty($data['o:options']['no-display-values']) ? $data['o:options']['no-display-values'] : Null)); ?>">
+    </div>
+    <input type="hidden" name="ignore">
+    <?php echo $this->propertySelector(); ?>
+</fieldset>
+<fieldset id="hide-properties-in-item-form" class="section">
+    <div id="hide-properties-in-item-form-list" data-hide-properties-in-item-form="<?php echo $this->escapeHtml(json_encode(!empty($data['o:options']['hidden-properties-in-item-form']) ? $data['o:options']['hidden-properties-in-item-form'] : Null)); ?>">
+    </div>
+    <input type="hidden" name="ignore">
+    <?php echo $this->propertySelector(); ?>
+</fieldset>
+<?= $formElement($form->get('csrf')) ?>
+<?= $this->form()->closeTag() ?>

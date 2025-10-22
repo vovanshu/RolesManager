@@ -1,0 +1,31 @@
+<?php
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+
+$this->htmlElement('body')->appendAttribute('class', 'configure');
+
+// $form->prepare();
+
+$this->pageTitle($translate('Import'), 1, $translate('Roles Manager'));
+// $this->form()->openTag($form);
+?>
+
+<div id="page-actions">
+    <?= $hyperlink($translate('Import'), $this->url('admin/roles-manager-import', ['action' => 'browse']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
+</div>
+
+<?php
+// $this->formCollection($form, false);
+// $this->form()->closeTag();
+
+
+if(!empty($result)){
+    echo '<pre>';
+    print_r($result);
+    echo '</pre>';
+}
+?>

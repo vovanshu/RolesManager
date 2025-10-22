@@ -1,0 +1,26 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Group\Form\GroupForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+
+$this->htmlElement('body')->appendAttribute('class', 'roles add');
+
+// $this->headScript()->appendFile($this->assetUrl('js/advanced-search.js', 'Omeka'), 'text/javascript', ['defer' => 'defer']);
+$form->prepare();
+echo $this->pageTitle($translate('New role'), 1, $translate('Roles'));
+echo $this->form()->openTag($form);
+?>
+
+<div id="page-actions">
+    <?php echo $this->cancelButton(); ?>
+    <button type="submit"><?= $translate('Add') ?></button>
+</div>
+
+<?PHP
+echo $this->formCollection($form, false);
+echo $this->form()->closeTag();
+?>

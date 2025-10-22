@@ -1,0 +1,32 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Omeka\Api\Representation\AbstractEntityRepresentation $resource
+ * @var \RolesManager\Api\Representation\RoleRepresentation $role
+ * @var array $roleCount
+ */
+
+$plugins = $this->getHelperPluginManager();
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+?>
+
+<div class="resource-details" data-resource-values="<?php // echo $escape($values) ?>">
+    <h3 class="o-module-role"><?= $resource->link($resource->name()) ?> <span class="internal-id"><?= sprintf('(id: %d)', $resource->id()) ?></span></h3>
+    <div class="meta-role">
+        <h4><?= $escape($translate('Role')) ?></h4>
+        <div class="value">
+            <span class="role-label"><?= $translate($resource->label()) ?></span>
+        </div>
+    </div>
+    <?php if(!empty($countUser = $resource->countUser())): ?>
+    <div class="meta-role">
+        <h4><?= $escape($translate('Count')) ?></h4>
+        <div class="value"><?= sprintf('%1$s: %2$s',
+            $escape($translate('Users')),
+            $hyperlink($countUser, $resource->urlToUsers()));
+        ?></div>
+    </div>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,37 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Group\Api\Representation\GroupRepresentation $group
+ * @var \Omeka\Api\Representation\AbstractEntityRepresentation $resource
+ */
+
+$plugins = $this->getHelperPluginManager();
+$url = $plugins->get('url');
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+
+$this->htmlElement('body')->appendAttribute('class', 'roles show');
+?>
+
+<?= $this->pageTitle($resource->name(), 1, $translate('Roles')) ?>
+
+<div id="page-actions">
+</div>
+<div class="breadcrumbs">
+    <a href="<?= $url('admin/roles') ?>" class="o-icon-left"><?= $translate('Back to role list') ?></a>
+</div>
+
+<?php $this->trigger('view.show.before') ?>
+<div class="property">
+    <h4><?= $escape($translate('Name')) ?>: </h4>
+    <div class="value"><?= $escape($resource->name()) ?></div>
+</div>
+<div class="property">
+    <h4><?= $escape($translate('Label')) ?>: </h4>
+    <div class="value"><?= $translate($resource->label()) ?></div>
+</div>
+<div class="property">
+    <h4><?= $escape($translate('Internal id')) ?>: </h4>
+    <div class="value"><?= $escape($resource->id()) ?></div>
+</div>
+<?php $this->trigger('view.show.after') ?>

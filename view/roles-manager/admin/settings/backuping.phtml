@@ -1,0 +1,27 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \RolesManager\Form\PermissionForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+
+$this->htmlElement('body')->appendAttribute('class', 'permissions backup');
+?>
+
+<?= $this->pageTitle($translate('Backup permissions'), 1, $translate('Permission')) ?>
+
+<div id="page-actions">
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Backups'), $this->url('admin/roles-manager-settings', ['action' => 'backups']), ['class' => 'button']) ?>
+</div>
+<fieldset id="general" class="section active"></fieldset>
+<?php
+foreach($result as $k => $v){
+    echo $k.' - '.$v.'<br>';
+}
+?>
+</fieldset>

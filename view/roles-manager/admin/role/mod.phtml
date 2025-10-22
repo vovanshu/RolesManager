@@ -1,0 +1,26 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Group\Form\RoleModForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+
+$this->htmlElement('body')->appendAttribute('class', 'roles mod');
+
+// $this->headScript()->appendFile($this->assetUrl('js/advanced-search.js', 'Omeka'), 'text/javascript', ['defer' => 'defer']);
+$form->prepare();
+?>
+
+<?= $this->pageTitle($translate('Change native role'), 1, $translate('Roles')) ?>
+<?= $this->form()->openTag($form) ?>
+
+<div id="page-actions">
+    <?php echo $this->cancelButton(); ?>
+    <button type="submit"><?= $translate('Add') ?></button>
+</div>
+
+<?= $this->formCollection($form, false) ?>
+
+<?= $this->form()->closeTag() ?>

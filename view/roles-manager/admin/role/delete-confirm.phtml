@@ -1,0 +1,17 @@
+<?php
+$translate = $this->plugin('translate');
+$this->form->setAttribute('action', $resource->url('delete'));
+$this->form->setButtonLabel('Confirm delete'); // @translate
+?>
+<div id="sidebar-confirm">
+    <h3><?= $translate('Delete roles') ?></h3>
+    <p><?= $translate('Are you sure you would like to delete the selected roles?') ?></p>
+    <?= $this->form($this->form) ?>
+</div>
+
+<?php echo $this->partial(
+    'roles-manager/admin/role/show-details',
+    [
+        'resource' => $resource
+    ]
+    ); ?>
