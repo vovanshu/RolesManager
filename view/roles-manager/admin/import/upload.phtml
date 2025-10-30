@@ -1,0 +1,12 @@
+<?php
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+?>
+
+<h3 id="file-upload-label"><?php echo $translate('Upload new file'); ?></h3>
+<form class="file-upload" method="post" enctype="multipart/form-data" action="<?php echo $escape($this->url('admin/roles-manager-import', ['action' => 'uploading'])); ?>">
+    <input type="file" name="file" accept="*" required aria-labelledby="file-upload-label">
+    <span><?php echo $this->uploadLimit(); ?></span><br>
+    <button type="submit"><?php echo $translate('Upload'); ?></button>
+    <ul class="errors"></ul>
+</form>

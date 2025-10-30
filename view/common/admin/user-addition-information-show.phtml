@@ -1,0 +1,29 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Omeka\Entity\User $user
+ * @var \Omeka\Settings\UserSettings $userSettings
+ * @var array $fields
+ */
+
+$plugins = $this->getHelperPluginManager();
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+?>
+
+<dl>
+    <?php foreach ($fields as $field => $label): ?>
+    <div class="property">
+        <dt><?= $translate($label) ?></dt>
+        <dd class="value">
+        <?php
+        $values = $userSettings->get($field);
+        if (!is_array($values)) $values = [$values];
+        foreach ($values as $value){
+            echo $escape($value);
+        }
+        ?>
+        </dd>
+    </div>
+    <?php endforeach; ?>
+</dl>

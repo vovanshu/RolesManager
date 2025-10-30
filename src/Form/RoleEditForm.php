@@ -24,6 +24,53 @@ class RoleEditForm extends Form
 
     protected $allow_empty;
 
+    protected $imitation_fields = [
+        'o:showonlyallowed' => 'Show only allowed', // @translate 
+        'o:allowviewallitems' => 'Allow view all Items', // @translate
+        'o:allowviewallmedias' => 'Allow view all Medias', // @translate
+        'o:allowviewallitemsets' => 'Allow view all Item Sets', // @translate
+        'o:allowviewallassets' => 'Allow view all Assets', // @translate
+        'o:allowed_resource_template' => 'Allowed resource template', // @translate
+        'o:allowed_item_sets' => 'Allowed item sets for items', // @translate
+        'o:allowed_item_sites' => 'Allowed sites for items', // @translate
+        'o:hide_apikey' => 'Hide Api KEYs', // @translate
+        'o:hide_default_resource_template' => 'Hide default resource template selector', // @translate
+        'o:list_partials_advancedsearch' => 'List partials Advanced Search', // @translate
+        'o:list_disallowed_partials_advancedsearch' => 'List disallowed partials Advanced Search', // @translate
+        'o:hide_site_selector' => 'Hide site selector on pages', // @translate
+        'o:withoutowner_site_selector' => 'List site selector without owner', // @translate
+        'o:remove_browse_defaults_admin_sites' => 'Remove Site browse default sort', // @translate
+        'o:remove_columns_admin_sites' => 'Remove Site browse columns', // @translate
+        'o:hide_item_sets_select' => 'Hide Item Set select on pages', // @translate
+        'o:withoutowner_item_set_selector' => 'List item set selector without owner', // @translate
+        'o:remove_browse_defaults_admin_item_sets' => 'Remove Item Set browse default sort', // @translate
+        'o:remove_columns_admin_item_sets' => 'Remove Item Set browse columns', // @translate
+        'o:remove_columns_admin_items' => 'Remove Item browse columns', // @translate
+        'o:remove_browse_defaults_admin_items' => 'Remove Item browse defaults', // @translate
+        'o:hide_items_advanced_settings' => 'Hide advanced settings Item', // @translate
+        'o:remove_columns_admin_media' => 'Remove Media browse columns', // @translate
+        'o:remove_browse_defaults_admin_media' => 'Remove Media browse defaults', // @translate
+        'o:list_media_types' => 'List media types', // @translate
+        'o:list_disallowed_media_types' => 'List disallowed media types', // @translate
+    ];
+
+    protected $partials_AdvancedSearch = [
+        'common/advanced-search/sort' => 'Sort', // @translate
+        'common/advanced-search/fulltext' => 'Fulltext', // @translate
+        'common/advanced-search/properties' => 'Properties', // @translate
+        'common/advanced-search/resource-class' => 'Resource class', // @translate
+        'common/advanced-search/resource-template' => 'Resource template', // @translate
+        'common/advanced-search/item-sets' => 'Item sets', // @translate
+        'common/advanced-search/site' => 'Site', // @translate
+        'common/advanced-search/has-media' => 'Has media', // @translate
+        'common/advanced-search/owner' => 'Owner', // @translate
+        'common/advanced-search/visibility' => 'Visibility', // @translate
+        'common/advanced-search/ids' => 'Ids', // @translate
+        'common/advanced-search/media_ingester' => 'Media ingester', // @translate
+        'common/advanced-search/data-type-geography' => 'data-type-geography', // @translate
+        'common/numeric-data-types-advanced-search' => 'numeric-data-types-advanced-search', // @translate
+    ];
+
     public function __construct($serviceLocator, $requestedName, $options)
     {
         $this->setServiceLocator($serviceLocator);
@@ -104,6 +151,25 @@ class RoleEditForm extends Form
                 ],
             ]);
         }
+        
+        if($this->isParentRole($this->options['current']) && !empty($this->options['created'])){
+            $this->get('role')->add([
+                'name' => 'o:imitation_fields',
+                'type' => 'select',
+                'attributes' => [
+                    'multiple' => true,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select imitation fields...', // @translate
+                    'id' => 'imitation_fields'
+                ],
+                'options' => [
+                    'label' => 'Imitation fields', // @translate
+                    'value_options' => $this->imitation_fields,
+                    'empty_option' => '',
+                ],
+            ]);
+            $this->allow_empty[]['role'] = 'o:imitation_fields';
+        }
 
         $this->get('role')->add([
             'name' => 'o:active',
@@ -128,8 +194,18 @@ class RoleEditForm extends Form
             ],
         ]);
 
-        $this->getFormOptions();
+        $optionsFieldset = $this->getFormOptions();
         
+        if(!empty($this->options['parent'])){
+            $imitation_fields = $this->getRoleOps($this->options['parent'], 'o:imitation_fields');
+            foreach($imitation_fields as $key_field){
+                // $value_field = $this->getRoleOps($this->options['parent'], $key_field);
+                $optionsFieldset->get($key_field)->setAttribute('disabled', 'disabled');
+                $this->allow_empty[]['options'] = $key_field;
+                // echo $key_field.' => '.$value_field.'<br>';
+            }
+        }
+
         $this->getFormPermissions();
 
         $addEvent = new Event('form.add_elements', $this);
@@ -228,6 +304,7 @@ class RoleEditForm extends Form
         $optionsFieldset = $this->get('options');
         $optionsFieldset->setOption('element_groups', [
             'options' => 'Options',
+            'advancedsearch' => 'Advanced Search',
             'site' => 'Site',
             'itemSet' => 'Item Set',
             'items' => 'Items',
@@ -378,6 +455,45 @@ class RoleEditForm extends Form
                 'id' => 'hide_default_resource_template'
             ]
         ]);
+
+        // 'element_group' => 'advancedsearch',
+
+        $optionsFieldset->add([
+            'name' => 'o:list_partials_advancedsearch',
+            'type' => 'Select',
+            'attributes' => [
+                'class' => 'chosen-select',
+                'data-placeholder' => 'Select partials Advanced Search', // @translate
+                'multiple' => true,
+                'id' => 'list_partials_advancedsearch',
+            ],
+            'options' => [
+                'element_group' => 'advancedsearch',
+                'label' => 'List partials Advanced Search', // @translate
+                'empty_option' => '', // @translate
+                'value_options' => $this->partials_AdvancedSearch,
+                'info' => ''
+            ],
+        ]);
+        
+        $this->allow_empty[]['options'] = 'o:list_partials_advancedsearch';
+
+        $optionsFieldset->add([
+            'name' => 'o:list_disallowed_partials_advancedsearch',
+            'type' => 'checkbox',
+            'options' => [
+                'label' => 'List disallowed partials Advanced Search', // @translate
+                'info' => 'If checked List partials Advanced Search is list disallowed elements', // @translate
+                'element_group' => 'advancedsearch'
+            ],
+            'attributes' => [
+                'id' => 'list_disallowed_partials_advancedsearch'
+            ]
+        ]);
+
+        $this->allow_empty[]['options'] = 'o:list_disallowed_partials_advancedsearch';
+
+        // 'element_group' => 'site',
 
         $optionsFieldset->add([
             'name' => 'o:hide_site_selector',
@@ -597,6 +713,8 @@ class RoleEditForm extends Form
                 ]
             ]);
         }
+
+        return $optionsFieldset;
 
     }
 

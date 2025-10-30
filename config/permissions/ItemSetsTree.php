@@ -24,6 +24,15 @@ return [
         'browse' => [
           'index',
         ],
+        'add' => [
+          'create',
+        ],
+        'edit' => [
+          'edit',
+        ],
+        'delete' => [
+          'delete',
+        ],
       ],
       'ItemSetsTree\Entity\ItemSetsTreeEdge' => [
         'add' => [

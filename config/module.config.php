@@ -53,7 +53,6 @@ return [
     'controllers' => [
         'factories' => [
             Controller\Admin\RoleController::class => Service\Controller\Admin\RoleControllerFactory::class,
-            // Controller\Admin\PermissionController::class => Service\Controller\Admin\PermissionControllerFactory::class,
             Controller\Admin\SettingsController::class => Service\Controller\Admin\SettingsControllerFactory::class,
             Controller\Admin\ImportController::class => Service\Controller\Admin\ImportControllerFactory::class,
         ],
@@ -68,7 +67,6 @@ return [
             'RolesManager\Form\Element\RoleNativeSelect' => Service\Form\Element\RoleNativeSelectFactory::class,
             Form\RoleAddForm::class => Service\Form\RoleAddFormFactory::class,
             Form\RoleModForm::class => Service\Form\RoleModFormFactory::class,
-            // Form\PermissionForm::class => Service\Form\PermissionFormFactory::class,
             Form\RoleEditForm::class => Service\Form\RoleEditFormFactory::class,
         ],
     ],
@@ -76,10 +74,10 @@ return [
         'invokables' => [
             'owner' => ColumnType\Owner::class,
         ],
-        'factories' => [
-            'theme' => Service\ColumnType\ThemeFactory::class,
-            'value' => Service\ColumnType\ValueFactory::class,
-        ],
+        // 'factories' => [
+            // 'theme' => Service\ColumnType\ThemeFactory::class,
+            // 'value' => Service\ColumnType\ValueFactory::class,
+        // ],
     ],
     'navigation' => [
         'AdminGlobal' => [
@@ -107,6 +105,7 @@ return [
                             ],
                             'defaults' => [
                                 '__NAMESPACE__' => 'RolesManager\Controller\Admin',
+                                '__CONTROLLER__' => 'settings',
                                 'controller' => Controller\Admin\SettingsController::class,
                                 'action' => 'edit',
                             ],
@@ -122,6 +121,7 @@ return [
                             ],
                             'defaults' => [
                                 '__NAMESPACE__' => 'RolesManager\Controller\Admin',
+                                '__CONTROLLER__' => 'roles-import',
                                 'controller' => Controller\Admin\ImportController::class,
                                 'action' => 'browse',
                             ],
@@ -175,6 +175,7 @@ return [
         'imports' => OMEKA_PATH.'/files/import/RolesManager/',
         'settings' => [
             'roles_manager_backup_users' => 'false',
+            'roles_manager_show_owned' => 'false',
             'roles_manager_viewer_can_assign_items' => 'false',
             'roles_manager_withoutowner_site_selector' => 'false',
             'roles_manager_withoutowner_item_set_selector' => 'false',
@@ -186,6 +187,7 @@ return [
         ],
         'options' => [
             'backup_users' => 'roles_manager_backup_users',
+            'show_owned' => 'roles_manager_show_owned',
             'viewer_can_assign_items' => 'roles_manager_viewer_can_assign_items',
             'withoutowner_site_selector' => 'roles_manager_withoutowner_site_selector',
             'withoutowner_item_set_selector' => 'roles_manager_withoutowner_item_set_selector',
@@ -206,7 +208,7 @@ return [
         // Apply the item groups to medias. Implied and not taken in account
         // when `group_recursive_item_sets` is true.
         // 'roles_recursive_items' => true,
-
+        'imitation_fields' => ['no-display-values', 'hidden-properties-in-item-form'],
         'AllowSetRulesOnlyGlobalAdmin' => ['roles'],
     ],
 ];

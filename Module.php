@@ -128,28 +128,46 @@ class Module extends AbstractModule
             1000
         );
 
+        // $sharedEventManager->attach(
+        //     'Omeka\Api\Adapter\ItemAdapter',
+        //     'api.search.query',
+        //     [$this, 'prepareSearchQuery']
+        // );
+
+        // $sharedEventManager->attach(
+        //     'Omeka\Api\Adapter\MediaAdapter',
+        //     'api.search.query',
+        //     [$this, 'prepareSearchQuery']
+        // );
+
+        // $sharedEventManager->attach(
+        //     'Omeka\Api\Adapter\ItemSetAdapter',
+        //     'api.search.query',
+        //     [$this, 'prepareSearchQuery']
+        // );
+
+        // $sharedEventManager->attach(
+        //     'Omeka\Api\Adapter\AssetAdapter',
+        //     'api.search.query',
+        //     [$this, 'prepareSearchQuery']
+        // );
+
         $sharedEventManager->attach(
-            'Omeka\Api\Adapter\ItemAdapter',
+            '*',
             'api.search.query',
-            [$this, 'prepareSearchQuery']
+            [$this, 'filterSearchQuery']
         );
 
         $sharedEventManager->attach(
-            'Omeka\Api\Adapter\MediaAdapter',
-            'api.search.query',
-            [$this, 'prepareSearchQuery']
+            '*',
+            'api.search.query.finalize',
+            [$this, 'filterSearchQueryFinalize']
         );
 
         $sharedEventManager->attach(
-            'Omeka\Api\Adapter\ItemSetAdapter',
-            'api.search.query',
-            [$this, 'prepareSearchQuery']
-        );
-
-        $sharedEventManager->attach(
-            'Omeka\Api\Adapter\AssetAdapter',
-            'api.search.query',
-            [$this, 'prepareSearchQuery']
+            '*',
+            'view.advanced_search',
+            [$this, 'filterAdvancedSearch']
         );
 
         $sharedEventManager->attach(
@@ -217,6 +235,12 @@ class Module extends AbstractModule
         );
 
         $sharedEventManager->attach(
+            'Omeka\Form\ResourceForm',
+            'form.add_elements',
+            [$this, 'filterResourceForm']
+        );
+
+        $sharedEventManager->attach(
             '*',
             'rep.resource.display_values',
             [$this, 'filterDisplayValues']
@@ -258,40 +282,44 @@ class Module extends AbstractModule
     {
 
         if(!empty($this->getCurrentRoleOps('o:showonlyallowed'))){
+            
             $target = $event->getTarget();
             $ResourceName = $target->getResourceName();
+            // echo '<!-- '.$ResourceName.' -->';
             // $params = $event->getParams();
             $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
+            $controller = $routeMatch->getParam('__CONTROLLER__');
+            $args = $event->getParam('request')->getContent();
+
             if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
                 if(!empty($routeMatch->getParam('__ADMIN__'))){
-                    // $controller = $routeMatch->getParam('__CONTROLLER__');
+                    
                     // $action = $routeMatch->getParam('action');
                     // $actions = ['browse'];
                     // print_r($routeMatch->getParams());
                     // $request = $event->getParam('request');
-                    $args = $event->getParam('request')->getContent();
-                    // print_r($params);
+                    // print_r(array_keys($params));
+                    
                     $viewall = False;
                     if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets')){
                         if(isset($args['owner_id']) || isset($args['all_item_set'])){
                             $viewall = True;
                         }
                     }
-                    // echo get_class($target);
-                    // print_r(get_class_methods($target));
-                    // print_r(array_keys($params));
-                    // print_r(($params['request']->getContent()));
                     if(!$viewall){
                         $entityAlias = 'omeka_root';
-                        $qb = $event->getParam('queryBuilder');                    
+                        $qb = $event->getParam('queryBuilder');
                     // $ignored = ['sort_by_default', 'sort_order_default', 'sort_by', 'sort_order', 'page'];   
                     // if(!isset($params['owner_id']) && (array_keys($params) == $ignored) && !empty($this->getCurentUserID())){
-                        if($ResourceName == 'item_sets'){
-                            $allowed = $this->getCurrentRoleOps('o:allowed_item_sets');
-                            $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
-                        }else{
-                            $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurentUserID()));
-                        }
+                        // if($ResourceName == 'item_sets'){
+                        //     $allowed = $this->getCurrentRoleOps('o:allowed_item_sets');
+                        //     if(!empty($allowed) && ($controller == 'item-set')){
+                        //         $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
+                        //     }
+                        // }
+                        // if($ResourceName == 'items' || $ResourceName == 'media'){
+                        //     $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurentUserID()));
+                        // }
                     }
                         
                     // }else{
@@ -302,6 +330,163 @@ class Module extends AbstractModule
             }
         }
         
+
+    }
+
+    public function filterSearchQuery(Event $event)
+    {
+
+        $target = $event->getTarget();
+        $ResourceName = $target->getResourceName();
+
+        $entityAlias = 'omeka_root';
+        $controller = False;
+        $ADMIN = False;
+        $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
+        if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
+            $controller = $routeMatch->getParam('__CONTROLLER__');
+            $ADMIN = $routeMatch->getParam('__ADMIN__');
+        }
+        $args = $event->getParam('request')->getContent();
+
+        $entityAlias = 'omeka_root';
+
+        // echo $ResourceName;
+        if($ADMIN){
+
+            if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
+
+                $viewall = False;
+                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets') || $this->getSets('show_owned') == 'true'){
+                    if(isset($args['owner_id']) || isset($args['all_item_set'])){
+                        $viewall = True;
+                    }
+                }
+
+                if(!$viewall){
+                    $qb = $event->getParam('queryBuilder');
+                // $ignored = ['sort_by_default', 'sort_order_default', 'sort_by', 'sort_order', 'page'];   
+                // if(!isset($params['owner_id']) && (array_keys($params) == $ignored) && !empty($this->getCurentUserID())){
+                    if($ResourceName == 'item_sets'){
+                        $allowed = $this->getCurrentRoleOps('o:allowed_item_sets');
+                        if(!empty($allowed) && ($controller == 'item-set')){
+                            $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
+                        }
+                    }
+                    if($ResourceName == 'items' || $ResourceName == 'media'){
+                        $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurentUserID()));
+                    }
+                }
+            }
+
+        }
+
+        if($ResourceName == 'properties'){
+            $qb = $event->getParam('queryBuilder');
+            if(!empty($ops = $this->getCurrentRoleOps('no-display-values'))){
+                $vocabularyIds = [];
+                $subQuery = "SELECT id FROM property WHERE";
+                foreach($ops as $kp => $prop){
+                    list($prefix, $term) = explode(':', $prop);
+                    if(empty($vocabularyIds[$prefix])){
+                        $rc = $this->getConnection()->executeQuery("SELECT id FROM `vocabulary` WHERE `prefix` = '{$prefix}';")->fetchOne();
+                        if(!empty($rc)){
+                            $vocabularyIds[$prefix] = $rc;
+                        }
+                    }
+                    if(!empty($vocabularyIds[$prefix])){
+                        $subQuery .= " vocabulary_id = '{$vocabularyIds[$prefix]}' AND local_name = '$term'";
+                        if($kp < count($ops)-1){
+                            $subQuery .= " OR";
+                        }
+                    }
+                }
+                $subQuery .= ";";
+                $propIds = [];
+                $rc = $this->getConnection()->executeQuery($subQuery)->fetchAll();
+                if(!empty($rc)){
+                    foreach($rc as $pId){
+                        $propIds[] = $pId['id'];
+                    }
+                    $qb->andWhere($qb->expr()->notIn($entityAlias . '.id', $propIds));
+                }               
+            }
+
+        }
+
+
+//  $qb->expr()
+// (
+//     [0] => andX
+//     [1] => orX
+//     [2] => asc
+//     [3] => desc
+//     [4] => eq
+//     [5] => neq
+//     [6] => lt
+//     [7] => lte
+//     [8] => gt
+//     [9] => gte
+//     [10] => avg
+//     [11] => max
+//     [12] => min
+//     [13] => count
+//     [14] => countDistinct
+//     [15] => exists
+//     [16] => all
+//     [17] => some
+//     [18] => any
+//     [19] => not
+//     [20] => abs
+//     [21] => mod
+//     [22] => prod
+//     [23] => diff
+//     [24] => sum
+//     [25] => quot
+//     [26] => sqrt
+//     [27] => in
+//     [28] => notIn
+//     [29] => isNull
+//     [30] => isNotNull
+//     [31] => like
+//     [32] => notLike
+//     [33] => concat
+//     [34] => substring
+//     [35] => lower
+//     [36] => upper
+//     [37] => length
+//     [38] => literal
+//     [39] => between
+//     [40] => trim
+//     [41] => isMemberOf
+//     [42] => isInstanceOf
+// )
+
+    }
+
+    public function filterSearchQueryFinalize(Event $event)
+    {
+
+        // $target = $event->getTarget();
+        // $ResourceName = $target->getResourceName();
+
+        // $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
+        // $controller = $routeMatch->getParam('__CONTROLLER__');
+        // $args = $event->getParam('request')->getContent();
+
+        // $entityAlias = 'omeka_root';
+
+        // $qb = $event->getParam('queryBuilder');
+        // $request = $event->getParam('request');
+
+        // echo '<pre>';
+
+        // print_r(get_class_methods($qb->getQuery()));
+        // print_r($request->getContent());
+        // print_r(get_class_methods($request));
+
+        // echo '</pre>';
+
 
     }
 
@@ -422,6 +607,29 @@ class Module extends AbstractModule
 
     }
 
+    public function filterResourceForm(Event $event)
+    {
+
+        $form = $event->getTarget();
+
+        $allowed_resource_template = $this->getCurrentRoleOps('o:allowed_resource_template');
+        if($allowed_resource_template && $form->has('o:resource_template[o:id]')){
+            $resourceTemplateSelect = $form->get('o:resource_template[o:id]');
+            $templates = $resourceTemplateSelect->getValueOptions();
+            foreach($templates as $k => $v){
+                if(!in_array($k, $allowed_resource_template)){
+                    unset($templates[$k]);
+                }
+            }
+            $resourceTemplateSelect->setValueOptions($templates);
+            if(count($allowed_resource_template) == 1){
+                $resourceTemplateSelect->setValue(current($allowed_resource_template));
+            }
+
+        }
+
+    }
+
     public function filterDisplayValues(Event $event)
     {
 
@@ -469,16 +677,18 @@ class Module extends AbstractModule
         if(!empty($params['__ADMIN__']) && !empty($params['__CONTROLLER__']) && !empty($params['action'])){
             $controller = $params['__CONTROLLER__'];
             if($params['action'] == 'browse'){
-                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $controller == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $controller == 'item-set') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $controller == 'asset')){
+                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $controller == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $controller == 'item-set') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $controller == 'asset') || $this->getSets('show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
                     $vars = $view->vars();
                     $need = '<div id="page-actions">';
                     $add = '<div id="page-actions">';
                     if($controller == 'item-set'){
-                        if(isset($args['all_item_set'])){
-                            $add .= $view->hyperlink($view->translate('Show only mine'), $view->url(null, ['action' => 'browse'], true), ['class' => 'button']);
-                        }else{
-                            $add .= $view->hyperlink($view->translate('Show all'), '?all_item_set=', ['class' => 'button']); 
-                        }                        
+                        if($this->getCurrentRoleOps('o:allowed_item_sets')){
+                            if(isset($args['all_item_set'])){
+                                $add .= $view->hyperlink($view->translate('Show only mine'), $view->url(null, ['action' => 'browse'], true), ['class' => 'button']);
+                            }else{
+                                $add .= $view->hyperlink($view->translate('Show all'), '?all_item_set=', ['class' => 'button']); 
+                            }
+                        }
                     }else{
                         if(isset($args['owner_id'])){
                             $add .= $view->hyperlink($view->translate('Show only mine'), $view->url(null, ['action' => 'browse'], true), ['class' => 'button']);
@@ -499,7 +709,7 @@ class Module extends AbstractModule
     {
 
         // (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $controller == 'media') ||
-        if(!empty($this->getCurrentRoleOps('o:allowviewallmedias'))){
+        if(!empty($this->getCurrentRoleOps('o:allowviewallmedias')) || $this->getSets('show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
             $view = $event->getTarget();
             $params = $view->params()->fromRoute();
             $args = $view->params()->fromQuery();
@@ -516,6 +726,21 @@ class Module extends AbstractModule
             }
         }
 
+    }
+
+    public function filterAdvancedSearch(Event $event): void
+    {
+
+        if(!empty($ops = $this->getCurrentRoleOps('o:list_partials_advancedsearch'))){
+            $partials = $event->getParam('partials');
+            if($this->getCurrentRoleOps('o:list_disallowed_partials_advancedsearch')){
+                $partials = array_flip(array_diff_key(array_flip($partials), array_flip($ops)));
+            }else{
+                $partials = $ops;
+            }
+            $event->setParam('partials', $partials);
+        }
+        
     }
 
     public function getConfigForm(PhpRenderer $renderer)

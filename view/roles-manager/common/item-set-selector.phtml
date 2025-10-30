@@ -1,0 +1,33 @@
+<div id="item-set-selector" class='selector sidebar active'>
+    <a href="#" class="mobile-only sidebar-close o-icon-close"><span class="screen-reader-text"><?php echo $this->translate('Close'); ?></span></a>
+    <div class="resources-available" data-all-resources-count="<?php echo $totalItemSetCount; ?>">
+        <?php if($itemSets): ?>
+        <h3><?php echo $this->translate('Click on an item set to add it to the edit panel.'); ?></h3>
+        <input type="text" class="selector-filter" placeholder=" <?php echo $this->escapeHtml($this->translate('Filter item sets')); ?>">
+        <ul>
+            <li class="total-count-heading"><?php echo $this->translate('Item sets'); ?> (<span class="selector-total-count"><?php echo $totalItemSetCount; ?></span>)
+                <ul class="selectable-list">
+                    <?php foreach ($itemSets as $itemSet): ?>
+                    <li class='selector-child'
+                        style="margin: 0px; width: 100%"
+                        data-child-search="<?php echo $this->escapeHtml($itemSet->displayTitle()); ?>"
+                        data-resource-id="<?php echo $this->escapeHtml($itemSet->id()); ?>"
+                        data-owner-email="<?php echo $this->escapeHtml($owner); ?>">
+                        <div class="description">
+                            <p class="o-icon-info"><span class="screen-reader-text"><?php echo $this->translate('More info'); ?></span></p>
+                            <p class="field-comment"><?php echo $this->escapeHtml($itemSet->displayDescription()); ?></p>
+                        </div>
+                        <span><?php echo $this->escapeHtml($itemSet->displayTitle()); ?></span>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+        </ul>
+        <?php else: ?>
+            <p><?php echo $this->translate('Omeka could not find any item sets.'); ?></p>
+        <?php endif; ?>
+    </div>
+    <div class="resources-unavailable">
+        <p><?php echo sprintf('All %s have been added.', 'item sets'); ?></p>
+    </div>
+</div>

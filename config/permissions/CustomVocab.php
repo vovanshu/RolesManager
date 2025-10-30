@@ -57,6 +57,12 @@ return [
         'add' => [
           'create',
         ],
+        'edit' => [
+          'update',
+        ],
+        'delete' => [
+          'delete',
+        ],
         'edit_owned' => [
           [
             'update' => 'Omeka\Permissions\Assertion\OwnsEntityAssertion',

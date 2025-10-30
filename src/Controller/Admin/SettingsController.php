@@ -107,6 +107,20 @@ class SettingsController extends AbstractActionController
         ]);
 
         $form->add([
+            'name' => $this->getOps('show_owned'),
+            'type' => 'checkbox',
+            'options' => [
+                'label' => 'At the begin show your owned', // @translate
+                'checked_value' => 'true',
+                'unchecked_value' => 'false',
+            ],
+            'attributes' => [
+                'id' => $this->getOps('show_owned'),
+                'value' => $this->getSets('show_owned')
+            ],
+        ]);
+
+        $form->add([
             'name' => $this->getOps('viewer_can_assign_items'),
             'type' => 'checkbox',
             'options' => [

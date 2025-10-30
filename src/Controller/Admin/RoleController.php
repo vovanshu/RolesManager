@@ -226,7 +226,9 @@ class RoleController extends AbstractActionController
             if ($form->isValid()) {
                 $response = $this->api($form)->create('roles', $data);
                 if ($response) {
-                    $this->setUserSettings($data['o:name'], $data['o:options']);
+                    if(!empty($data['o:options'])){
+                        $this->setUserSettings($data['o:name'], $data['o:options']);
+                    }
                     $message = new Message(
                         'Role successfully created.' // @translate
                     );
@@ -260,7 +262,16 @@ class RoleController extends AbstractActionController
         $form->setAttribute('enctype', 'multipart/form-data');
         $form->setAttribute('id', 'update-role');
         $name_role = $data['o:name'];
+        if(!empty($data['o:options']['o:imitation_fields'])){
+            $data['o:imitation_fields'] = $data['o:options']['o:imitation_fields'];
+        }
         $form->get('role')->populateValues($data);
+        $imitation_fields = $this->getRoleOps($parent, 'o:imitation_fields');
+        if(!empty($imitation_fields)){
+            foreach($imitation_fields as $key_field){
+                $data['o:options'][$key_field] = $this->getRoleOps($parent, $key_field);
+            }
+        }
         if(!empty($data['o:options'])){
             $form->get('options')->populateValues($data['o:options']);
         }
@@ -295,6 +306,9 @@ class RoleController extends AbstractActionController
                     $data['o:options'] = $post['options'];
                 }else{
                     $data['o:options'] = [];
+                }
+                if(!empty($data['o:imitation_fields'])){
+                    $data['o:options']['o:imitation_fields'] = $data['o:imitation_fields'];
                 }
                 $data['o:options']['no-display-values'] = $this->params()->fromPost('no-display-values', []);
                 $data['o:options']['hidden-properties-in-item-form'] = $this->params()->fromPost('hidden-properties-in-item-form', []);

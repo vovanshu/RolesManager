@@ -284,6 +284,20 @@ return [
           ],
         ],
       ],
+      'Omeka\Entity\ValueAnnotation'=> [
+        'browse' => [
+          'read',
+        ],
+        'add' => [
+          'create',
+        ],
+        'edit' => [
+          'update',
+        ],
+        'delete' => [
+          'delete',
+        ],
+      ],
     ],
     'itemSets'=> [
       'Omeka\Api\Adapter\ItemSetAdapter'=> [
@@ -794,22 +808,6 @@ return [
           [
             'add-page' => 'RolesManager\Permissions\Assertion\SitesUpdateAssertion',
           ],
-        ],
-      ],
-    ],
-    'annotation'=> [
-      'Omeka\Entity\ValueAnnotation'=> [
-        'browse' => [
-          'read',
-        ],
-        'add' => [
-          'create',
-        ],
-        'edit' => [
-          'update',
-        ],
-        'delete' => [
-          'delete',
         ],
       ],
     ],

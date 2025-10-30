@@ -301,19 +301,30 @@ trait Common
 
     public function getCurrentRoleOps($name)
     {
+
         return $this->getRoleOps($this->getRoleCurrentUser(), $name);
+
     }
 
     public function getRoleOps($role, $name)
     {
 
-        if(empty($this->listRoles)){
-            $this->listRoles = $this->getAcl()->listRoles();
-            // $this->listRoles = $this->getListActiveRoles();
-        }
-        if(!empty($this->listRoles[$role])){
-            if(!empty($this->listRoles[$role]['options'][$name])){
-                return $this->listRoles[$role]['options'][$name];
+        $imitation = $this->getConf('imitation_fields');
+        $listRoles = $this->getAcl()->listRoles();
+        if(!empty($listRoles[$role])){
+            if(!empty($listRoles[$role]['parent'])){
+                $parent = $listRoles[$role]['parent'];
+                if(!empty($listRoles[$parent]['options']['o:imitation_fields'])){
+                    foreach($listRoles[$parent]['options']['o:imitation_fields'] as $key_field){
+                        array_push($imitation, $key_field);
+                    }
+                }
+                if(!empty($listRoles[$parent]['options'][$name]) && in_array($name, $imitation)){
+                    return $listRoles[$parent]['options'][$name];
+                }
+            }
+            if(!empty($listRoles[$role]['options'][$name])){
+                return $listRoles[$role]['options'][$name];
             }
         }
         return Null;
