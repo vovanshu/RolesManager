@@ -228,11 +228,11 @@ class Module extends AbstractModule
             [$this, 'viewUserShowAfter']
         );
 
-        $sharedEventManager->attach(
-            'Omeka\Form\SettingForm',
-            'form.add_elements',
-            [$this, 'filterSettingFormElement']
-        );
+        // $sharedEventManager->attach(
+        //     'Omeka\Form\SettingForm',
+        //     'form.add_elements',
+        //     [$this, 'filterSettingFormElement']
+        // );
 
         $sharedEventManager->attach(
             'Omeka\Form\ResourceForm',
@@ -554,58 +554,58 @@ class Module extends AbstractModule
         }
     }
 
-    public function filterSettingFormElement(Event $event)
-    {
+    // public function filterSettingFormElement(Event $event)
+    // {
 
-        $form = $event->getTarget();
+    //     $form = $event->getTarget();
 
-        $form->add([
-            'type' => 'checkbox',
-            'name' => 'recaptcha_enable_on_login',
-            'options' => [
-                'element_group' => 'security',
-                'label' => 'Enable reCAPTCHA on Login page', // @translate
-                'info' => 'Check this to enable reCAPTCHA on Login page.', // @translate
-                'checked_value' => 'true',
-                'unchecked_value' => 'false',
-            ],
-            'attributes' => [
-                'value' => $this->getSets('recaptcha_enable_on_login'),
-                'id' => 'recaptcha_enable_on_login',
-            ],
-        ]);
+    //     $form->add([
+    //         'type' => 'checkbox',
+    //         'name' => 'recaptcha_enable_on_login',
+    //         'options' => [
+    //             'element_group' => 'security',
+    //             'label' => 'Enable reCAPTCHA on Login page', // @translate
+    //             'info' => 'Check this to enable reCAPTCHA on Login page.', // @translate
+    //             'checked_value' => 'true',
+    //             'unchecked_value' => 'false',
+    //         ],
+    //         'attributes' => [
+    //             'value' => $this->getSets('recaptcha_enable_on_login'),
+    //             'id' => 'recaptcha_enable_on_login',
+    //         ],
+    //     ]);
 
-        $form->add([
-            'type' => 'checkbox',
-            'name' => 'recaptcha_enable_on_forgot_password',
-            'options' => [
-                'element_group' => 'security',
-                'label' => 'Enable reCAPTCHA on Forgot Password page', // @translate
-                'info' => 'Check this to enable reCAPTCHA on Forgot Password page.', // @translate
-                'checked_value' => 'true',
-                'unchecked_value' => 'false',
-            ],
-            'attributes' => [
-                'value' => $this->getSets('recaptcha_enable_on_forgot_password'),
-                'id' => 'recaptcha_enable_on_forgot_password',
-            ],
-        ]);
+    //     $form->add([
+    //         'type' => 'checkbox',
+    //         'name' => 'recaptcha_enable_on_forgot_password',
+    //         'options' => [
+    //             'element_group' => 'security',
+    //             'label' => 'Enable reCAPTCHA on Forgot Password page', // @translate
+    //             'info' => 'Check this to enable reCAPTCHA on Forgot Password page.', // @translate
+    //             'checked_value' => 'true',
+    //             'unchecked_value' => 'false',
+    //         ],
+    //         'attributes' => [
+    //             'value' => $this->getSets('recaptcha_enable_on_forgot_password'),
+    //             'id' => 'recaptcha_enable_on_forgot_password',
+    //         ],
+    //     ]);
 
-        $form->add([
-            'name' => 'recaptcha_ip_white_list',
-            'type' => 'textarea',
-            'options' => [
-                'element_group' => 'security',
-                'label' => 'IP whitelist for reCAPTCHA', // @translate
-                'info' => 'Enter a single IP address or a range of IP addresses separated by dashes (IPbegin-IPend) in the line to whitelist for reCAPTCHA.', // @translate
-            ],
-            'attributes' => [
-                'value' => $this->getSets('recaptcha_ip_white_list'),
-                'id' => 'recaptcha_ip_white_list',
-            ],
-        ]);
+    //     $form->add([
+    //         'name' => 'recaptcha_ip_white_list',
+    //         'type' => 'textarea',
+    //         'options' => [
+    //             'element_group' => 'security',
+    //             'label' => 'IP whitelist for reCAPTCHA', // @translate
+    //             'info' => 'Enter a single IP address or a range of IP addresses separated by dashes (IPbegin-IPend) in the line to whitelist for reCAPTCHA.', // @translate
+    //         ],
+    //         'attributes' => [
+    //             'value' => $this->getSets('recaptcha_ip_white_list'),
+    //             'id' => 'recaptcha_ip_white_list',
+    //         ],
+    //     ]);
 
-    }
+    // }
 
     public function filterResourceForm(Event $event)
     {

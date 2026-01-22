@@ -59,8 +59,6 @@ return [
     ],
     'form_elements' => [
         'factories' => [
-            'Omeka\Form\LoginForm' => Service\Form\LoginFormFactory::class,
-            'Omeka\Form\ForgotPasswordForm' => Service\Form\ForgotPasswordFormFactory::class,
             'Omeka\Form\UserForm' => Service\Form\UserFormFactory::class,
             Form\Element\ParentRoleSelect::class => Service\Form\Element\ParentRoleSelectFactory::class,
             Form\Element\RoleSelect::class => Service\Form\Element\RoleSelectFactory::class,
@@ -181,9 +179,9 @@ return [
             'roles_manager_withoutowner_item_set_selector' => 'false',
             'roles_manager_addition_role_information' => '',
             'roles_manager_addition_user_information' => '',
-            'recaptcha_enable_on_login' => 'false',
-            'recaptcha_enable_on_forgot_password' => 'false',
-            'recaptcha_ip_white_list' => '',
+            // 'recaptcha_enable_on_login' => 'false',
+            // 'recaptcha_enable_on_forgot_password' => 'false',
+            // 'recaptcha_ip_white_list' => '',
         ],
         'options' => [
             'backup_users' => 'roles_manager_backup_users',
@@ -193,9 +191,9 @@ return [
             'withoutowner_item_set_selector' => 'roles_manager_withoutowner_item_set_selector',
             'addition_role_information' => 'roles_manager_addition_role_information',
             'addition_user_information' => 'roles_manager_addition_user_information',
-            'recaptcha_enable_on_login' => 'recaptcha_enable_on_login',
-            'recaptcha_enable_on_forgot_password' => 'recaptcha_enable_on_forgot_password',
-            'recaptcha_ip_white_list' => 'recaptcha_ip_white_list',
+            // 'recaptcha_enable_on_login' => 'recaptcha_enable_on_login',
+            // 'recaptcha_enable_on_forgot_password' => 'recaptcha_enable_on_forgot_password',
+            // 'recaptcha_ip_white_list' => 'recaptcha_ip_white_list',
         ],
         // 'labels' => [
         //     'registred_classes' => 'Registred Resource Classes', // @translate
