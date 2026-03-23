@@ -218,6 +218,12 @@ class Module extends AbstractModule
         );
 
         $sharedEventManager->attach(
+            '*',
+            'view.layout',
+            [$this, 'addAdminResourceHeaders']
+        );
+
+        $sharedEventManager->attach(
             'Omeka\Controller\Admin\User',
             'view.details',
             [$this, 'viewUserDetails']
@@ -414,54 +420,6 @@ class Module extends AbstractModule
 
         }
 
-
-//  $qb->expr()
-// (
-//     [0] => andX
-//     [1] => orX
-//     [2] => asc
-//     [3] => desc
-//     [4] => eq
-//     [5] => neq
-//     [6] => lt
-//     [7] => lte
-//     [8] => gt
-//     [9] => gte
-//     [10] => avg
-//     [11] => max
-//     [12] => min
-//     [13] => count
-//     [14] => countDistinct
-//     [15] => exists
-//     [16] => all
-//     [17] => some
-//     [18] => any
-//     [19] => not
-//     [20] => abs
-//     [21] => mod
-//     [22] => prod
-//     [23] => diff
-//     [24] => sum
-//     [25] => quot
-//     [26] => sqrt
-//     [27] => in
-//     [28] => notIn
-//     [29] => isNull
-//     [30] => isNotNull
-//     [31] => like
-//     [32] => notLike
-//     [33] => concat
-//     [34] => substring
-//     [35] => lower
-//     [36] => upper
-//     [37] => length
-//     [38] => literal
-//     [39] => between
-//     [40] => trim
-//     [41] => isMemberOf
-//     [42] => isInstanceOf
-// )
-
     }
 
     public function filterSearchQueryFinalize(Event $event)
@@ -524,6 +482,52 @@ class Module extends AbstractModule
 
     }
 
+    public function addAdminResourceHeaders(Event $event): void
+    {
+
+        /** @var \Laminas\View\Renderer\PhpRenderer $view */
+        $view = $event->getTarget();
+        $params = $view->params()->fromRoute();
+
+        $plugins = $view->getHelperPluginManager();
+        $assetUrl = $plugins->get('assetUrl');
+
+        $controller = False;
+        $action = False;
+
+        if(!empty($params['__CONTROLLER__'])){
+            $controller = $params['__CONTROLLER__'];
+        }elseif(!empty($params['controller'])){
+            $controller = $params['controller'];
+        }
+        if(!empty($params['action'])){
+            $action = $params['action'];
+        }
+
+        // echo "<!---\r\n";
+        // echo $controller."\r\n";
+        // echo $action."\r\n";
+        // echo "\r\n--->";
+        if(!empty($params['__ADMIN__'])){
+            if(in_array($controller, ['item']) && in_array($action, ['add', 'edit'])){
+                $plugins->get('headScript')->appendFile($assetUrl('js/admin-ui.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
+            }
+        }
+
+        // $params = $view->params()->fromRoute();
+        // $args = $view->params()->fromQuery();
+        // if(!empty($params['__ADMIN__']) && !empty($params['__CONTROLLER__']) && !empty($params['action'])){
+            // $controller = $params['__CONTROLLER__'];
+        // }
+
+        // $plugins->get('headLink')->appendStylesheet($assetUrl('css/items-review.css', 'ItemsReview'));
+        // if (in_array($action, ['add', 'edit'])) {
+            // $plugins->get('headLink')->appendStylesheet($assetUrl('css/items-review-contract.css', 'ItemsReview'));
+            // $plugins->get('headScript')->appendFile($assetUrl('js/items-review.js', 'ItemsReview'), 'text/javascript', ['defer' => 'defer']);
+        // }
+
+    }
+
     public function viewUserDetails(Event $event): void
     {
         $view = $event->getTarget();
@@ -553,59 +557,6 @@ class Module extends AbstractModule
             );
         }
     }
-
-    // public function filterSettingFormElement(Event $event)
-    // {
-
-    //     $form = $event->getTarget();
-
-    //     $form->add([
-    //         'type' => 'checkbox',
-    //         'name' => 'recaptcha_enable_on_login',
-    //         'options' => [
-    //             'element_group' => 'security',
-    //             'label' => 'Enable reCAPTCHA on Login page', // @translate
-    //             'info' => 'Check this to enable reCAPTCHA on Login page.', // @translate
-    //             'checked_value' => 'true',
-    //             'unchecked_value' => 'false',
-    //         ],
-    //         'attributes' => [
-    //             'value' => $this->getSets('recaptcha_enable_on_login'),
-    //             'id' => 'recaptcha_enable_on_login',
-    //         ],
-    //     ]);
-
-    //     $form->add([
-    //         'type' => 'checkbox',
-    //         'name' => 'recaptcha_enable_on_forgot_password',
-    //         'options' => [
-    //             'element_group' => 'security',
-    //             'label' => 'Enable reCAPTCHA on Forgot Password page', // @translate
-    //             'info' => 'Check this to enable reCAPTCHA on Forgot Password page.', // @translate
-    //             'checked_value' => 'true',
-    //             'unchecked_value' => 'false',
-    //         ],
-    //         'attributes' => [
-    //             'value' => $this->getSets('recaptcha_enable_on_forgot_password'),
-    //             'id' => 'recaptcha_enable_on_forgot_password',
-    //         ],
-    //     ]);
-
-    //     $form->add([
-    //         'name' => 'recaptcha_ip_white_list',
-    //         'type' => 'textarea',
-    //         'options' => [
-    //             'element_group' => 'security',
-    //             'label' => 'IP whitelist for reCAPTCHA', // @translate
-    //             'info' => 'Enter a single IP address or a range of IP addresses separated by dashes (IPbegin-IPend) in the line to whitelist for reCAPTCHA.', // @translate
-    //         ],
-    //         'attributes' => [
-    //             'value' => $this->getSets('recaptcha_ip_white_list'),
-    //             'id' => 'recaptcha_ip_white_list',
-    //         ],
-    //     ]);
-
-    // }
 
     public function filterResourceForm(Event $event)
     {

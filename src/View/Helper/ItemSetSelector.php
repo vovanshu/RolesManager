@@ -35,8 +35,9 @@ class ItemSetSelector extends AbstractHelper
         }
         $response = $view->api()->search('item_sets', $query);
 
-        if(!empty($common->getCurrentRoleOps('o:withoutowner_item_set_selector')) || !empty($common->getSets('withoutowner_item_set_selector'))){
-            // $query['sort_by'] = 'value';
+        // if(!empty($common->getCurrentRoleOps('o:withoutowner_item_set_selector')) || !empty($common->getSets('withoutowner_item_set_selector'))){
+        if($common->getCurrentRoleOps('o:withoutowner_item_set_selector') == 'true' || $common->getSets('withoutowner_item_set_selector') == 'true'){
+            $query['sort_by'] = 'title';
             $itemSets = [];
             foreach ($response->getContent() as $itemSet) {
                 $itemSets[] = $itemSet;
