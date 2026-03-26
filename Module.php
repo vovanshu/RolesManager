@@ -509,9 +509,9 @@ class Module extends AbstractModule
         // echo $action."\r\n";
         // echo "\r\n--->";
         if(!empty($params['__ADMIN__'])){
-            if(in_array($controller, ['item']) && in_array($action, ['add', 'edit'])){
+            // if(in_array($controller, ['item']) && in_array($action, ['add', 'edit'])){
                 $plugins->get('headScript')->appendFile($assetUrl('js/admin-ui.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
-            }
+            // }
         }
 
         // $params = $view->params()->fromRoute();
