@@ -6,6 +6,14 @@ return [
   ],
   'rules' => [
     'reference' => [
+      'Reference\Controller\Admin\ReferenceController' => [
+        'browse' => [
+          'browse',
+        ],
+        'show' => [
+          'show', 'values'
+        ],
+      ],
       'Reference\Controller\Site\ReferenceController' => [
         'browse' => [
           'browse',
