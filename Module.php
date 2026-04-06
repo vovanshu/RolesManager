@@ -48,22 +48,17 @@ class Module extends AbstractModule
     public function getConfig()
     {
 
-        // $config = include $this->modulePath().'/config/module.config.php';
-        if(file_exists($this->modulePath() . '/config/permissions')){
-            $permissions = [];
-            foreach(glob($this->modulePath() . '/config/permissions/*.php') as $file){
-                $permissions = array_merge_recursive($permissions, (include $file));
-                // $permissions = $permissions + (include $file);
-                
-                // $permissions = $permissions ? $permissions + (include $file) : (include $file);
+        $permissions = [];
+        if(file_exists($this->modulePath() . '/config/permissions.php')){
+            $listperms = (include $this->modulePath() . '/config/permissions.php');
+            foreach($listperms as $name => $dt){
+                if(file_exists($this->modulePath() . '/config/permissions/'.$name.'.php')){
+                    $permissions = array_merge_recursive($permissions, (include $this->modulePath() . '/config/permissions/'.$name.'.php'));
+                }
             }
         }
-
-        // array_walk($permissions, function(&$v) {
-        //     $v = array_map('array_unique', $v);
-        // });
-
         return include $this->modulePath().'/config/module.config.php';;
+
     }
 
     public function onBootstrap(MvcEvent $event): void
@@ -128,40 +123,11 @@ class Module extends AbstractModule
             1000
         );
 
-        // $sharedEventManager->attach(
-        //     'Omeka\Api\Adapter\ItemAdapter',
-        //     'api.search.query',
-        //     [$this, 'prepareSearchQuery']
-        // );
-
-        // $sharedEventManager->attach(
-        //     'Omeka\Api\Adapter\MediaAdapter',
-        //     'api.search.query',
-        //     [$this, 'prepareSearchQuery']
-        // );
-
-        // $sharedEventManager->attach(
-        //     'Omeka\Api\Adapter\ItemSetAdapter',
-        //     'api.search.query',
-        //     [$this, 'prepareSearchQuery']
-        // );
-
-        // $sharedEventManager->attach(
-        //     'Omeka\Api\Adapter\AssetAdapter',
-        //     'api.search.query',
-        //     [$this, 'prepareSearchQuery']
-        // );
-
         $sharedEventManager->attach(
             '*',
             'api.search.query',
-            [$this, 'filterSearchQuery']
-        );
-
-        $sharedEventManager->attach(
-            '*',
-            'api.search.query.finalize',
-            [$this, 'filterSearchQueryFinalize']
+            [$this, 'filterSearchQuery'],
+            -1000
         );
 
         $sharedEventManager->attach(
@@ -284,63 +250,9 @@ class Module extends AbstractModule
 
     }
 
-    public function prepareSearchQuery(Event $event)
-    {
-
-        if(!empty($this->getCurrentRoleOps('o:showonlyallowed'))){
-            
-            $target = $event->getTarget();
-            $ResourceName = $target->getResourceName();
-            // echo '<!-- '.$ResourceName.' -->';
-            // $params = $event->getParams();
-            $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
-            $controller = $routeMatch->getParam('__CONTROLLER__');
-            $args = $event->getParam('request')->getContent();
-
-            if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
-                if(!empty($routeMatch->getParam('__ADMIN__'))){
-                    
-                    // $action = $routeMatch->getParam('action');
-                    // $actions = ['browse'];
-                    // print_r($routeMatch->getParams());
-                    // $request = $event->getParam('request');
-                    // print_r(array_keys($params));
-                    
-                    $viewall = False;
-                    if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets')){
-                        if(isset($args['owner_id']) || isset($args['all_item_set'])){
-                            $viewall = True;
-                        }
-                    }
-                    if(!$viewall){
-                        $entityAlias = 'omeka_root';
-                        $qb = $event->getParam('queryBuilder');
-                    // $ignored = ['sort_by_default', 'sort_order_default', 'sort_by', 'sort_order', 'page'];   
-                    // if(!isset($params['owner_id']) && (array_keys($params) == $ignored) && !empty($this->getCurentUserID())){
-                        // if($ResourceName == 'item_sets'){
-                        //     $allowed = $this->getCurrentRoleOps('o:allowed_item_sets');
-                        //     if(!empty($allowed) && ($controller == 'item-set')){
-                        //         $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
-                        //     }
-                        // }
-                        // if($ResourceName == 'items' || $ResourceName == 'media'){
-                        //     $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurentUserID()));
-                        // }
-                    }
-                        
-                    // }else{
-                        // $qb->andWhere($expr->like($entityAlias . '.owner', '%'));
-                    // }
-                    // print_r($params);
-                }
-            }
-        }
-        
-
-    }
-
     public function filterSearchQuery(Event $event)
     {
+
 
         $target = $event->getTarget();
         $ResourceName = $target->getResourceName();
@@ -362,9 +274,13 @@ class Module extends AbstractModule
 
             if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
 
+                // print_r($args);
                 $viewall = False;
                 if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets') || $this->getSets('show_owned') == 'true'){
-                    if(isset($args['owner_id']) || isset($args['all_item_set'])){
+                    
+                    if(isset($args['__original_query']) && (isset($args['__original_query']['owner_id']) || isset($args['__original_query']['all_item_set']))){
+                        $viewall = True;
+                    }elseif(isset($args['owner_id']) || isset($args['all_item_set'])){
                         $viewall = True;
                     }
                 }
@@ -419,32 +335,6 @@ class Module extends AbstractModule
             }
 
         }
-
-    }
-
-    public function filterSearchQueryFinalize(Event $event)
-    {
-
-        // $target = $event->getTarget();
-        // $ResourceName = $target->getResourceName();
-
-        // $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
-        // $controller = $routeMatch->getParam('__CONTROLLER__');
-        // $args = $event->getParam('request')->getContent();
-
-        // $entityAlias = 'omeka_root';
-
-        // $qb = $event->getParam('queryBuilder');
-        // $request = $event->getParam('request');
-
-        // echo '<pre>';
-
-        // print_r(get_class_methods($qb->getQuery()));
-        // print_r($request->getContent());
-        // print_r(get_class_methods($request));
-
-        // echo '</pre>';
-
 
     }
 
@@ -509,9 +399,9 @@ class Module extends AbstractModule
         // echo $action."\r\n";
         // echo "\r\n--->";
         if(!empty($params['__ADMIN__'])){
-            if(in_array($controller, ['item']) && in_array($action, ['add', 'edit'])){
+            // if(in_array($controller, ['item']) && in_array($action, ['add', 'edit'])){
                 $plugins->get('headScript')->appendFile($assetUrl('js/admin-ui.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
-            }
+            // }
         }
 
         // $params = $view->params()->fromRoute();
@@ -635,17 +525,23 @@ class Module extends AbstractModule
                     if($controller == 'item-set'){
                         if($this->getCurrentRoleOps('o:allowed_item_sets')){
                             if(isset($args['all_item_set'])){
-                                $add .= $view->hyperlink($view->translate('Show only mine'), $view->url(null, ['action' => 'browse'], true), ['class' => 'button']);
+                                unset($args['all_item_set']);
+                                $title = $view->translate('Show only mine');
                             }else{
-                                $add .= $view->hyperlink($view->translate('Show all'), '?all_item_set=', ['class' => 'button']); 
+                                $args['all_item_set'] = '';
+                                $title = $view->translate('Show all');
                             }
+                            $add .= $view->hyperlink($title, $view->url(null, ['action' => 'browse'], ['query' => $args], true), ['class' => 'button']);
                         }
                     }else{
                         if(isset($args['owner_id'])){
-                            $add .= $view->hyperlink($view->translate('Show only mine'), $view->url(null, ['action' => 'browse'], true), ['class' => 'button']);
+                            unset($args['owner_id']);
+                            $title = $view->translate('Show only mine');
                         }else{
-                            $add .= $view->hyperlink($view->translate('Show all'), '?owner_id=', ['class' => 'button']); 
+                            $args['owner_id'] = '';
+                            $title = $view->translate('Show all');
                         }
+                        $add .= $view->hyperlink($title, $view->url(null, ['action' => 'browse'], ['query' => $args], true), ['class' => 'button']);
                     }
                     $content = $vars->offsetGet('content');
                     $content = strtr($content, [$need => $add]);

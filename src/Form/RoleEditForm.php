@@ -223,10 +223,6 @@ class RoleEditForm extends Form
         }
 
         $inputFilter->get('options')->add([
-            'name' => 'o:allowed_resource_template',
-            'allow_empty' => true,
-        ]);
-        $inputFilter->get('options')->add([
             'name' => 'o:allowed_item_sets',
             'allow_empty' => true,
         ]);
@@ -396,6 +392,8 @@ class RoleEditForm extends Form
                 ],
             ],
         ]);
+
+        $this->allow_empty[]['options'] = 'o:allowed_resource_template';
 
         $optionsFieldset->add([
             'name' => 'o:allowed_item_sets',
