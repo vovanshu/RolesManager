@@ -55,6 +55,7 @@ return [
             Controller\Admin\RoleController::class => Service\Controller\Admin\RoleControllerFactory::class,
             Controller\Admin\SettingsController::class => Service\Controller\Admin\SettingsControllerFactory::class,
             Controller\Admin\ImportController::class => Service\Controller\Admin\ImportControllerFactory::class,
+            'Omeka\Controller\Admin\Index' => Service\Controller\Admin\IndexControllerFactory::class,
         ],
     ],
     'form_elements' => [

@@ -57,6 +57,7 @@ echo $this->pageTitle($translate('Admin dashboard'));
         <?php $this->trigger('view.manage_resources.after'); ?>
     </div>
 
+<?php if(!empty($sites)): ?>
     <div id="manage-sites" class="panel">
         <h2><?php echo $translate('Sites'); ?></h2>
         <?php $this->trigger('view.manage_sites.before'); ?>
@@ -88,5 +89,6 @@ echo $this->pageTitle($translate('Admin dashboard'));
         <?php endif; ?>
     <?php $this->trigger('view.manage_sites.after'); ?>
     </div>
+<?php endif; ?>
 <?php $this->trigger('view.browse.after'); ?>
 </div>

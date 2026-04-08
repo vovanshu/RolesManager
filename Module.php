@@ -130,6 +130,13 @@ class Module extends AbstractModule
             -1000
         );
 
+        // $sharedEventManager->attach(
+        //     '*',
+        //     'api.search.query.finalize',
+        //     [$this, 'filterSearchQueryFinalize'],
+        //     -1000
+        // );
+
         $sharedEventManager->attach(
             '*',
             'view.advanced_search',
@@ -249,6 +256,47 @@ class Module extends AbstractModule
         );
 
     }
+    public function filterSearchQueryFinalize(Event $event)
+    {
+
+        $target = $event->getTarget();
+        $ResourceName = $target->getResourceName();
+
+        $entityAlias = 'omeka_root';
+        $controller = False;
+        $ADMIN = False;
+        $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
+        if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
+            $controller = $routeMatch->getParam('__CONTROLLER__');
+            $ADMIN = $routeMatch->getParam('__ADMIN__');
+        }
+        $args = $event->getParam('request')->getContent();
+
+        $entityAlias = 'omeka_root';
+
+        // echo $ResourceName;
+        if($ADMIN){
+
+            if($ResourceName == 'sites'){
+                if(!empty($allowed = $this->getCurrentRoleOps('o:allowed_item_sites'))){
+                    $qb = $event->getParam('queryBuilder');
+                    // $qb->expr()->orX(
+                        // $qb->expr()->in($entityAlias . '.id', $allowed)
+                    // );
+                    // $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
+
+                    // print_r(get_class_methods($qb->getQuery()));
+                // print_r(get_class_methods($qb->getQuery()->getParameters()));
+                // print_r(get_class_methods($qb->getQuery()->getParameters()->toArray()[0]));
+                // print_r(array_keys($qb->getQuery()->getParameters()->getValues()));
+                echo $qb->getQuery()->getSQL();
+
+                }
+            }
+
+        }
+
+    }
 
     public function filterSearchQuery(Event $event)
     {
@@ -298,6 +346,23 @@ class Module extends AbstractModule
                     if($ResourceName == 'items' || $ResourceName == 'media'){
                         $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurentUserID()));
                     }
+                }
+            }
+
+            if($ResourceName == 'sites'){
+                if(!empty($allowed = $this->getCurrentRoleOps('o:allowed_item_sites'))){
+                    $qb = $event->getParam('queryBuilder');
+            //         // $qb->expr()->orX(
+            //             // $qb->expr()->in($entityAlias . '.id', $allowed)
+            //         // );
+                    $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
+
+            //         // print_r(get_class_methods($qb->getQuery()));
+            //     // print_r(get_class_methods($qb->getQuery()->getParameters()));
+            //     // print_r(get_class_methods($qb->getQuery()->getParameters()->toArray()[0]));
+            //     // print_r(array_keys($qb->getQuery()->getParameters()->getValues()));
+            //     // echo $qb->getQuery()->getSQL();
+
                 }
             }
 

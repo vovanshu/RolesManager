@@ -40,7 +40,6 @@ class RoleModForm extends Form
                     'label' => 'Role', // @translate
                     'info' => 'Select role for modification his options and permissions.', // @translate
                     'value_options' => $this->getNativeRolesForMod(),
-                    'empty_option' => '',
                 ],
             ]);
         $this->add([

@@ -56,7 +56,6 @@ class RoleAddForm extends Form
                 'options' => [
                     'label' => 'Parent Role', // @translate
                     'info' => 'Select Parent Role for create associated permissions and copy options.', // @translate
-                    'empty_option' => '',
                     'name_as_value' => true,
                     'RoleCurrentUser' => $this->getRoleCurrentUser(),
                 ],
@@ -75,7 +74,6 @@ class RoleAddForm extends Form
                 'options' => [
                     'label' => 'Role as Template', // @translate
                     'info' => 'Select this if you want new role copy permissions.', // @translate
-                    'empty_option' => '',
                     'name_as_value' => true,
                     'RoleCurrentUser' => $this->getRoleCurrentUser(),
                 ],

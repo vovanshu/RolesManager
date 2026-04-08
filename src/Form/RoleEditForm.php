@@ -6,14 +6,10 @@ use Laminas\Form\Element;
 use Laminas\Form\Form;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\EventManager\Event;
-// use Omeka\Api\Manager as ApiManager;
 use Omeka\Permissions\Acl;
 use Omeka\Form\Element\ItemSetSelect;
 use Omeka\Form\Element\ResourceSelect;
 use Omeka\Form\Element\SiteSelect;
-// use Omeka\Settings;
-// use Interop\Container\ContainerInterface;
-// use Generic\AbstractModule;
 use RolesManager\Form\Element\ParentRoleSelect;
 use RolesManager\Common;
 
@@ -198,11 +194,13 @@ class RoleEditForm extends Form
         
         if(!empty($this->options['parent'])){
             $imitation_fields = $this->getRoleOps($this->options['parent'], 'o:imitation_fields');
-            foreach($imitation_fields as $key_field){
-                // $value_field = $this->getRoleOps($this->options['parent'], $key_field);
-                $optionsFieldset->get($key_field)->setAttribute('disabled', 'disabled');
-                $this->allow_empty[]['options'] = $key_field;
-                // echo $key_field.' => '.$value_field.'<br>';
+            if(!empty($imitation_fields)){
+                foreach($imitation_fields as $key_field){
+                    // $value_field = $this->getRoleOps($this->options['parent'], $key_field);
+                    $optionsFieldset->get($key_field)->setAttribute('disabled', 'disabled');
+                    $this->allow_empty[]['options'] = $key_field;
+                    // echo $key_field.' => '.$value_field.'<br>';
+                }
             }
         }
 
@@ -221,19 +219,6 @@ class RoleEditForm extends Form
                 'allow_empty' => true,
             ]);
         }
-
-        $inputFilter->get('options')->add([
-            'name' => 'o:allowed_item_sets',
-            'allow_empty' => true,
-        ]);
-        $inputFilter->get('options')->add([
-            'name' => 'o:allowed_item_sites',
-            'allow_empty' => true,
-        ]);
-        $inputFilter->get('options')->add([
-            'name' => 'o:list_media_types',
-            'allow_empty' => true,
-        ]);
 
         if(!empty($this->allow_empty)){
             foreach($this->allow_empty as $allowed_empty){
@@ -407,10 +392,11 @@ class RoleEditForm extends Form
             'options' => [
                 'element_group' => 'options',
                 'label' => 'Allowed item sets for items', // @translate
-                'empty_option' => '',
                 'query' => ['is_open' => true],
             ],
         ]);
+
+        $this->allow_empty[]['options'] = 'o:allowed_item_sets';
 
         $optionsFieldset->add([
             'name' => 'o:allowed_item_sites',
@@ -424,9 +410,10 @@ class RoleEditForm extends Form
             'options' => [
                 'element_group' => 'options',
                 'label' => 'Allowed sites for items', // @translate
-                'empty_option' => '',
             ],
         ]);
+
+        $this->allow_empty[]['options'] = 'o:allowed_item_sites';
 
         $optionsFieldset->add([
             'name' => 'o:hide_apikey',
@@ -468,7 +455,6 @@ class RoleEditForm extends Form
             'options' => [
                 'element_group' => 'advancedsearch',
                 'label' => 'List partials Advanced Search', // @translate
-                'empty_option' => '', // @translate
                 'value_options' => $this->partials_AdvancedSearch,
                 'info' => ''
             ],
@@ -678,11 +664,12 @@ class RoleEditForm extends Form
             'options' => [
                 'element_group' => 'media',
                 'label' => 'List media types', // @translate
-                'empty_option' => '', // @translate
                 'value_options' => $this->getListMediaTypes(),
                 'info' => ''
             ],
         ]);
+
+        $this->allow_empty[]['options'] = 'o:list_media_types';
 
         $optionsFieldset->add([
             'name' => 'o:list_disallowed_media_types',
