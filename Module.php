@@ -301,40 +301,38 @@ class Module extends AbstractModule
     public function filterSearchQuery(Event $event)
     {
 
-
         $target = $event->getTarget();
         $ResourceName = $target->getResourceName();
-
-        $entityAlias = 'omeka_root';
         $controller = False;
         $ADMIN = False;
         $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
         if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
             $controller = $routeMatch->getParam('__CONTROLLER__');
             $ADMIN = $routeMatch->getParam('__ADMIN__');
+            $action = $routeMatch->getParam('action');
         }
         $args = $event->getParam('request')->getContent();
 
-        $entityAlias = 'omeka_root';
-
-        // echo $ResourceName;
         if($ADMIN){
 
             if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
-
-                // print_r($args);
                 $viewall = False;
                 if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets') || $this->getSets('show_owned') == 'true'){
-                    
-                    if(isset($args['__original_query']) && (isset($args['__original_query']['owner_id']) || isset($args['__original_query']['all_item_set']))){
+                    if(isset($args['property']) || isset($args['filter'])){
+                        $viewall = True;
+                    }elseif(isset($args['__original_query']['owner_id']) || isset($args['__original_query']['all_item_set'])){
                         $viewall = True;
                     }elseif(isset($args['owner_id']) || isset($args['all_item_set'])){
                         $viewall = True;
+                    }elseif($action == 'search'){
+                        $viewall = True;
                     }
+                    // print_r($args);
                 }
 
                 if(!$viewall){
                     $qb = $event->getParam('queryBuilder');
+                    $entityAlias = $qb->getRootAlias();
                 // $ignored = ['sort_by_default', 'sort_order_default', 'sort_by', 'sort_order', 'page'];   
                 // if(!isset($params['owner_id']) && (array_keys($params) == $ignored) && !empty($this->getCurentUserID())){
                     if($ResourceName == 'item_sets'){
@@ -352,25 +350,16 @@ class Module extends AbstractModule
             if($ResourceName == 'sites'){
                 if(!empty($allowed = $this->getCurrentRoleOps('o:allowed_item_sites'))){
                     $qb = $event->getParam('queryBuilder');
-            //         // $qb->expr()->orX(
-            //             // $qb->expr()->in($entityAlias . '.id', $allowed)
-            //         // );
+                    $entityAlias = $qb->getRootAlias();
                     $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
-
-            //         // print_r(get_class_methods($qb->getQuery()));
-            //     // print_r(get_class_methods($qb->getQuery()->getParameters()));
-            //     // print_r(get_class_methods($qb->getQuery()->getParameters()->toArray()[0]));
-            //     // print_r(array_keys($qb->getQuery()->getParameters()->getValues()));
-            //     // echo $qb->getQuery()->getSQL();
-
                 }
             }
-
         }
 
         if($ResourceName == 'properties'){
             $qb = $event->getParam('queryBuilder');
             if(!empty($ops = $this->getCurrentRoleOps('no-display-values'))){
+                $entityAlias = $qb->getRootAlias();
                 $vocabularyIds = [];
                 $subQuery = "SELECT id FROM property WHERE";
                 foreach($ops as $kp => $prop){

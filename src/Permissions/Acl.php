@@ -85,27 +85,42 @@ class Acl extends \Omeka\Permissions\Acl
                 foreach($cv as $resource => $rv){
                     if($this->resourceExists($resource)){
                         foreach($rv as $label => $privileges){
-                            foreach($privileges as $privilege){
-                                if(is_array($privilege)){
-                                    $assertion = $this->getAssertionObject(current($privilege));                              
-                                    $privilege = key($privilege);
-                                }else{
-                                    $assertion = Null;
+                            if(!empty($privileges) && is_array($privileges)){
+                                foreach($privileges as $privilege){
+                                    if(is_array($privilege)){
+                                        $assertion = $this->getAssertionObject(current($privilege));                              
+                                        $privilege = key($privilege);
+                                    }else{
+                                        $assertion = Null;
+                                    }
+                                    if($allow && !empty($allow[$class]) && in_array($label, $allow[$class]) && $assertion !== False){
+                                        $this->allow(
+                                            $current,
+                                            $resource,
+                                            $privilege,
+                                            $assertion
+                                        );
+                                    }
+                                    if($deny && !empty($deny[$class]) && in_array($label, $deny[$class]) && $assertion !== False){
+                                        $this->deny(
+                                            $current,
+                                            $resource,
+                                            $privilege,
+                                            $assertion
+                                        );
+                                    }
                                 }
-                                if($allow && !empty($allow[$class]) && in_array($label, $allow[$class]) && $assertion !== False){
+                            }else{
+                                if($allow && !empty($allow[$class]) && in_array($label, $allow[$class])){
                                     $this->allow(
                                         $current,
-                                        $resource,
-                                        $privilege,
-                                        $assertion
+                                        $resource
                                     );
                                 }
-                                if($deny && !empty($deny[$class]) && in_array($label, $deny[$class]) && $assertion !== False){
+                                if($deny && !empty($deny[$class]) && in_array($label, $deny[$class])){
                                     $this->deny(
                                         $current,
-                                        $resource,
-                                        $privilege,
-                                        $assertion
+                                        $resource
                                     );
                                 }
                             }
