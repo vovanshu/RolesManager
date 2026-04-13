@@ -1,18 +1,9 @@
 <?php
-$common = $this->ItemsReviewCommon();
-
 $defaultSiteId = $this->setting('default_site');
 
 $translate = $this->plugin('translate');
 $title = $this->setting('installation_title', 'Omeka S');
 echo $this->pageTitle($translate('Admin dashboard'));
-
-// if($common->roleIsContributor() && isset($myItemCount)){
-//     $itemCount = $myItemCount.'\\'.$itemCount;
-//     if($allowedItemSetsCount !== $itemSetCount){
-//         $itemSetCount = $allowedItemSetsCount.'\\'.$itemSetCount;
-//     }
-// }
 ?>
 
 <div id="dashboard">
