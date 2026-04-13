@@ -1,20 +1,13 @@
 <?php
 namespace RolesManager\Permissions;
 
-// use Omeka\Api\ResourceInterface;
-// use Laminas\Authentication\AuthenticationServiceInterface;
-// use Laminas\Permissions\Acl\Acl as ZendAcl;
 use Laminas\EventManager\Event;
-// use Laminas\Permissions\Acl\Assertion\AssertionAggregate;
-// use Omeka\Permissions\Assertion\OwnsEntityAssertion;
-// use Omeka\Permissions\Assertion\HasSitePermissionAssertion;
-// use RolesManager\Entity\Roles;
-use RolesManager\Common;
+use RolesManager\General;
 
 class Acl extends \Omeka\Permissions\Acl
 {
 
-    use Common;
+    use General;
 
     protected $listRoles;
 
@@ -45,7 +38,6 @@ class Acl extends \Omeka\Permissions\Acl
     /**
      * Registration custom ACL roles.
      *
-     * @param Acl $acl
      */
     public function registrationRoles()
     {

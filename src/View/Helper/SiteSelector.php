@@ -10,15 +10,15 @@ class SiteSelector extends AbstractHelper
     {
 
         $view = $this->getView();
-        $common = $view->RolesManagerCommon();
+        $RolesManager = $view->RolesManager();
 
         $query['sort_by'] = 'title';
-        if(!empty($ops = $common->getCurrentRoleOps('o:allowed_item_sites'))){
+        if(!empty($ops = $RolesManager->getCurrentRoleOps('o:allowed_item_sites'))){
             $query['id'] = $ops;
         }
 
         $sites = $view->api()->search('sites', $query)->getContent();
-        if($common->getCurrentRoleOps('o:withoutowner_site_selector') == 'true' || $common->getSets('withoutowner_site_selector') == 'true'){
+        if($RolesManager->getCurrentRoleOps('o:withoutowner_site_selector') == 'true' || $RolesManager->getSets('withoutowner_site_selector') == 'true'){
             $allowedSites = [];
             foreach ($sites as $site) {
                 if ($site->userIsAllowed('can-assign-items')) {
@@ -30,7 +30,7 @@ class SiteSelector extends AbstractHelper
                 [
                     'sites' => $allowedSites,
                     'totalCount' => count($allowedSites),
-                    'owner' => $common->getSets('installation_title')
+                    'owner' => $RolesManager->getSets('installation_title')
                 ]
             );
         }else{

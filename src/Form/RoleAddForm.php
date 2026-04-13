@@ -11,12 +11,12 @@ use Generic\AbstractModule;
 use Interop\Container\ContainerInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\EventManager\Event;
-use RolesManager\Common;
+use RolesManager\General;
 
 class RoleAddForm extends Form
 {
     use EventManagerAwareTrait;
-    use Common;
+    use General;
 
     public function __construct($serviceLocator, $requestedName, $options)
     {

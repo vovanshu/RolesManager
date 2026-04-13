@@ -34,7 +34,7 @@ class RoleReference extends ResourceReference
             'o:created' => $this->created(),
             'o:parent' => $this->parent(),
             'o:options' => $this->options(),
-            'countUser' = > $this->countUser()
+            'countUser' => $this->countUser()
         ];
     }
 }

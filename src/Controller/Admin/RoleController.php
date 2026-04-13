@@ -10,12 +10,12 @@ use Omeka\Mvc\Exception;
 use RolesManager\Form\RoleAddForm;
 use RolesManager\Form\RoleModForm;
 use RolesManager\Form\RoleEditForm;
-use RolesManager\Common;
+use RolesManager\General;
 
 class RoleController extends AbstractActionController
 {
 
-    use Common;
+    use General;
 
     public function browseAction()
     {

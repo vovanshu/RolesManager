@@ -11,12 +11,12 @@ use Omeka\Form\Element\ItemSetSelect;
 use Omeka\Form\Element\ResourceSelect;
 use Omeka\Form\Element\SiteSelect;
 use RolesManager\Form\Element\ParentRoleSelect;
-use RolesManager\Common;
+use RolesManager\General;
 
 class RoleEditForm extends Form
 {
     use EventManagerAwareTrait;
-    use Common;
+    use General;
 
     protected $allow_empty;
 
@@ -48,23 +48,6 @@ class RoleEditForm extends Form
         'o:remove_browse_defaults_admin_media' => 'Remove Media browse defaults', // @translate
         'o:list_media_types' => 'List media types', // @translate
         'o:list_disallowed_media_types' => 'List disallowed media types', // @translate
-    ];
-
-    protected $partials_AdvancedSearch = [
-        'common/advanced-search/sort' => 'Sort', // @translate
-        'common/advanced-search/fulltext' => 'Fulltext', // @translate
-        'common/advanced-search/properties' => 'Properties', // @translate
-        'common/advanced-search/resource-class' => 'Resource class', // @translate
-        'common/advanced-search/resource-template' => 'Resource template', // @translate
-        'common/advanced-search/item-sets' => 'Item sets', // @translate
-        'common/advanced-search/site' => 'Site', // @translate
-        'common/advanced-search/has-media' => 'Has media', // @translate
-        'common/advanced-search/owner' => 'Owner', // @translate
-        'common/advanced-search/visibility' => 'Visibility', // @translate
-        'common/advanced-search/ids' => 'Ids', // @translate
-        'common/advanced-search/media_ingester' => 'Media ingester', // @translate
-        'common/advanced-search/data-type-geography' => 'data-type-geography', // @translate
-        'common/numeric-data-types-advanced-search' => 'numeric-data-types-advanced-search', // @translate
     ];
 
     public function __construct($serviceLocator, $requestedName, $options)
@@ -231,24 +214,6 @@ class RoleEditForm extends Form
             }
         }
 
-        // if(!empty($permission_element_groups)){
-        //     foreach($permission_element_groups as $pegk => $pegn){
-        //         $inputFilter->get('permissions')->add([
-        //             'name' => $pegk.'-all',
-        //             'allow_empty' => true,
-        //         ]);
-        //     }
-        // }
-
-        // if(!empty($permission_element)){
-        //     foreach($permission_element as $element => $value){
-        //         $inputFilter->get('permissions')->add([
-        //             'name' => $element.'-state',
-        //             'allow_empty' => true,
-        //         ]);
-        //     }
-        // }
-
         $filterEvent = new Event('form.add_input_filters', $this, ['inputFilter' => $inputFilter]);
         $this->getEventManager()->triggerEvent($filterEvent);
 
@@ -280,7 +245,6 @@ class RoleEditForm extends Form
 
     private function getFormOptions()
     {
-
 
         $optionsFieldset = $this->get('options');
         $optionsFieldset->setOption('element_groups', [
@@ -455,7 +419,7 @@ class RoleEditForm extends Form
             'options' => [
                 'element_group' => 'advancedsearch',
                 'label' => 'List partials Advanced Search', // @translate
-                'value_options' => $this->partials_AdvancedSearch,
+                'value_options' => $this->getConf('partials_AdvancedSearch'),
                 'info' => ''
             ],
         ]);
@@ -762,17 +726,6 @@ class RoleEditForm extends Form
                 }
 
                 foreach($permission_element as $element => $value){
-
-                    // $permissionsFieldset->add([
-                    //     'name' => $element.'-pid',
-                    //     'type' => 'hidden',
-                    //     'options' => [
-                    //         'label' => $element.'-pid',
-                    //     ],
-                    //     'attributes' => [
-                    //         'value' => join(',', $value['pid']),
-                    //     ],
-                    // ]);
 
                     $permissionsFieldset ->add([
                         'name' => $element,

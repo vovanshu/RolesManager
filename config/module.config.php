@@ -5,7 +5,87 @@
 namespace RolesManager;
 
 return [
-    'permissions' => $permissions,
+    'permissions' => [
+        'classes' => [
+            'roles' => 'Roles', // @translate
+        ],
+        'labels' => [
+            'change_native' => 'Change native',  // @translate
+            'update_doctrine' => 'Update Doctrine',  // @translate
+            'backups' => 'Backups',  // @translate
+        ],
+        'rules' => [
+            'roles' => [
+                'RolesManager\Controller\Admin\settingsController' => [
+                    'settings' => [
+                        'edit',
+                    ],
+                    'update_doctrine' => [
+                        'updoctrine',
+                    ],
+                    'backups' => [
+                        'backups', 'backuping', 'details', 'delete', 'delete-confirm', 'restore', 'restore-confirm',
+                    ],
+                ],
+                'RolesManager\Api\Adapter\RoleAdapter' => [
+                    'add' => [
+                        'create',
+                    ],
+                    'delete' => [
+                        'delete',
+                    ],
+                    'edit' => [
+                        'update',
+                    ],
+                    'browse' => [
+                        'read', 'search',
+                    ],
+                ],
+                'RolesManager\Controller\Admin\RoleController' => [
+                    'browse' => [
+                        'browse', 'search', 'show', 'show-details',
+                    ],
+                    'add' => [
+                        'add',
+                    ],
+                    'change_native' => [
+                        'mod',
+                    ],
+                    'edit' => [
+                        'edit',
+                    ],
+                    'delete' => [
+                        'delete', 'delete-confirm',
+                    ],
+                ],
+                'RolesManager\Controller\Admin\ImportController' => [
+                    'import' => [
+                        'browse', 'search', 'show', 'upload', 'delete', 'delete-confirm', 'import'
+                    ],
+                ],
+                'RolesManager\Entity\Roles' => [
+                    'browse' => [
+                        'read',
+                    ],
+                    'add' => [
+                        'create',
+                    ],
+                    'edit' => [
+                        'update',
+                        [
+                            'update' => 'RolesManager\Permissions\Assertion\IsNoYourRoleAssertion',
+                        ],
+                    ],
+                    'delete' => [
+                        'delete',
+                        [
+                            'delete' => 'RolesManager\Permissions\Assertion\IsNoYourRoleAssertion',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     'api_adapters' => [
         'invokables' => [
             'roles' => Api\Adapter\RoleAdapter::class,
@@ -17,9 +97,6 @@ return [
         ],
         'proxy_paths' => [
             dirname(__DIR__) . '/data/doctrine-proxies',
-        ],
-        'filters' => [
-            // 'resource_visibility' => Db\Filter\ResourceVisibilityFilter::class,
         ],
     ],
     'view_manager' => [
@@ -36,19 +113,14 @@ return [
             'siteSelector' => View\Helper\SiteSelector::class,
         ],
         'factories' => [
-            'RolesManagerCommon' => Service\ControllerPlugin\CommonPluginFactory::class,
+            'RolesManager' => Service\ControllerPlugin\GeneralPluginFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
             'Omeka\Acl' => Service\AclFactory::class,
-            'RolesManager\Common' => Service\ControllerPlugin\CommonPluginFactory::class,
+            'RolesManager' => Service\ControllerPlugin\GeneralPluginFactory::class,
         ],
-        // 'delegators' => [
-        //     'Omeka\Acl' => [
-        //         Service\AclFactory::class
-        //     ],
-        // ]
     ],
     'controllers' => [
         'factories' => [
@@ -73,10 +145,6 @@ return [
         'invokables' => [
             'owner' => ColumnType\Owner::class,
         ],
-        // 'factories' => [
-            // 'theme' => Service\ColumnType\ThemeFactory::class,
-            // 'value' => Service\ColumnType\ValueFactory::class,
-        // ],
     ],
     'navigation' => [
         'AdminGlobal' => [
@@ -167,7 +235,7 @@ return [
     ],
     // Don't edit these options here: copy this key in your own omeka config/local.config.php
     // and modify options as you want.
-    'rolesmanager' => [
+    'RolesManager' => [
         'developing' => False,
         'debug' => False,
         'backups' => OMEKA_PATH.'/files/backup/RolesManager/',
@@ -180,9 +248,6 @@ return [
             'roles_manager_withoutowner_item_set_selector' => 'false',
             'roles_manager_addition_role_information' => '',
             'roles_manager_addition_user_information' => '',
-            // 'recaptcha_enable_on_login' => 'false',
-            // 'recaptcha_enable_on_forgot_password' => 'false',
-            // 'recaptcha_ip_white_list' => '',
         ],
         'options' => [
             'backup_users' => 'roles_manager_backup_users',
@@ -192,21 +257,32 @@ return [
             'withoutowner_item_set_selector' => 'roles_manager_withoutowner_item_set_selector',
             'addition_role_information' => 'roles_manager_addition_role_information',
             'addition_user_information' => 'roles_manager_addition_user_information',
-            // 'recaptcha_enable_on_login' => 'recaptcha_enable_on_login',
-            // 'recaptcha_enable_on_forgot_password' => 'recaptcha_enable_on_forgot_password',
-            // 'recaptcha_ip_white_list' => 'recaptcha_ip_white_list',
         ],
-        // 'labels' => [
-        //     'registred_classes' => 'Registred Resource Classes', // @translate
-        //     'registred_permissions' => 'Registred Permissions', // @translate
-        //     'found_classes' => 'Found Resource Classes', // @translate
-        //     'found_permissions' => 'Found Permissions', // @translate
-        // ],
-        // Apply the groups of item sets to items and medias.
-        // 'roles_recursive_item_sets' => true,
-        // Apply the item groups to medias. Implied and not taken in account
-        // when `group_recursive_item_sets` is true.
-        // 'roles_recursive_items' => true,
+        'partials_AdvancedSearch' => [
+            'common/advanced-search/sort' => 'Sort', // @translate
+            'common/advanced-search/fulltext' => 'Fulltext', // @translate
+            'common/advanced-search/properties' => 'Properties', // @translate       
+            'common/advanced-search/properties-improved' => 'Properties improved', // @translate
+            'common/advanced-search/filters' => 'Filters', // @translate
+            'common/advanced-search/resource-class' => 'Resource class', // @translate
+            'common/advanced-search/resource-template' => 'Resource template', // @translate
+            'common/advanced-search/item-sets' => 'Item sets', // @translate
+            'common/advanced-search/site' => 'Site', // @translate
+            'common/advanced-search/site-improved' => 'Site improved', // @translate
+            'common/advanced-search/has-media' => 'Has media', // @translate
+            'common/advanced-search/has-original' => 'Has original', // @translate
+            'common/advanced-search/has-thumbnails' => 'Has thumbnails', // @translate
+            'common/advanced-search/owner' => 'Owner', // @translate
+            'common/advanced-search/owner-improved' => 'Owner improved', // @translate
+            'common/advanced-search/visibility' => 'Visibility', // @translate
+            'common/advanced-search/visibility-radio' => 'Visibility radio', // @translate
+            'common/advanced-search/ids' => 'Ids', // @translate
+            'common/advanced-search/media-ingester' => 'Media ingester', // @translate
+            'common/advanced-search/media-types' => 'Media types', // @translate
+            'common/advanced-search/media-types-improved' => 'Media types improved', // @translate
+            'common/advanced-search/data-type-geography' => 'data-type-geography', // @translate
+            'common/numeric-data-types-advanced-search' => 'numeric-data-types-advanced-search', // @translate
+        ],
         'imitation_fields' => ['no-display-values', 'hidden-properties-in-item-form'],
         'AllowSetRulesOnlyGlobalAdmin' => ['roles'],
     ],

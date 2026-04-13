@@ -19,13 +19,15 @@ use Omeka\Entity\Resource;
 use Omeka\Entity\User;
 use Omeka\Stdlib\ErrorStore;
 use Omeka\Stdlib\Message;
-use Omeka\Api\Representation\AbstractEntityRepresentation;
+// use Omeka\Api\Representation\AbstractEntityRepresentation;
 use RolesManager\Common;
+use RolesManager\General;
 
 class RoleAdapter extends AbstractEntityAdapter
 {
-    use QueryBuilderTrait;
+    // use QueryBuilderTrait;
     use Common;
+    use General;
 
     protected $sortFields = [
         'id' => 'id',

@@ -2,19 +2,16 @@
 
 namespace RolesManager;
 
-use RolesManager\Entity\Roles;
-use RolesManager\Entity\Permissions;
-use RolesManager\Entity\RolesPermissions;
-use Omeka\Permissions\Acl;
-
 trait Common
 {
 
-    protected $configName = 'rolesmanager';
+    protected $configName = __NAMESPACE__;
 
     protected $mvcEvent;
 
     protected $serviceLocator;
+
+    protected $applicationRouteMatch;
 
     protected $acl;
 
@@ -28,15 +25,13 @@ trait Common
 
     protected $apiManager;
 
-    protected $ApiAdapterManager;
+    // protected $ApiAdapterManager;
 
     protected $ApiAdapter = [];
 
     protected $entityManager;
 
     protected $logger;
-
-    protected $listRoles;
 
     public function setMvcEvent($mvcEvent)
     {
@@ -85,6 +80,19 @@ trait Common
     //     return;
 
     // }
+
+    public function getApplicationRouteMatch()
+    {
+
+        if($this->applicationRouteMatch){
+            if(!$this->applicationRouteMatch){
+                $this->applicationRouteMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
+            }
+            return $this->applicationRouteMatch;
+        }
+        return;
+
+    }
 
     public function getConnection()
     {
@@ -254,83 +262,6 @@ trait Common
         
     }
 
-
-    public function getPermissionsRules()
-    {
-
-        $permissions = $this->getConfigs()['permissions'];
-        if(!empty($permissions)){
-            if(!empty($permissions['rules'])){
-                return $permissions['rules'];
-            }
-        }
-        return Null;
-
-    }
-
-    public function getPermissionsClasses()
-    {
-
-        $permissions = $this->getConfigs()['permissions'];
-        if(!empty($permissions) && !empty($permissions['classes'])){
-            return $permissions['classes'];
-        }
-        return Null;
-
-    }
-
-    public function getPermissionLabel($name)
-    {
-
-        $permissions = $this->getConfigs()['permissions'];
-        if(!empty($permissions) && !empty($permissions['labels'])){
-            if(!empty($permissions['labels'][$name])){
-                if(is_array($permissions['labels'][$name])){
-                    return current($permissions['labels'][$name]);
-                }elseif(is_string($permissions['labels'][$name])){
-                    return $permissions['labels'][$name];
-                }
-                
-            }else{
-                return $name.' - Label no found!';
-            }
-        }
-        return 'Labels no found!';
-
-    }
-
-    public function getCurrentRoleOps($name)
-    {
-
-        return $this->getRoleOps($this->getRoleCurrentUser(), $name);
-
-    }
-
-    public function getRoleOps($role, $name)
-    {
-
-        $imitation = $this->getConf('imitation_fields');
-        $listRoles = $this->getAcl()->listRoles();
-        if(!empty($listRoles[$role])){
-            if(!empty($listRoles[$role]['parent'])){
-                $parent = $listRoles[$role]['parent'];
-                if(!empty($listRoles[$parent]['options']['o:imitation_fields'])){
-                    foreach($listRoles[$parent]['options']['o:imitation_fields'] as $key_field){
-                        array_push($imitation, $key_field);
-                    }
-                }
-                if(!empty($listRoles[$parent]['options'][$name]) && in_array($name, $imitation)){
-                    return $listRoles[$parent]['options'][$name];
-                }
-            }
-            if(!empty($listRoles[$role]['options'][$name])){
-                return $listRoles[$role]['options'][$name];
-            }
-        }
-        return Null;
-
-    }
-
     public function getUserSets($name, $userId, $callback = [])
     {
         
@@ -351,69 +282,7 @@ trait Common
 
     }
 
-    public function getNativeRole()
-    {
-        return $this->getAcl()->getRoles();
-    }
-
-    private function getNativeRolesForMod()
-    {
-
-        $r = [];
-        $rs = $this->getApiManager()->search('roles', [])->getContent();
-        $explude[] = Acl::ROLE_GLOBAL_ADMIN;
-        // $explude[] = $acl::ROLE_SITE_ADMIN;
-        if(!empty($rs)){
-            foreach($rs as $role){
-                $explude[] = $role->name();
-            }
-        }
-        $rc = $this->getAcl()->getRoleLabels();
-        $rc['public'] = 'Public';
-        foreach($rc as $name => $label){
-            if(!in_array($name, $explude)){
-                $r[$name] = $label;
-            }
-        }
-        return $r;
-
-    }
-    
-    private function resourceExists($resource)
-    {
-
-        if(($pos = stripos($resource, '::class')) !== False){
-            $rc = substr($resource, 0, $pos);
-            if (class_exists($rc, True)) {
-                $class = $rc;
-            }
-        }else{
-            $class = $resource;
-        }
-        if(!empty($class) && $this->getAcl()->hasResource($class)){
-            return True;
-        }
-        return False;
-
-    }
-    
-    private function getAssertionObject($assertion)
-    {
-
-        if(!empty($assertion) && class_exists($assertion)){
-            try {
-                // return eval("$content");
-                return new $assertion();
-            } catch (\Throwable $e) {
-                $this->getLogger()->err((string) $e);
-                return False;
-            }
-        }
-        return Null;
-
-    }
-
-    private function getCurentUserID()
+    public function getCurrentUserID()
     {
 
         $user = $this->getAcl()->getAuthenticationService()->getIdentity();
@@ -424,7 +293,7 @@ trait Common
 
     }
 
-    private function getRoleCurrentUser()
+    public function getRoleCurrentUser()
     {
 
         $r = 'public';
@@ -436,7 +305,7 @@ trait Common
 
     }
 
-    private function getRoleUser($userID)
+    public function getRoleUser($userID)
     {
 
         $r = $this->getUser($userID);
@@ -447,17 +316,12 @@ trait Common
 
     }
 
-    private function getUser($userID)
+    public function getUser($userID)
     {
 
-        $user = $this->getApiManager()->read('users', $userID)->getContent();
-        if(!empty($user)){
-            $r['id'] = $user['o:id'];
-            $r['name'] = $user['o:name'];
-            $r['email'] = $user['o:email'];
-            $r['created'] = $user['o:created'];
-            $r['role'] = $user['o:role'];
-            return $r;
+        $rc = $this->getConnection()->executeQuery("SELECT id, name, email, role, created FROM `user` WHERE `id` = '{$userID}' LIMIT 1;");
+        if(!empty($rc)){
+            return $rc->fetchAssociative();
         }
         return False;
 
@@ -476,47 +340,6 @@ trait Common
             return $this->translate($rc);
         }
         return False;
-
-    }
-
-    private function isAllowedIngester($name)
-    {
-
-        if($this->getRoleCurrentUser() == Acl::ROLE_GLOBAL_ADMIN){
-            return True;
-        }elseif(!empty($ops = $this->getCurrentRoleOps('o:list_media_types'))){
-            if(!empty($this->getCurrentRoleOps('o:list_disallowed_media_types'))){
-                if(in_array($name, $ops)){
-                    return False;
-                }
-            }else{
-                if(!in_array($name, $ops)){
-                    return False;
-                }
-            }
-        }
-        return True;
-
-    }
-
-    private function setUserSettings($role, $settings)
-    {
-
-        $rc = $this->getConnection()->executeQuery("SELECT * FROM `user` WHERE `role` = '{$role}';");
-        if(!empty($rc)){
-            $r = $rc->fetchAll();
-            foreach($r as $user){
-                if(!empty($settings['o:allowed_resource_template']) && (count($settings['o:allowed_resource_template']) == 1 || !empty($settings['o:hide_default_resource_template']))){
-                    $this->getUserSettings()->set('default_resource_template', current($settings['o:allowed_resource_template']), $user['id']);
-                }
-                if(!empty($settings['o:allowed_item_sets']) && (count($settings['o:allowed_item_sets']) == 1 || !empty($settings['o:remove_browse_defaults_admin_item_sets']))){
-                    $this->getUserSettings()->set('default_item_sets', [current($settings['o:allowed_item_sets'])], $user['id']);
-                }
-                if(!empty($settings['o:allowed_item_sites']) && (count($settings['o:allowed_item_sites']) == 1 || !empty($settings['o:remove_browse_defaults_admin_sites']))){
-                    $this->getUserSettings()->set('default_item_sites', [current($settings['o:allowed_item_sites'])], $user['id']);
-                }
-            }
-        }
 
     }
 
@@ -591,36 +414,6 @@ trait Common
         return str_replace(["\r\n", "\n\r", "\r"], ["\n", "\n", "\n"], (string) $string);
     }
 
-    private function hadIPInWLrecaptcha()
-    {
-
-        if(!empty($value = $this->getSets('recaptcha_ip_white_list'))){
-            $list = explode("\r\n", $value);
-            if($_SERVER['REMOTE_ADDR'] !== $_SERVER['SERVER_ADDR']){
-                $curIP = ip2long($_SERVER['REMOTE_ADDR']);
-            }else{
-                $curIP = ip2long($_SERVER['HTTP_X_REAL_IP']);
-            }
-            // if(in_array($curIP, $list)){
-                // return True;
-            // }
-            foreach($list as $v){
-                if(stripos($v, '-') !== False){
-                    $va = explode('-', $v);
-                    if($curIP >= ip2long($va[0]) && $curIP <= ip2long($va[1])){
-                        return True;
-                    }
-                }else{
-                    if($curIP == ip2long($v)){
-                        return True;
-                    }
-                }
-            }
-        }
-        return False;
-
-    }
-
     public function findKeyInArray($rc, $need)
     {
 
@@ -665,15 +458,11 @@ trait Common
         return False;
 
     }
-    
-    public function isParentRole($role)
+
+    public function convert_size($size)
     {
-
-        if($this->getConnection()->executeQuery("SELECT * FROM `roles` WHERE `parent` = '$role';")->fetchOne()){
-            return True;
-        }
-        return False;
-
+        $unit=array('b','Kb','Mb','Gb','Tb','Pb');
+        return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }
-
+    
 }

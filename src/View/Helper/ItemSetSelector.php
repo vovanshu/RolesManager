@@ -22,11 +22,11 @@ class ItemSetSelector extends AbstractHelper
     {
 
         $view = $this->getView();
-        $common = $view->RolesManagerCommon();
+        $RolesManager = $view->RolesManager();
 
         $query['sort_by'] = 'owner_name';
 
-        if(!empty($ops = $common->getCurrentRoleOps('o:allowed_item_sets'))){
+        if(!empty($ops = $RolesManager->getCurrentRoleOps('o:allowed_item_sets'))){
             $query['id'] = $ops;
         }
 
@@ -36,7 +36,7 @@ class ItemSetSelector extends AbstractHelper
         $response = $view->api()->search('item_sets', $query);
 
         // if(!empty($common->getCurrentRoleOps('o:withoutowner_item_set_selector')) || !empty($common->getSets('withoutowner_item_set_selector'))){
-        if($common->getCurrentRoleOps('o:withoutowner_item_set_selector') == 'true' || $common->getSets('withoutowner_item_set_selector') == 'true'){
+        if($RolesManager->getCurrentRoleOps('o:withoutowner_item_set_selector') == 'true' || $RolesManager->getSets('withoutowner_item_set_selector') == 'true'){
             $query['sort_by'] = 'title';
             $itemSets = [];
             foreach ($response->getContent() as $itemSet) {
@@ -47,7 +47,7 @@ class ItemSetSelector extends AbstractHelper
                 [
                     'itemSets' => $itemSets,
                     'totalItemSetCount' => $response->getTotalResults(),
-                    'owner' => $common->getSets('installation_title')
+                    'owner' => $RolesManager->getSets('installation_title')
                 ]
             );
             // $installationTitle = $this->settings->get('installation_title', 'Omeka S');

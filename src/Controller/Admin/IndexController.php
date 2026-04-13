@@ -4,12 +4,12 @@ namespace RolesManager\Controller\Admin;
 use Omeka\Permissions\Acl;
 use Laminas\View\Model\ViewModel;
 use Laminas\Mvc\Controller\AbstractActionController;
-use RolesManager\Common;
+use RolesManager\General;
 
 class IndexController extends AbstractActionController
 {
 
-    use Common;
+    use General;
 
     public function browseAction()
     {

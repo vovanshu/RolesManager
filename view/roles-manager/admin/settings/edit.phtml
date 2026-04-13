@@ -1,7 +1,7 @@
 <?php
 
 $plugins = $this->getHelperPluginManager();
-$common = $this->RolesManagerCommon();
+$RolesManager = $this->RolesManager();
 $translate = $plugins->get('translate');
 $hyperlink = $plugins->get('hyperlink');
 
@@ -19,7 +19,7 @@ $form->prepare();
 <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'backups')): ?>
     <?= $hyperlink($translate('Backups'), $this->url('admin/roles-manager-settings', ['action' => 'backups'], true), ['class' => 'button']) ?>
 <?php endif; ?>
-<?php if ($common->getConf('developing') && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')): ?>
+<?php if ($RolesManager->getConf('developing') && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')): ?>
     <?= $hyperlink($translate('Update Doctrine'), $this->url('admin/roles-manager-settings', ['action' => 'updoctrine'], true), ['class' => 'button']) ?>
 <?php endif; ?>
 

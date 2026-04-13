@@ -8,12 +8,12 @@ use Laminas\Form\Form;
 // use RolesManager\Form\Element\RoleSelect;
 // use Generic\AbstractModule;
 // use Interop\Container\ContainerInterface;
-use RolesManager\Common;
+use RolesManager\General;
 
 class RoleModForm extends Form
 {
 
-    use Common;
+    use General;
 
     public function __construct($serviceLocator, $requestedName, $options)
     {

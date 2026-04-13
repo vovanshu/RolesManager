@@ -8,11 +8,12 @@ use Laminas\Form\Form;
 use Omeka\Form\ConfirmForm;
 use Omeka\Stdlib\Message;
 use RolesManager\Common;
+use RolesManager\General;
 
 class SettingsController extends AbstractActionController
 {
 
-    use Common;
+    use General;
 
     public function __construct($serviceLocator = Null, $requestedName = Null, $options = Null)
     {

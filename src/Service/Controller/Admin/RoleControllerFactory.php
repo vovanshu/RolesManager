@@ -6,7 +6,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class RoleControllerFactory implements FactoryInterface
 {
-    public function __invoke($serviceLocator, $requestedName, array $options = null)
+    public function __invoke($serviceLocator, $requestedName, ?array $options = null)
     {
         $class = new RoleController();
         $class->setServiceLocator($serviceLocator);

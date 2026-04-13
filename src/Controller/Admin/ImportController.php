@@ -7,15 +7,12 @@ use Laminas\View\Model\ViewModel;
 use Laminas\Form\Form;
 use Omeka\Form\ConfirmForm;
 use Omeka\Form\Element\PropertySelect;
-use Omeka\Stdlib\Message;
-use RolesManager\Form\RoleAddForm;
-// use RolesManager\Form\RoleEditForm;
-use RolesManager\Common;
+use RolesManager\General;
 
 class ImportController extends AbstractActionController
 {
 
-    use Common;
+    use General;
 
     public function __construct($serviceLocator = Null, $requestedName = Null, $options = Null)
     {

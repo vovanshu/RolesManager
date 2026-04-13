@@ -7,7 +7,7 @@ use RolesManager\Form\RoleAddForm;
 
 class RoleAddFormFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $serviceLocator, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $serviceLocator, $requestedName, ?array $options = null)
     {
         return new RoleAddForm( $serviceLocator, $requestedName, $options);
     }

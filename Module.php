@@ -5,7 +5,7 @@
  * Add roles to users and resources to manage the access rights and the
  * resource visibility in a more flexible way.
  *
- * @copyright Volodimir Shumeyko, 2024-2025
+ * @copyright Volodimir Shumeyko, 2024-2026
  * @license 
  *
  */
@@ -15,22 +15,19 @@ if (!class_exists(\Common\TraitModule::class)) {
     require_once dirname(__DIR__) . '/Common/TraitModule.php';
 }
 
-if (!class_exists(RolesManager\Common::class)) {
-    require_once __DIR__ . '/Common.php';
-}
+require_once __DIR__ . '/src/General.php';
 
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
+use Laminas\ModuleManager\ModuleEvent;
+use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\MvcEvent;
 use Laminas\View\Renderer\PhpRenderer;
-// use Laminas\Permissions\Acl\Assertion\AssertionAggregate;
 use Omeka\Module\AbstractModule;
 use Omeka\Permissions\Acl;
-// use Omeka\Permissions\Assertion\OwnsEntityAssertion;
-// use Omeka\Permissions\Assertion\HasSitePermissionAssertion;
 use Omeka\Api\Representation\UserRepresentation;
 use Common\TraitModule;
-use RolesManager\Common;
+use RolesManager\General;
 
 /**
  * RolesManager
@@ -41,23 +38,36 @@ class Module extends AbstractModule
 {
 
     use TraitModule;
-    use Common;
+    // use Common;
+    use General;
     
     const NAMESPACE = __NAMESPACE__;
 
-    public function getConfig()
+    public function init(ModuleManager $moduleManager): void
+    {
+        $moduleManager->getEventManager()->attach(ModuleEvent::EVENT_MERGE_CONFIG, [$this, 'onEventMergeConfig']);
+    }
+
+    public function onEventMergeConfig(ModuleEvent $event): void
     {
 
-        $permissions = [];
         if(file_exists($this->modulePath() . '/config/permissions.php')){
+            $permissions = [];
             $listperms = (include $this->modulePath() . '/config/permissions.php');
             foreach($listperms as $name => $dt){
                 if(file_exists($this->modulePath() . '/config/permissions/'.$name.'.php')){
                     $permissions = array_merge_recursive($permissions, (include $this->modulePath() . '/config/permissions/'.$name.'.php'));
                 }
             }
+            if(!empty($permissions)){
+                /** @var \Laminas\ModuleManager\Listener\ConfigListener $configListener */
+                $configListener = $event->getParam('configListener');
+                // At this point, the config is read only, so it is copied and replaced.
+                $config = $configListener->getMergedConfig(false);
+                $config = array_replace_recursive($config, ['permissions' => $permissions]);
+                $configListener->setMergedConfig($config);
+            }
         }
-        return include $this->modulePath().'/config/module.config.php';;
 
     }
 
@@ -67,7 +77,6 @@ class Module extends AbstractModule
         parent::onBootstrap($event);
         $this->setMvcEvent($event);
         $this->addDefAclRules();
-        // $this->getAcl()->registrationAclRules();
 
     }
 
@@ -79,11 +88,8 @@ class Module extends AbstractModule
 
         $resources = [
             Entity\Roles::class,
-            // Entity\Permissions::class,
             Api\Adapter\RoleAdapter::class,
-            // Api\Adapter\PermissionAdapter::class,
             Controller\Admin\RoleController::class,
-            // Controller\Admin\PermissionController::class,
             Controller\Admin\SettingsController::class,
             Controller\Admin\ImportController::class,
         ];
@@ -119,7 +125,6 @@ class Module extends AbstractModule
             'Laminas\Mvc\Application',
             'route',
             [$this->getAcl(), 'registrationAclRules'],
-            // [$this, 'registrationAclRules'],
             1000
         );
 
@@ -130,53 +135,61 @@ class Module extends AbstractModule
             -1000
         );
 
-        // $sharedEventManager->attach(
-        //     '*',
-        //     'api.search.query.finalize',
-        //     [$this, 'filterSearchQueryFinalize'],
-        //     -1000
-        // );
+        /// For dev only
+        $sharedEventManager->attach(
+            '*',
+            'api.search.query.finalize',
+            [$this, 'devSearchQueryFinalize'],
+            -1000
+        );
 
         $sharedEventManager->attach(
             '*',
             'view.advanced_search',
-            [$this, 'filterAdvancedSearch']
+            [$this, 'filterAdvancedSearch'],
+            -1000
         );
 
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\User',
             'view.add.section_nav',
-            [$this, 'filterViewSectionNav']
+            [$this, 'filterViewSectionNav'],
+            -1000
         );
 
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\User',
             'view.edit.section_nav',
-            [$this, 'filterViewSectionNav']
+            [$this, 'filterViewSectionNav'],
+            -1000
         );
        
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Item',
             'view.add.section_nav',
-            [$this, 'filterViewSectionNav']
+            [$this, 'filterViewSectionNav'],
+            -1000
         );
 
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Item',
             'view.edit.section_nav',
-            [$this, 'filterViewSectionNav']
+            [$this, 'filterViewSectionNav'],
+            -1000
         );
 
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Item',
             'view.add.after',
-            [$this, 'hidePropertiesInItemForm']
+            [$this, 'hidePropertiesInItemForm'],
+            -1000
         );
 
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Item',
             'view.edit.after',
-            [$this, 'hidePropertiesInItemForm']
+            [$this, 'hidePropertiesInItemForm'],
+            -1000
         );
  
         $sharedEventManager->attach(
@@ -184,6 +197,7 @@ class Module extends AbstractModule
             'api.create.post',
             [$this, 'apiCreateOrUpdatePostUser']
         );
+
         $sharedEventManager->attach(
             \Omeka\Api\Adapter\UserAdapter::class,
             'api.update.post',
@@ -201,6 +215,7 @@ class Module extends AbstractModule
             'view.details',
             [$this, 'viewUserDetails']
         );
+
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\User',
             'view.show.after',
@@ -216,13 +231,15 @@ class Module extends AbstractModule
         $sharedEventManager->attach(
             'Omeka\Form\ResourceForm',
             'form.add_elements',
-            [$this, 'filterResourceForm']
+            [$this, 'filterResourceForm'],
+            -1000
         );
 
         $sharedEventManager->attach(
             '*',
             'rep.resource.display_values',
-            [$this, 'filterDisplayValues']
+            [$this, 'filterDisplayValues'],
+            -1000
         );
 
         $sharedEventManager->attach(
@@ -256,44 +273,28 @@ class Module extends AbstractModule
         );
 
     }
-    public function filterSearchQueryFinalize(Event $event)
+    public function devSearchQueryFinalize(Event $event)
     {
 
-        $target = $event->getTarget();
-        $ResourceName = $target->getResourceName();
-
-        $entityAlias = 'omeka_root';
-        $controller = False;
-        $ADMIN = False;
-        $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
-        if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
-            $controller = $routeMatch->getParam('__CONTROLLER__');
-            $ADMIN = $routeMatch->getParam('__ADMIN__');
-        }
-        $args = $event->getParam('request')->getContent();
-
-        $entityAlias = 'omeka_root';
-
-        // echo $ResourceName;
-        if($ADMIN){
-
-            if($ResourceName == 'sites'){
-                if(!empty($allowed = $this->getCurrentRoleOps('o:allowed_item_sites'))){
-                    $qb = $event->getParam('queryBuilder');
-                    // $qb->expr()->orX(
-                        // $qb->expr()->in($entityAlias . '.id', $allowed)
-                    // );
-                    // $qb->andWhere($qb->expr()->in($entityAlias . '.id', $allowed));
-
-                    // print_r(get_class_methods($qb->getQuery()));
-                // print_r(get_class_methods($qb->getQuery()->getParameters()));
-                // print_r(get_class_methods($qb->getQuery()->getParameters()->toArray()[0]));
-                // print_r(array_keys($qb->getQuery()->getParameters()->getValues()));
-                echo $qb->getQuery()->getSQL();
-
-                }
+        if($this->getConf('developing')){
+            $target = $event->getTarget();
+            $ResourceName = $target->getResourceName();
+            $controller = False;
+            $ADMIN = False;
+            $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
+            if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
+                $controller = $routeMatch->getParam('__CONTROLLER__');
+                $ADMIN = $routeMatch->getParam('__ADMIN__');
             }
-
+            $args = $event->getParam('request')->getContent();
+            $qb = $event->getParam('queryBuilder');
+            ob_start();
+            if($ADMIN) echo "ADMIN\r\n";
+            echo $ResourceName."\r\n";
+            if($controller) echo $controller."\r\n";
+            print_r($args);
+            echo "\r\n".$qb->getQuery()->getSQL();
+            file_put_contents(OMEKA_PATH.'/logs/dev.query.finalize.log', ob_get_clean());
         }
 
     }
@@ -318,23 +319,17 @@ class Module extends AbstractModule
             if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
                 $viewall = False;
                 if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets') || $this->getSets('show_owned') == 'true'){
-                    if(isset($args['property']) || isset($args['filter'])){
-                        $viewall = True;
-                    }elseif(isset($args['__original_query']['owner_id']) || isset($args['__original_query']['all_item_set'])){
+                    if(isset($args['__original_query']['owner_id']) || isset($args['__original_query']['all_item_set'])){
                         $viewall = True;
                     }elseif(isset($args['owner_id']) || isset($args['all_item_set'])){
                         $viewall = True;
                     }elseif($action == 'search'){
                         $viewall = True;
                     }
-                    // print_r($args);
                 }
-
                 if(!$viewall){
                     $qb = $event->getParam('queryBuilder');
                     $entityAlias = $qb->getRootAlias();
-                // $ignored = ['sort_by_default', 'sort_order_default', 'sort_by', 'sort_order', 'page'];   
-                // if(!isset($params['owner_id']) && (array_keys($params) == $ignored) && !empty($this->getCurentUserID())){
                     if($ResourceName == 'item_sets'){
                         $allowed = $this->getCurrentRoleOps('o:allowed_item_sets');
                         if(!empty($allowed) && ($controller == 'item-set')){
@@ -342,7 +337,7 @@ class Module extends AbstractModule
                         }
                     }
                     if($ResourceName == 'items' || $ResourceName == 'media'){
-                        $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurentUserID()));
+                        $qb->andWhere($qb->expr()->eq($entityAlias . '.owner', $this->getCurrentUserID()));
                     }
                 }
             }
@@ -448,27 +443,9 @@ class Module extends AbstractModule
             $action = $params['action'];
         }
 
-        // echo "<!---\r\n";
-        // echo $controller."\r\n";
-        // echo $action."\r\n";
-        // echo "\r\n--->";
         if(!empty($params['__ADMIN__'])){
-            // if(in_array($controller, ['item']) && in_array($action, ['add', 'edit'])){
-                $plugins->get('headScript')->appendFile($assetUrl('js/admin-ui.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
-            // }
+            $plugins->get('headScript')->appendFile($assetUrl('js/admin-ui.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
         }
-
-        // $params = $view->params()->fromRoute();
-        // $args = $view->params()->fromQuery();
-        // if(!empty($params['__ADMIN__']) && !empty($params['__CONTROLLER__']) && !empty($params['action'])){
-            // $controller = $params['__CONTROLLER__'];
-        // }
-
-        // $plugins->get('headLink')->appendStylesheet($assetUrl('css/items-review.css', 'ItemsReview'));
-        // if (in_array($action, ['add', 'edit'])) {
-            // $plugins->get('headLink')->appendStylesheet($assetUrl('css/items-review-contract.css', 'ItemsReview'));
-            // $plugins->get('headScript')->appendFile($assetUrl('js/items-review.js', 'ItemsReview'), 'text/javascript', ['defer' => 'defer']);
-        // }
 
     }
 
@@ -609,7 +586,6 @@ class Module extends AbstractModule
     public function addActionsToMediaBrowse(Event $event): void
     {
 
-        // (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $controller == 'media') ||
         if(!empty($this->getCurrentRoleOps('o:allowviewallmedias')) || $this->getSets('show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
             $view = $event->getTarget();
             $params = $view->params()->fromRoute();
@@ -632,23 +608,29 @@ class Module extends AbstractModule
     public function filterAdvancedSearch(Event $event): void
     {
 
+        // $query = $event->getParam('query');
+        $resourceType = $event->getParam('resourceType');
+        $partials = $event->getParam('partials');        
         if(!empty($ops = $this->getCurrentRoleOps('o:list_partials_advancedsearch'))){
-            $partials = $event->getParam('partials');
             if($this->getCurrentRoleOps('o:list_disallowed_partials_advancedsearch')){
                 $partials = array_flip(array_diff_key(array_flip($partials), array_flip($ops)));
             }else{
-                $partials = $ops;
+                $partials = array_intersect_key($partials, $ops);
             }
-            $event->setParam('partials', $partials);
         }
-        
+        if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
+            if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $resourceType == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $resourceType == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $resourceType == 'itemSet') || $this->getSets('show_owned') == 'true'){
+                array_unshift($partials, 'common/advanced-search/owner-hidden');                
+            }
+        }        
+        $event->setParam('partials', $partials);
+
     }
 
     public function getConfigForm(PhpRenderer $renderer)
     {
 
         $url = $renderer->url('admin/roles-manager-settings', ['action' => 'edit']);
-        // return "<script>window.location.href = '$url';</script>";
         $response = $this->getMvcEvent()->getResponse();
         $response->getHeaders()->addHeaderLine('Location', $url);
         $response->setStatusCode(302);

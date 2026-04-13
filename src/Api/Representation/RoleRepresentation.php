@@ -3,13 +3,14 @@
 namespace RolesManager\Api\Representation;
 
 use Omeka\Api\Representation\AbstractEntityRepresentation;
-use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
-use Omeka\Api\Representation\UserRepresentation;
-use Omeka\Entity\AbstractEntity;
-use RolesManager\Entity\Roles;
-use RolesManager\Entity\Permissions;
-use RolesManager\Entity\RolesPermissions;
+// use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
+// use Omeka\Api\Representation\UserRepresentation;
+// use Omeka\Entity\AbstractEntity;
+// use RolesManager\Entity\Roles;
+// use RolesManager\Entity\Permissions;
+// use RolesManager\Entity\RolesPermissions;
 use RolesManager\Common;
+use RolesManager\General;
 
 /**
  * Role representation.
@@ -18,6 +19,7 @@ class RoleRepresentation extends AbstractEntityRepresentation
 {
 
     use Common;
+    use General;
 
     protected $countUsers = [];
 
