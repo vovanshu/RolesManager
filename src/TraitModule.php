@@ -1,56 +1,43 @@
 <?php declare(strict_types=1);
 /*
  * Copyright Daniel Berthereau, 2017-2026
+ * Copyright Volodimir Shumeyko, 2026
  *
+ * This software is governed by the CeCILL license by the rules of distribution
+ * of free software.  You can use, modify and/ or redistribute the software
+ * under the terms of the CeCILL license as circulated by CEA, CNRS and INRIA
+ * at the following URL "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
  */
 
 namespace RolesManager;
 
-// Polyfill core PsrMessage classes for Omeka S < 4.2.
-// if (version_compare(\Omeka\Module::VERSION, '4.2', '<')) {
-//     require_once dirname(__DIR__) . '/data/compat/MessageInterface.php';
-//     require_once dirname(__DIR__) . '/data/compat/PsrInterpolateInterface.php';
-//     require_once dirname(__DIR__) . '/data/compat/PsrInterpolateTrait.php';
-//     require_once dirname(__DIR__) . '/data/compat/PsrMessage.php';
-// }
-
-// PsrMessage may not be autoloaded when Common is upgrading.
-// if (!class_exists('Common\Stdlib\PsrMessage', false)) {
-//     if (!interface_exists('Common\Stdlib\PsrInterpolateInterface', false)) {
-//         require_once __DIR__ . '/Stdlib/PsrInterpolateInterface.php';
-//     }
-//     if (!trait_exists('Common\Stdlib\PsrInterpolateTrait', false)) {
-//         require_once __DIR__ . '/Stdlib/PsrInterpolateTrait.php';
-//     }
-//     require_once __DIR__ . '/Stdlib/PsrMessage.php';
-// }
-
-// use Common\Stdlib\PsrMessage;
-use Laminas\EventManager\Event;
+use Omeka\Stdlib\PsrMessage;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Mvc\Controller\AbstractController;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Module\Exception\ModuleCannotInstallException;
 use Omeka\Module\Manager as ModuleManager;
-use Omeka\Settings\AbstractTargetSettings;
-use Omeka\Settings\SettingsInterface;
 
-/**
- * This trait allows to manage all methods that should run only once and that
- * are generic to all modules (install and settings).
- *
- * The logic is "config over code": so all settings have just to be set in the
- * main `config/module.config.php` file, inside a key with the lowercase module
- * name,  with sub-keys `config`, `settings`, `site_settings`, `user_settings`
- * and `block_settings`. All the forms have just to be standard Laminas form.
- * Eventual install and uninstall sql can be set in `data/install/` and upgrade
- * code in `data/scripts`.
- *
- * See readme.
- */
 trait TraitModule
 {
+
     /**
      * Get the config of the current module.
      *
@@ -67,35 +54,6 @@ trait TraitModule
     protected function isFileReadable(string $filepath): bool
     {
         return file_exists($filepath) && filesize($filepath) && is_readable($filepath);
-    }
-
-    /**
-     * Get the settings of the current module.
-     *
-     * The settings are the default config of config, settings, site settings,
-     * user settings, block settings, etc.
-     *
-     * The config of the module is not merged with Omeka main config for
-     * services before the end of install. So it is locally cached to avoid to
-     * reload and reprocess the file. It is used to manage the forms too.
-     */
-    protected function getModuleConfig(?string $settingsType = null): ?array
-    {
-        static $localConfig;
-
-        if (!isset($localConfig)) {
-            $space = strtolower(static::NAMESPACE);
-            $localConfig = $this->getConfig();
-            $localConfig = $localConfig[$space] ?? false;
-        }
-
-        if ($localConfig === false) {
-            return null;
-        }
-
-        return $settingsType
-            ? $localConfig[$settingsType] ?? []
-            : $localConfig;
     }
 
     public function install(ServiceLocatorInterface $services): void
@@ -129,13 +87,6 @@ trait TraitModule
             throw new ModuleCannotInstallException((string) $message->setTranslator($translator));
         }
 
-        if (!$this->checkAllResourcesToInstall()) {
-            $message = new PsrMessage(
-                'This module has resources that cannot be installed.' // @translate
-            );
-            throw new ModuleCannotInstallException((string) $message->setTranslator($translator));
-        }
-
         $sqlFile = $this->modulePath() . '/data/install/schema.sql';
         if (!$this->checkNewTablesFromFile($sqlFile)) {
             $message = new PsrMessage(
@@ -146,13 +97,6 @@ trait TraitModule
 
         $this->execSqlFromFile($sqlFile);
 
-        $this
-            ->installAllResources()
-            ->manageConfig('install')
-            ->manageMainSettings('install')
-            ->manageSiteSettings('install')
-            ->manageUserSettings('install')
-            ->postInstall();
     }
 
     public function uninstall(ServiceLocatorInterface $services): void
@@ -160,14 +104,7 @@ trait TraitModule
         $this->setServiceLocator($services);
         $this->preUninstall();
         $this->execSqlFromFile($this->modulePath() . '/data/install/uninstall.sql');
-        $this
-            // Don't uninstall user settings, they don't belong to admin.
-            // ->manageUserSettings('uninstall')
-            ->manageSiteSettings('uninstall')
-            ->manageMainSettings('uninstall')
-            ->manageConfig('uninstall')
-            // ->uninstallAllResources()
-            ->postUninstall();
+        $this->postUninstall();
     }
 
     public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $services): void
@@ -181,110 +118,7 @@ trait TraitModule
         // particular when a doctrine entity is modified.
         // But invalidate only current module files instead of resetting entire
         // opcache to avoid jit segfaults on multiple upgrades with apache.
-        $this->getManageModuleAndResources()->clearCaches($this->modulePath());
-    }
-
-    public function getManageModuleAndResources(): \Common\ManageModuleAndResources
-    {
-        require_once __DIR__ . '/ManageModuleAndResources.php';
-        $services = $this->getServiceLocator();
-        return new \Common\ManageModuleAndResources($services);
-    }
-
-    public function checkAllResourcesToInstall(): bool
-    {
-        $installResources = $this->getManageModuleAndResources();
-        return $installResources->checkAllResources(static::NAMESPACE);
-    }
-
-    /**
-     * @return self
-     */
-    public function installAllResources(): self
-    {
-        $installResources = $this->getManageModuleAndResources();
-        $installResources->createAllResources(static::NAMESPACE);
-        return $this;
-    }
-
-    /**
-     * @todo Uninstall all resources is not implemented currently.
-     */
-    public function uninstallAllResources(): self
-    {
-        $manageModuleAndResources = $this->getManageModuleAndResources();
-        $manageModuleAndResources->deleteAllResources(static::NAMESPACE);
-        return $this;
-    }
-
-    public function handleConfigForm(AbstractController $controller)
-    {
-        return $this->handleConfigFormAuto($controller);
-    }
-
-    protected function handleConfigFormAuto(AbstractController $controller): bool
-    {
-        $defaultSettings = $this->getModuleConfig('config');
-        if (!$defaultSettings) {
-            return true;
-        }
-
-        $services = $this->getServiceLocator();
-        $formManager = $services->get('FormElementManager');
-        $formClass = static::NAMESPACE . '\Form\ConfigForm';
-        if (!$formManager->has($formClass)) {
-            return true;
-        }
-
-        $params = $controller->getRequest()->getPost();
-
-        $form = $formManager->get($formClass);
-        $form->init();
-        $form->setData($params);
-        if (!$form->isValid()) {
-            $controller->messenger()->addErrors($form->getMessages());
-            return false;
-        }
-
-        $params = $form->getData();
-
-        $settings = $services->get('Omeka\Settings');
-        $params = array_intersect_key($params, $defaultSettings);
-        foreach ($params as $name => $value) {
-            $settings->set($name, $value);
-        }
-        return true;
-    }
-
-    public function handleMainSettings(Event $event): void
-    {
-        $this->handleAnySettings($event, 'settings');
-    }
-
-    public function handleSiteSettings(Event $event): void
-    {
-        $this->handleAnySettings($event, 'site_settings');
-    }
-
-    public function handleUserSettings(Event $event): void
-    {
-        $services = $this->getServiceLocator();
-        /** @var \Omeka\Mvc\Status $status */
-        $status = $services->get('Omeka\Status');
-        // Does not manage the public user form of module Guest.
-        if ($status->isAdminRequest()) {
-            /** @var \Laminas\Router\Http\RouteMatch $routeMatch */
-            $routeMatch = $status->getRouteMatch();
-            if (!in_array($routeMatch->getParam('controller'), ['Omeka\Controller\Admin\User', 'user'])) {
-                return;
-            }
-            $this->handleAnySettings($event, 'user_settings');
-        }
-    }
-
-    protected function modulePath(): string
-    {
-        return dirname((new \ReflectionClass(static::class))->getFileName());
+        $this->clearCaches($this->modulePath());
     }
 
     protected function preInstall(): void
@@ -402,12 +236,8 @@ trait TraitModule
             return true;
         }
 
-        /** @var \Doctrine\DBAL\Connection $connection */
-        $services = $this->getServiceLocator();
-        $connection = $services->get('Omeka\Connection');
-
         // Get the list of all tables.
-        $tables = $connection->executeQuery('SHOW TABLES;')->fetchFirstColumn();
+        $tables = $this->getConnection()->executeQuery('SHOW TABLES;')->fetchFirstColumn();
 
         $dropTables = [];
 
@@ -423,7 +253,7 @@ trait TraitModule
             if (!in_array($table, $tables)) {
                 continue;
             }
-            $result = $connection->executeQuery("SELECT * FROM `$table` LIMIT 1;")->fetchOne();
+            $result = $this->getConnection()->executeQuery("SELECT * FROM `$table` LIMIT 1;")->fetchOne();
             if ($result !== false) {
                 return false;
             }
@@ -434,14 +264,14 @@ trait TraitModule
             // No check: if a table cannot be removed, an exception will be
             // thrown later.
             foreach ($dropTables as $table) {
-                $connection->executeStatement("SET FOREIGN_KEY_CHECKS=0; DROP TABLE `$table`;");
+                $this->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS=0; DROP TABLE `$table`;");
             }
 
             $message = new PsrMessage(
                 'The module removed tables "{tables}" from a previous broken install.', // @translate
                 ['tables' => implode('", "', $dropTables)]
             );
-            $messenger = $services->get('ControllerPluginManager')->get('messenger');
+            $messenger = $this->getControllerPluginManager()->get('messenger');
             $messenger->addWarning($message);
         }
 
@@ -460,522 +290,16 @@ trait TraitModule
             return null;
         }
 
-        /** @var \Doctrine\DBAL\Connection $connection */
-        $services = $this->getServiceLocator();
-        $connection = $services->get('Omeka\Connection');
-
         // Use single statements for execution.
         // See core commit #2689ce92f.
         $sql = file_get_contents($filepath);
         $sqls = array_filter(array_map('trim', explode(";\n", $sql)));
         $result = null;
         foreach ($sqls as $sql) {
-            $result = $connection->executeStatement($sql);
+            $result = $this->getConnection()->executeStatement($sql);
         }
 
         return $result;
-    }
-
-    /**
-     * Set, delete or update settings of the config of a module.
-     *
-     * @param string $process
-     * @param array $values Values to use when process is update.
-     * @return self
-     */
-    protected function manageConfig(string $process, array $values = []): self
-    {
-        $services = $this->getServiceLocator();
-        $settings = $services->get('Omeka\Settings');
-        return $this->manageAnySettings($settings, 'config', $process, $values);
-    }
-
-    /**
-     * Set, delete or update main settings.
-     *
-     * @param string $process
-     * @param array $values Values to use when process is update.
-     * @return self
-     */
-    protected function manageMainSettings(string $process, array $values = []): self
-    {
-        $services = $this->getServiceLocator();
-        $settings = $services->get('Omeka\Settings');
-        return $this->manageAnySettings($settings, 'settings', $process, $values);
-    }
-
-    /**
-     * Set, delete or update settings of all sites.
-     *
-     * @param string $process
-     * @param array $values Values to use when process is update, by site id.
-     * @return self
-     */
-    protected function manageSiteSettings(string $process, array $values = []): self
-    {
-        return $this->manageTargetSettings('site_settings', 'Omeka\Settings\Site', 'sites', $process, $values);
-    }
-
-    /**
-     * Set, delete or update settings of all users.
-     *
-     * @param string $process
-     * @param array $values Values to use when process is update, by user id.
-     * @return self
-     */
-    protected function manageUserSettings(string $process, array $values = []): self
-    {
-        return $this->manageTargetSettings('user_settings', 'Omeka\Settings\User', 'users', $process, $values);
-    }
-
-    /**
-     * Set, delete or update settings for all targets (sites or users).
-     *
-     * For install and uninstall, batch SQL is used to avoid N×M individual
-     * queries (N targets × M settings). For update, per-target logic is kept
-     * because values differ by target.
-     *
-     * @param string $settingsType
-     * @param string $settingsService
-     * @param string $resourceName
-     * @param string $process
-     * @param array $values Values to use when process is update, by target id.
-     * @return self
-     */
-    protected function manageTargetSettings(
-        string $settingsType,
-        string $settingsService,
-        string $resourceName,
-        string $process,
-        array $values = []
-    ): self {
-        $defaultSettings = $this->getModuleConfig($settingsType);
-        if (!$defaultSettings) {
-            return $this;
-        }
-
-        $services = $this->getServiceLocator();
-
-        // Use batch SQL for install/uninstall to avoid N×M individual queries.
-        if ($process === 'uninstall') {
-            /** @var \Doctrine\DBAL\Connection $connection */
-            $connection = $services->get('Omeka\Connection');
-            $table = $resourceName === 'sites' ? 'site_setting' : 'user_setting';
-            $settingNames = array_keys($defaultSettings);
-            if ($settingNames) {
-                $placeholders = implode(', ', array_fill(0, count($settingNames), '?'));
-                $connection->executeStatement(
-                    "DELETE FROM `$table` WHERE `id` IN ($placeholders)",
-                    $settingNames
-                );
-            }
-            return $this;
-        }
-
-        if ($process === 'install') {
-            /** @var \Doctrine\DBAL\Connection $connection */
-            $connection = $services->get('Omeka\Connection');
-            $table = $resourceName === 'sites' ? 'site_setting' : 'user_setting';
-            $targetColumn = $resourceName === 'sites' ? 'site_id' : 'user_id';
-            $targetTable = $resourceName === 'sites' ? '`site`' : '`user`';
-            $translator = $services->get(TranslatorInterface::class);
-            foreach ($defaultSettings as $name => $value) {
-                $value = $this->isSettingTranslatable($settingsType, $name)
-                    ? $translator->translate($value) : $value;
-                $connection->executeStatement(
-                    "INSERT INTO `$table` (`id`, `$targetColumn`, `value`)"
-                        . " SELECT ?, `id`, ? FROM $targetTable",
-                    [$name, json_encode($value)]
-                );
-            }
-            return $this;
-        }
-
-        // For "update", keep per-target logic since values differ by target.
-        $settings = $services->get($settingsService);
-        $api = $services->get('Omeka\ApiManager');
-        $ids = $api->search($resourceName, [], ['returnScalar' => 'id'])->getContent();
-        foreach ($ids as $id) {
-            $this->manageAnySettings(
-                $settings,
-                $settingsType,
-                $process,
-                $values[$id] ?? [],
-                (int) $id
-            );
-        }
-        return $this;
-    }
-
-    /**
-     * Set, delete or update all settings of a specific type.
-     *
-     * It processes main settings, or one site, or one user.
-     *
-     * @param SettingsInterface $settings
-     * @param string $settingsType
-     * @param string $process "install", "uninstall", "update".
-     * @param array $values
-     * @param int|null $targetId
-     * @return $this;
-     */
-    protected function manageAnySettings(
-        SettingsInterface $settings,
-        string $settingsType,
-        string $process,
-        array $values = [],
-        ?int $targetId = null
-    ): self {
-        $defaultSettings = $this->getModuleConfig($settingsType);
-        if (!$defaultSettings) {
-            return $this;
-        }
-
-        $translator = $this->getServiceLocator()->get(TranslatorInterface::class);
-
-        // This check avoids to force the target id with setTargetId() for next
-        // processing, so it keeps the target id managed by omeka.
-        if ($targetId && $settings instanceof AbstractTargetSettings) {
-            foreach ($defaultSettings as $name => $value) {
-                switch ($process) {
-                    case 'install':
-                        $settings->set(
-                            $name,
-                            $this->isSettingTranslatable($settingsType, $name) ? $translator->translate($value) : $value,
-                            $targetId
-                        );
-                        break;
-                    case 'uninstall':
-                        $settings->delete($name, $targetId);
-                        break;
-                    case 'update':
-                        if (array_key_exists($name, $values)) {
-                            $settings->set(
-                                $name,
-                                $this->isSettingTranslatable($settingsType, $name) ? $translator->translate($values[$name]) : $values[$name],
-                                $targetId
-                            );
-                        }
-                        break;
-                }
-            }
-
-            return $this;
-        }
-
-        foreach ($defaultSettings as $name => $value) {
-            switch ($process) {
-                case 'install':
-                    $settings->set(
-                        $name,
-                        $this->isSettingTranslatable($settingsType, $name) ? $translator->translate($value) : $value
-                    );
-                    break;
-                case 'uninstall':
-                    $settings->delete($name);
-                    break;
-                case 'update':
-                    if (array_key_exists($name, $values)) {
-                        $settings->set(
-                            $name,
-                            $this->isSettingTranslatable($settingsType, $name) ? $translator->translate($values[$name]) : $values[$name]
-                        );
-                    }
-                    break;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Prepare a settings fieldset.
-     *
-     * @param Event $event
-     * @param string $settingsType
-     * @return \Laminas\Form\Fieldset|null
-     */
-    protected function handleAnySettings(Event $event, string $settingsType): ?\Laminas\Form\Fieldset
-    {
-        global $globalNext;
-
-        $services = $this->getServiceLocator();
-        $formElementManager = $services->get('FormElementManager');
-
-        // TODO Check fieldsets in the config of the module.
-        $settingFieldsets = [
-            // 'config' => static::NAMESPACE . '\Form\ConfigForm',
-            'settings' => static::NAMESPACE . '\Form\SettingsFieldset',
-            'site_settings' => static::NAMESPACE . '\Form\SiteSettingsFieldset',
-            'user_settings' => static::NAMESPACE . '\Form\UserSettingsFieldset',
-        ];
-        if (!isset($settingFieldsets[$settingsType])
-            || !$formElementManager->has($settingFieldsets[$settingsType])
-        ) {
-            return null;
-        }
-
-        $settingsTypes = [
-            // 'config' => 'Omeka\Settings',
-            'settings' => 'Omeka\Settings',
-            'site_settings' => 'Omeka\Settings\Site',
-            'user_settings' => 'Omeka\Settings\User',
-        ];
-
-        $settings = $services->get($settingsTypes[$settingsType]);
-
-        switch ($settingsType) {
-            case 'settings':
-                $id = null;
-                break;
-            case 'site_settings':
-                $site = $services->get('ControllerPluginManager')->get('currentSite');
-                $id = $site()->id();
-                break;
-            case 'user_settings':
-                /** @var \Laminas\Router\Http\RouteMatch $routeMatch */
-                $routeMatch = $services->get('Application')->getMvcEvent()->getRouteMatch();
-                $id = (int) $routeMatch->getParam('id');
-                break;
-            default:
-                return null;
-        }
-
-        // Simplify config of settings.
-        if (empty($globalNext)) {
-            $globalNext = true;
-            $ckEditorHelper = $services->get('ViewHelperManager')->get('ckEditor');
-            $ckEditorHelper();
-        }
-
-        // Allow to use a form without an id, for example to create a user.
-        if ($settingsType !== 'settings' && !$id) {
-            $data = [];
-        } else {
-            $this->initDataToPopulate($settings, $settingsType, $id);
-            $data = $this->prepareDataToPopulate($settings, $settingsType, $id);
-            if ($data === null) {
-                return null;
-            }
-        }
-
-        $space = strtolower(static::NAMESPACE);
-
-        /**
-         * @var \Laminas\Form\Fieldset $fieldset
-         * @var \Laminas\Form\Form $form
-         */
-        $fieldset = $formElementManager->get($settingFieldsets[$settingsType]);
-        $fieldset->setName($space);
-        $form = $event->getTarget();
-
-        // In Omeka S v4, settings  are no more managed with fieldsets, but with
-        // "element groups", to de-correlate setting storage and display.
-
-        // Handle form loading.
-        // There are default element groups:
-        // - Settings:
-        //   - general
-        //   - security
-        // - Site settings:
-        //   - general
-        //   - language
-        //   - browse
-        //   - show
-        //   - search
-        // - User settings: fieldsets "user-information"; "user-settings", "change-password"
-        // and "edit-keys" are kept, but groups are added to fieldset "user-settings":
-        //   - columns
-        //   - browse_defaults
-        // There are two possibilities to manage module features in settings:
-        // - make each module a group
-        // - or create new groups for each set of features: resource metadata,
-        // site and pages params, viewers, contributions, public browse, public
-        // resource, jobs to run…
-        // The second way is more readable for admin, but in most of the cases,
-        // features are very different, so there will be a group by module
-        // anyway. Similar to module config, but config is not end-user friendly
-        // (multiple pages).
-        // So for now, let each module choose during upgrade to v4.
-        // Nevertheless, to use group feature smartly, it is recommended to use
-        // a generic list of groups similar to the site settings ones.
-        // Maybe sub-groups may be interesting, but not possible for now.
-        // In practice, there is a new option to set in each fieldset the group
-        // where params are displayed.
-
-        // TODO Order element groups.
-        // TODO Move main params to site settings and user settings.
-
-        $fieldsetElementGroups = $fieldset->getOption('element_groups');
-        if ($fieldsetElementGroups) {
-            $form->setOption('element_groups', array_merge($form->getOption('element_groups') ?: [], $fieldsetElementGroups));
-        }
-
-        // The user view is managed differently.
-        if ($settingsType === 'user_settings') {
-            // This process allows to save first level elements automatically.
-            // @see \Omeka\Controller\Admin\UserController::editAction()
-            $formFieldset = $form->get('user-settings');
-            foreach ($fieldset->getFieldsets() as $subFieldset) {
-                $formFieldset->add($subFieldset);
-            }
-            foreach ($fieldset->getElements() as $element) {
-                $formFieldset->add($element);
-            }
-            $formFieldset->populateValues($data);
-            $fieldset = $formFieldset;
-        } else {
-            // Allow to save data and to manage modules compatible with
-            // Omeka S v3 and v4.
-            //
-            // In Omeka S v4, settings are no more de-nested, next to the new
-            // "element group" feature, where default elements are attached
-            // directly to the main form with a fake fieldset (not managed by
-            // laminas), without using the formCollection() option.
-            // So un-de-nested params are checked, but no more automatically
-            // saved.
-            // And when data is populated, it is not possible to determinate
-            // directly if the form is valid or not as a whole, because the
-            // check is done after the filling inside the controller.
-            // To manage this new feature, either remove fieldsets and attach
-            // elements directly to the form, either save elements via event
-            // "view.browse.before", where the form is available.
-            // This second way is simpler to manage modules compatible with
-            // Omeka S v3 and v4, but it is not possible because there is a
-            // redirect in the controller when post is successfull.
-            // So append all elements and sub-fieldsets on the root of the form.
-            if (version_compare(\Omeka\Module::VERSION, '4', '<')) {
-                $form->add($fieldset);
-                $form->get($space)->populateValues($data);
-            } else {
-                foreach ($fieldset->getFieldsets() as $subFieldset) {
-                    $form->add($subFieldset);
-                }
-                foreach ($fieldset->getElements() as $element) {
-                    $form->add($element);
-                }
-                $form->populateValues($data);
-                $fieldset = $form;
-            }
-        }
-
-        return $fieldset;
-    }
-
-    /**
-     * Initialize each original settings, if not ready.
-     *
-     * If the default settings were never registered, it means an incomplete
-     * config, install or upgrade, or a new site or a new user. In all cases,
-     * check it and save default value first.
-     *
-     * @param SettingsInterface $settings
-     * @param string $settingsType
-     * @param int|null $id Site id or user id.
-     * @param bool True if processed.
-     *
-     * @todo Allow to set default options for arrays (see module Reference).
-     */
-    protected function initDataToPopulate(SettingsInterface $settings, string $settingsType, ?int $id = null): bool
-    {
-        // This method is not in the interface, but is set for config, site and
-        // user settings.
-        if (!method_exists($settings, 'getTableName')) {
-            return false;
-        }
-
-        $defaultSettings = $this->getModuleConfig($settingsType);
-        if (!$defaultSettings) {
-            return false;
-        }
-
-        /** @var \Doctrine\DBAL\Connection $connection */
-        $services = $this->getServiceLocator();
-        $connection = $services->get('Omeka\Connection');
-        if ($id) {
-            if (!method_exists($settings, 'getTargetIdColumnName')) {
-                return false;
-            }
-            $sql = sprintf('SELECT id, value FROM %s WHERE %s = :target_id', $settings->getTableName(), $settings->getTargetIdColumnName());
-            $stmt = $connection->executeQuery($sql, ['target_id' => $id]);
-        } else {
-            $sql = sprintf('SELECT id, value FROM %s', $settings->getTableName());
-            $stmt = $connection->executeQuery($sql);
-        }
-
-        $translator = $services->get(TranslatorInterface::class);
-
-        $currentSettings = $stmt->fetchAllKeyValue();
-        // Skip settings that are arrays, because the fields "multi-checkbox"
-        // and "multi-select" are removed when no value are selected, so it's
-        // not possible to determine if it's a new setting or an old empty
-        // setting currently. So fill them via upgrade in that case or fill the
-        // values.
-        // TODO Find a way to save empty multi-checkboxes and multi-selects (core fix).
-        $defaultSettings = array_filter($defaultSettings, fn ($v) => !is_array($v));
-        $missingSettings = array_diff_key($defaultSettings, $currentSettings);
-
-        foreach ($missingSettings as $name => $value) {
-            $settings->set(
-                $name,
-                $this->isSettingTranslatable($settingsType, $name) ? $translator->translate($value) : $value
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * Prepare data for a form or a fieldset.
-     *
-     * To be overridden by module for specific keys.
-     *
-     * @todo Use form methods to populate.
-     *
-     * @param SettingsInterface $settings
-     * @param string $settingsType
-     * @param int|null $targetId
-     * @return array|null
-     */
-    protected function prepareDataToPopulate(SettingsInterface $settings, string $settingsType, ?int $targetId = null): ?array
-    {
-        // TODO Explain this feature.
-        // Use isset() instead of empty() to give the possibility to display a
-        // specific form.
-        $defaultSettings = $this->getModuleConfig($settingsType);
-        if ($defaultSettings === null) {
-            return null;
-        }
-
-        $data = [];
-
-        // This check avoids to force the target id with setTargetId() for next
-        // processing, so it keeps the target id managed by omeka.
-        if ($targetId && $settings instanceof AbstractTargetSettings) {
-            foreach ($defaultSettings as $name => $value) {
-                $val = $settings->get($name, is_array($value) ? [] : null, $targetId);
-                $data[$name] = $val;
-            }
-            return $data;
-        }
-
-        foreach ($defaultSettings as $name => $value) {
-            $val = $settings->get($name, is_array($value) ? [] : null);
-            $data[$name] = $val;
-        }
-        return $data;
-    }
-
-    /**
-     * Check if a setting is translatable.
-     *
-     * The method should be overridden to match settings names.
-     *
-     * @todo Manage the comment "// @translate" in config automatically.
-     */
-    protected function isSettingTranslatable(string $settingsType, string $name): bool
-    {
-        return false;
     }
 
     /**
@@ -1130,27 +454,25 @@ trait TraitModule
         }
 
         // Check if the user is a global admin to avoid right issues.
-        $services = $this->getServiceLocator();
-        $user = $services->get('Omeka\AuthenticationService')->getIdentity();
-        if (!$user || $user->getRole() !== \Omeka\Permissions\Acl::ROLE_GLOBAL_ADMIN) {
+        // $services = $this->getServiceLocator();
+        // $user = $this->getServiceLocator()->get('Omeka\AuthenticationService')->getIdentity();
+        
+        // if (!$user || $user->getRole() !== \Omeka\Permissions\Acl::ROLE_GLOBAL_ADMIN) {
+        if ($this->getRoleCurrentUser() !== \Omeka\Permissions\Acl::ROLE_GLOBAL_ADMIN) {
             return false;
         }
 
         /** @var \Omeka\Module\Manager $moduleManager */
-        $moduleManager = $services->get('Omeka\ModuleManager');
-        $managedModule = $moduleManager->getModule($module);
-        $moduleManager->deactivate($managedModule);
+        $managedModule = $this->getModuleManager()->getModule($module);
+        $this->getModuleManager()->deactivate($managedModule);
 
         $this->ensurePsrMessage();
         $message = new PsrMessage(
             'The module "{module}" was automatically deactivated because the dependencies are unavailable.', // @translate
             ['module' => $module]
         );
-        $messenger = $services->get('ControllerPluginManager')->get('messenger');
-        $messenger->addWarning($message);
-
-        $logger = $services->get('Omeka\Logger');
-        $logger->warn($message->getMessage(), $message->getContext());
+        $this->getControllerPluginManager()->addWarning($message);
+        $this->getLogger()->warn($message->getMessage(), $message->getContext());
         return true;
     }
 
@@ -1187,7 +509,7 @@ trait TraitModule
     /**
      * Remove a dir from filesystem.
      *
-     * @param string $dirpath Absolute path.
+     * @param string $dirPath Absolute path.
      * @return bool
      */
     protected function rmDir(string $dirPath): bool
@@ -1210,16 +532,71 @@ trait TraitModule
         return rmdir($dirPath);
     }
 
-    public function getConfigForm(PhpRenderer $renderer)
+    /**
+     * Clear php and doctrine caches.
+     *
+     * This method may be used when updating the schema of an entity, in which
+     * case the cache may need to be refreshed.
+     *
+     * When a module path is provided, only its php and phtml files are
+     * invalidated to avoid a race condition in apache when multiple modules are
+     * upgraded quickly and the general cache has no time to be rebuilt.
+     *
+     * @see https://github.com/php/php-src/issues/20818
+     * @see https://github.com/php/php-src/issues/13508
+     */
+    private function clearCaches(?string $modulePath = null): void
     {
+        // Invalidate OPcache: targeted per-module or full reset as fallback.
+        if ($modulePath && function_exists('opcache_invalidate')) {
+            $this->opcacheInvalidateDirectory($modulePath);
+        } elseif (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
 
-        $url = $renderer->url('admin/roles-manager-settings', ['action' => 'edit']);
-        $response = $this->getMvcEvent()->getResponse();
-        $response->getHeaders()->addHeaderLine('Location', $url);
-        $response->setStatusCode(302);
-        $response->sendHeaders();
-        return $response;
+        // Clear Doctrine metadata cache to fix issue with entity schema change.
+        try {
+            /** @var \Doctrine\ORM\EntityManager $entityManager */
+            $config = $this->getEntityManager()->getConfiguration();
+            // ORM 2.14+/3.x uses getMetadataCache() (PSR-6). ORM 2.7–2.13 uses
+            // getMetadataCacheImpl() (Doctrine Cache).
+            $cache = method_exists($config, 'getMetadataCache')
+                ? $config->getMetadataCache()
+                : $config->getMetadataCacheImpl();
+            if ($cache) {
+                if (method_exists($cache, 'clear')) {
+                    $cache->clear();
+                } elseif (method_exists($cache, 'deleteAll')) {
+                    $cache->deleteAll();
+                }
+            }
+        } catch (\Throwable $e) {
+            // Ignore.
+        }
 
+        if (function_exists('apcu_clear_cache')) {
+            apcu_clear_cache();
+        }
+
+        @clearstatcache(true);
+    }
+
+    /**
+     * Invalidate OPcache entries for all PHP files in a directory.
+     */
+    private function opcacheInvalidateDirectory(string $directory): void
+    {
+        if (!is_dir($directory)) {
+            return;
+        }
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+        foreach ($iterator as $file) {
+            if (in_array($file->getExtension(), ['php', 'phtml'], true)) {
+                opcache_invalidate($file->getPathname(), true);
+            }
+        }
     }
 
 }

@@ -7,12 +7,12 @@ use Laminas\View\Model\ViewModel;
 use Laminas\Form\Form;
 use Omeka\Form\ConfirmForm;
 use Omeka\Form\Element\PropertySelect;
-use RolesManager\General;
+use RolesManager\TraitGeneral;
 
 class ImportController extends AbstractActionController
 {
 
-    use General;
+    use TraitGeneral;
 
     public function __construct($serviceLocator = Null, $requestedName = Null, $options = Null)
     {

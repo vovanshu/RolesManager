@@ -2,15 +2,15 @@
 
 namespace RolesManager;
 
-require_once __DIR__ . '/Common.php';
+require_once __DIR__ . '/TraitCommon.php';
 
 use Omeka\Permissions\Acl;
-use RolesManager\Common;
+use RolesManager\TraitCommon;
 
-trait General
+trait TraitGeneral
 {
 
-    use Common;
+    use TraitCommon;
 
     protected $listRoles;
 

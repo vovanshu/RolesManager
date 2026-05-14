@@ -9,8 +9,8 @@ use Omeka\Api\Representation\AbstractEntityRepresentation;
 // use RolesManager\Entity\Roles;
 // use RolesManager\Entity\Permissions;
 // use RolesManager\Entity\RolesPermissions;
-use RolesManager\Common;
-use RolesManager\General;
+// use RolesManager\Common;
+use RolesManager\TraitGeneral;
 
 /**
  * Role representation.
@@ -18,8 +18,8 @@ use RolesManager\General;
 class RoleRepresentation extends AbstractEntityRepresentation
 {
 
-    use Common;
-    use General;
+    // use Common;
+    use TraitGeneral;
 
     protected $countUsers = [];
 

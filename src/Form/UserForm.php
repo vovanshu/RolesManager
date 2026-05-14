@@ -12,12 +12,12 @@ use Omeka\Settings\UserSettings;
 use Laminas\Form\Form;
 use Laminas\EventManager\EventManagerAwareTrait;
 use Laminas\EventManager\Event;
-use RolesManager\General;
+use RolesManager\TraitGeneral;
 
 class UserForm extends Form
 {
     use EventManagerAwareTrait;
-    use General;
+    use TraitGeneral;
 
     /**
      * @var array

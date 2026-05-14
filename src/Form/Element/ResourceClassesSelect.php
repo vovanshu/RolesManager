@@ -5,12 +5,12 @@ namespace RolesManager\Form\Element;
 use Laminas\Form\Element\Select;
 use Laminas\View\Helper\Url;
 use Omeka\Api\Manager as ApiManager;
-use RolesManager\General;
+use RolesManager\TraitGeneral;
 
 class ResourceClassesSelect extends Select
 {
 
-    use General;
+    use TraitGeneral;
 
     /**
      * @see https://github.com/zendframework/zendframework/issues/2761#issuecomment-14488216

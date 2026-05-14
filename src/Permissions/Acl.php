@@ -2,12 +2,12 @@
 namespace RolesManager\Permissions;
 
 use Laminas\EventManager\Event;
-use RolesManager\General;
+use RolesManager\TraitGeneral;
 
 class Acl extends \Omeka\Permissions\Acl
 {
 
-    use General;
+    use TraitGeneral;
 
     protected $listRoles;
 
@@ -58,9 +58,17 @@ class Acl extends \Omeka\Permissions\Acl
     {
 
         if($this->getConf('debug')){
-            ob_start();
-            print_r($this->rules);
-            file_put_contents(OMEKA_PATH.'/logs/dev.rules.system.log', ob_get_clean());
+            if(function_exists('d')){
+                if(class_exists('Kint\Renderer\RichRenderer')){
+                    \Kint\Kint::$depth_limit = 0;
+                    \Kint\Renderer\RichRenderer::$folder = True;
+                }
+                d($this->rules);
+            }else{
+                ob_start();
+                print_r($this->rules);
+                file_put_contents(OMEKA_PATH.'/logs/dev.rules.system.log', ob_get_clean());
+            }
         }
 
         $current = $this->getRoleCurrentUser();
@@ -131,10 +139,18 @@ class Acl extends \Omeka\Permissions\Acl
             );
         }
 
-        if($this->getConf('debug')){
-            ob_start();
-            print_r($this->rules);
-            file_put_contents(OMEKA_PATH.'/logs/dev.rules.set.log', ob_get_clean());
+        if($this->getConf('debug')){           
+            if(function_exists('d')){
+                if(class_exists('Kint\Renderer\RichRenderer')){
+                    \Kint\Kint::$depth_limit = 0;
+                    \Kint\Renderer\RichRenderer::$folder = True;
+                }
+                d($this->rules);
+            }else{
+                ob_start();
+                print_r($this->rules);
+                file_put_contents(OMEKA_PATH.'/logs/dev.rules.set.log', ob_get_clean());
+            }
         }
 
     }
@@ -142,17 +158,6 @@ class Acl extends \Omeka\Permissions\Acl
     public function getAllRules()
     {
         return $this->rules;
-    }
-
-    public function writeDevRules(Event $event)
-    {
-
-        if($this->getConf('debug')){
-            ob_start();
-            print_r($this->rules);
-            file_put_contents(OMEKA_PATH.'/logs/dev.rules.finish.log', ob_get_clean());
-        }
-
     }
 
 }

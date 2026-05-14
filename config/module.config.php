@@ -236,7 +236,6 @@ return [
     // Don't edit these options here: copy this key in your own omeka config/local.config.php
     // and modify options as you want.
     'RolesManager' => [
-        'developing' => False,
         'debug' => False,
         'backups' => OMEKA_PATH.'/files/backup/RolesManager/',
         'imports' => OMEKA_PATH.'/files/import/RolesManager/',

@@ -11,11 +11,8 @@
  */
 namespace RolesManager;
 
-if (!class_exists(\Common\TraitModule::class)) {
-    require_once dirname(__DIR__) . '/Common/TraitModule.php';
-}
-
-require_once __DIR__ . '/src/General.php';
+require_once __DIR__ . '/src/TraitGeneral.php';
+require_once __DIR__ . '/src/TraitModule.php';
 
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
@@ -26,8 +23,8 @@ use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Module\AbstractModule;
 use Omeka\Permissions\Acl;
 use Omeka\Api\Representation\UserRepresentation;
-use Common\TraitModule;
-use RolesManager\General;
+use RolesManager\TraitGeneral;
+use RolesManager\TraitModule;
 
 /**
  * RolesManager
@@ -37,11 +34,9 @@ use RolesManager\General;
 class Module extends AbstractModule
 {
 
+    use TraitGeneral;
     use TraitModule;
-    // use Common;
-    use General;
-    
-    const NAMESPACE = __NAMESPACE__;
+
 
     public function init(ModuleManager $moduleManager): void
     {
@@ -115,13 +110,6 @@ class Module extends AbstractModule
     {
 
         $sharedEventManager->attach(
-            '*',
-            'view.layout',
-            [$this->getAcl(), 'writeDevRules'],
-            -1001
-        );
-
-        $sharedEventManager->attach(
             'Laminas\Mvc\Application',
             'route',
             [$this->getAcl(), 'registrationAclRules'],
@@ -132,14 +120,6 @@ class Module extends AbstractModule
             '*',
             'api.search.query',
             [$this, 'filterSearchQuery'],
-            -1000
-        );
-
-        /// For dev only
-        $sharedEventManager->attach(
-            '*',
-            'api.search.query.finalize',
-            [$this, 'devSearchQueryFinalize'],
             -1000
         );
 
@@ -271,31 +251,6 @@ class Module extends AbstractModule
             'view.browse.before',
             [$this, 'addActionsToMediaBrowse']
         );
-
-    }
-    public function devSearchQueryFinalize(Event $event)
-    {
-
-        if($this->getConf('developing')){
-            $target = $event->getTarget();
-            $ResourceName = $target->getResourceName();
-            $controller = False;
-            $ADMIN = False;
-            $routeMatch = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
-            if(!empty($routeMatch) && is_object($routeMatch) && method_exists($routeMatch, 'getParam')){
-                $controller = $routeMatch->getParam('__CONTROLLER__');
-                $ADMIN = $routeMatch->getParam('__ADMIN__');
-            }
-            $args = $event->getParam('request')->getContent();
-            $qb = $event->getParam('queryBuilder');
-            ob_start();
-            if($ADMIN) echo "ADMIN\r\n";
-            echo $ResourceName."\r\n";
-            if($controller) echo $controller."\r\n";
-            print_r($args);
-            echo "\r\n".$qb->getQuery()->getSQL();
-            file_put_contents(OMEKA_PATH.'/logs/dev.query.finalize.log', ob_get_clean());
-        }
 
     }
 
@@ -630,12 +585,7 @@ class Module extends AbstractModule
     public function getConfigForm(PhpRenderer $renderer)
     {
 
-        $url = $renderer->url('admin/roles-manager-settings', ['action' => 'edit']);
-        $response = $this->getMvcEvent()->getResponse();
-        $response->getHeaders()->addHeaderLine('Location', $url);
-        $response->setStatusCode(302);
-        $response->sendHeaders();
-        return $response;
+        return $this->redirecToURL($renderer->url('admin/roles-manager-settings', ['action' => 'edit']));
 
     }
 

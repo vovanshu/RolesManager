@@ -2,10 +2,10 @@
 
 namespace RolesManager;
 
-trait Common
+trait TraitCommon
 {
 
-    protected $configName = __NAMESPACE__;
+    protected $moduleName = __NAMESPACE__;
 
     protected $mvcEvent;
 
@@ -19,13 +19,19 @@ trait Common
 
     protected $settings;
 
+    protected $siteSettings;
+
     protected $userSettings;
 
     protected $config;
 
     protected $apiManager;
 
-    // protected $ApiAdapterManager;
+    protected $ModuleManager;
+
+    protected $ControllerPluginManager;
+
+    protected $ApiAdapterManager;
 
     protected $ApiAdapter = [];
 
@@ -33,14 +39,21 @@ trait Common
 
     protected $logger;
 
-    public function setMvcEvent($mvcEvent)
+
+    protected function isAppDevMode(): bool
     {
-        $this->mvcEvent = $mvcEvent;
+
+        if ((isset($_SERVER['APPLICATION_ENV']) && 'development' == $_SERVER['APPLICATION_ENV']) ||
+        (isset($_SERVER['REDIRECT_APPLICATION_ENV']) && 'development' == $_SERVER['REDIRECT_APPLICATION_ENV'])){
+            return True;
+        }
+        return False;
+
     }
 
-    public function getMvcEvent()
+    protected function modulePath(): string
     {
-        return $this->mvcEvent;
+        return dirname((new \ReflectionClass(static::class))->getFileName());
     }
 
     /**
@@ -62,24 +75,47 @@ trait Common
         return $this->serviceLocator;
     }
 
-    // public function getAdapter($resourceName = null)
-    // {
+    public function setMvcEvent($mvcEvent)
+    {
+        $this->mvcEvent = $mvcEvent;
+    }
 
-    //     if($this->serviceLocator){
-    //         if(!$this->ApiAdapterManager){
-    //             $this->ApiAdapterManager = $this->getServiceLocator()->get('Omeka\ApiAdapterManager');
-    //         }
-    //         if(!empty($resourceName)){
-    //             if(empty($this->ApiAdapter[$resourceName])){
-    //                 $this->ApiAdapter[$resourceName] = $this->getServiceLocator()->get('Omeka\ApiAdapterManager')->get($resourceName);
-    //             }
-    //             return $this->ApiAdapter[$resourceName];
-    //         }
-    //         return $this->ApiAdapterManager;
-    //     }
-    //     return;
+    public function getMvcEvent()
+    {
+        return $this->mvcEvent;
+    }
 
-    // }
+    public function getApiAdapterManager($resourceName = null)
+    {
+
+        if($this->serviceLocator){
+            if(!$this->ApiAdapterManager){
+                $this->ApiAdapterManager = $this->getServiceLocator()->get('Omeka\ApiAdapterManager');
+            }
+            if(!empty($resourceName)){
+                if(empty($this->ApiAdapters[$resourceName])){
+                    $this->ApiAdapters[$resourceName] = $this->ApiAdapterManager->get($resourceName);
+                }
+                return $this->ApiAdapters[$resourceName];
+            }
+            return $this->ApiAdapterManager;
+        }
+        return;
+
+    }
+
+    public function getModuleManager()
+    {
+
+        if($this->ModuleManager){
+            if(!$this->ModuleManager){
+                $this->ModuleManager = $this->getServiceLocator()->get('Omeka\ModuleManager');
+            }
+            return $this->ModuleManager;
+        }
+        return;
+
+    }
 
     public function getApplicationRouteMatch()
     {
@@ -133,6 +169,19 @@ trait Common
 
     }
 
+    public function getControllerPluginManager()
+    {
+
+        if($this->serviceLocator){
+            if(!$this->ControllerPluginManager){
+                $this->ControllerPluginManager = $this->getServiceLocator()->get('ControllerPluginManager');
+            }
+            return $this->ControllerPluginManager;
+        }
+        return;
+
+    }
+
     public function getEntityManager()
     {
 
@@ -172,6 +221,19 @@ trait Common
 
     }
 
+    public function getSiteSettings()
+    {
+
+        if($this->serviceLocator){
+            if(!$this->siteSettings){
+                $this->siteSettings = $this->getServiceLocator()->get('Omeka\Settings\Site');
+            }
+            return $this->siteSettings;
+        }
+        return;
+
+    }
+
     public function getUserSettings()
     {
 
@@ -203,17 +265,17 @@ trait Common
         return $this->getServiceLocator()->get('Omeka\Media\Ingester\Manager');
     }
 
-    public function getConf($name = Null, $param = Null, $all = False)
+    public function getConf($name = Null, $param = Null, $default = Null, $all = False)
     {
 
-        $config = $this->getConfigs()[$this->configName];
+        $config = $this->getConfigs()[$this->moduleName];
         if(!empty($name)){
             if(!empty($config[$name])){
                 if(!empty($param)){
                     if(isset($config[$name][$param])){
                         return $config[$name][$param];
                     }else{
-                        return False;
+                        return $default;
                     }
                 }else{
                     return $config[$name];
@@ -223,30 +285,24 @@ trait Common
             if($all){
                 return $config;
             }else{
-                return False;
+                return $default;
             }
         }
 
     }
 
-    public function getOps($name)
+    public function getOps($name, $default = Null)
     {
 
-        $config = $this->getConfigs()[$this->configName];
-        if(!empty($name)){
-            if(!empty($config['options']) && !empty($config['options'][$name])){
-                return $config['options'][$name];
-            }
-        }
-        return False;
+        return $this->getConf('options', $name, $default);        
 
     }
 
     public function getSets($name, $callback = [])
     {
         
-        $name = (($opt = $this->getOps($name)) ? $opt : $name);
-        $r = ($this->getSettings()->get($name) ? $this->getSettings()->get($name) : ($this->getConf('settings', $name) ? $this->getConf('settings', $name) : Null));
+        $ops = $this->getOps($name, $name);
+        $r = $this->getSettings()->get($ops, $this->getConf('settings', $ops));
         if(!empty($callback)){
             $r = call_user_func_array($callback, [$r]);
         }
@@ -257,8 +313,44 @@ trait Common
     public function setSets($name, $value)
     {
         
-        $name = (($opt = $this->getOps($name)) ? $opt : $name);
-        $this->getSettings()->set($name, $value);
+        $ops = $this->getOps($name, $name);
+        $this->getSettings()->set($ops, $value);
+        
+    }
+
+    public function getSiteSets($name, $siteID = Null, $callback = [])
+    {
+
+        $ops = $this->getOps($name, $name);
+        if($siteID){
+            $r = $this->getSiteSettings()->get($ops, $this->getConf('settings', $ops), $siteID);
+        }else{
+            $r = $this->getSiteSettings()->get($ops, $this->getConf('settings', $ops));
+        }
+        
+        if(!empty($callback)){
+            $r = call_user_func_array($callback, [$r]);
+        }
+        return $r;
+        
+    }
+
+    public function setSiteSets($name, $value)
+    {
+        
+        $ops = $this->getOps($name, $name);
+        $this->getSiteSettings()->set($ops, $value);
+        
+    }
+
+    public function getSiteID($slug)
+    {
+
+        $rc = $this->getConnection()->executeQuery("SELECT id FROM `site` WHERE `slug` = '{$slug}' LIMIT 1;")->fetchAssociative();
+        if(!empty($rc['id'])){
+            return $rc['id'];
+        }
+        return False;
         
     }
 
@@ -274,7 +366,7 @@ trait Common
         
     }
 
-    private function setUserSets($userId, $name, $value)
+    public function setUserSets($userId, $name, $value)
     {
 
         $name = (($opt = $this->getOps($name)) ? $opt : $name);
@@ -305,6 +397,20 @@ trait Common
 
     }
 
+    public function userIsGuest()
+    {
+    
+        return ($this->getRoleCurrentUser() == 'public');
+
+    }
+
+    public function userIsGlobalAdmin()
+    {
+        
+        return ($this->getRoleCurrentUser() == $this->getAcl()::ROLE_GLOBAL_ADMIN);
+        
+    }
+
     public function getRoleUser($userID)
     {
 
@@ -329,7 +435,7 @@ trait Common
 
     private function getUserEntry($id)
     {
-        return $this->getAdapter('users')->findEntity($id);
+        return $this->getApiAdapterManager('users')->findEntity($id);
     }
 
     public function getStrConf($name, $param = Null)
@@ -353,7 +459,7 @@ trait Common
 
     }
 
-    private function arrayToTextList($string, $separator = ' = ')
+    public function arrayToTextList($string, $separator = ' = ')
     {
 
         if(!empty($string)){
@@ -378,7 +484,7 @@ trait Common
      * @param string $string
      * @return array
      */
-    private function textListToArray($string, $keyValueSeparator = ' = ')
+    public function textListToArray($string, $keyValueSeparator = ' = ')
     {
 
         $result = [];
@@ -396,7 +502,7 @@ trait Common
      * @param string $string
      * @return array
      */
-    protected function stringToList($string)
+    public function stringToList($string)
     {
         return array_filter(array_map('trim', explode("\n", $this->fixEndOfLine($string))), 'strlen');
     }
@@ -409,7 +515,7 @@ trait Common
      * @param string $string
      * @return string
      */
-    private function fixEndOfLine($string)
+    public function fixEndOfLine($string)
     {
         return str_replace(["\r\n", "\n\r", "\r"], ["\n", "\n", "\n"], (string) $string);
     }
@@ -459,10 +565,54 @@ trait Common
 
     }
 
+    public function searchInArray($haystack, $needs)
+    {
+
+        $r = [];
+        foreach($haystack as $i => $v){
+            if(is_array($v)){
+                $rc = $this->searchInArray($v, $needs);
+                if(!empty($rc)){
+                    $r[] = $i;
+                }
+            }else{
+                $rc = $this->procSearchInArray($i, $v, $needs);
+                if(!empty($rc)){
+                    $r[] = $rc;
+                }
+            }
+        }
+        return $r;
+
+    }
+
+    private function procSearchInArray($i, $v, $needs)
+    {
+
+        foreach($needs as $k => $n){
+            if($k == $i && $n == $v){
+                return $i;
+            }
+        }
+        return False;
+
+    }
+
     public function convert_size($size)
     {
         $unit=array('b','Kb','Mb','Gb','Tb','Pb');
         return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }
-    
+
+    public function redirecToURL($url, $status = 301)
+    {
+
+        $response = $this->getMvcEvent()->getResponse();
+        $response->getHeaders()->addHeaderLine('Location', $url);
+        $response->setStatusCode($status);
+        $response->sendHeaders();
+        return $response;
+        
+    }
+
 }

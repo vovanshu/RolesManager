@@ -11,12 +11,12 @@ use Omeka\Form\Element\ItemSetSelect;
 use Omeka\Form\Element\ResourceSelect;
 use Omeka\Form\Element\SiteSelect;
 use RolesManager\Form\Element\ParentRoleSelect;
-use RolesManager\General;
+use RolesManager\TraitGeneral;
 
 class RoleEditForm extends Form
 {
     use EventManagerAwareTrait;
-    use General;
+    use TraitGeneral;
 
     protected $allow_empty;
 
