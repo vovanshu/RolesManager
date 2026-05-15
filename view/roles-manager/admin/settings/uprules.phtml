@@ -1,0 +1,102 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \RolesManager\Form\PermissionForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+
+$this->htmlElement('body')->appendAttribute('class', 'permissions restore');
+?>
+
+<?= $this->pageTitle($translate('Update Rules'), 1, $translate('Roles Manager')) ?>
+
+<div id="page-actions">
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
+    <?php if (!empty($update_list)): ?>
+    <?= $hyperlink($translate('Upgrade'), $this->url('admin/roles-manager-settings', ['action' => 'rules-upgrade-all']), ['class' => 'button']) ?>
+    <?php else: ?>
+    <?= $hyperlink($translate('Update'), $this->url('admin/roles-manager-settings', ['action' => 'uprules']), ['class' => 'button']) ?>
+    <?php endif; ?>
+</div>
+
+<?php if (!empty($update_list)): ?>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
+        <tr>
+            <th><?= $translate('Name') ?></th>
+            <th><?= $translate('Date Repository') ?></th>
+            <th><?= $translate('Date Installed') ?></th>
+            <th><?= $translate('Actions') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($update_list as $name => $date): 
+            $installed = !empty($current_list[$name]) ? $current_list[$name] : '-';
+            $mayupgrade = False;
+            if ($installed !== '-'){
+                if(strtotime($date) > strtotime($installed)){
+                    $mayupgrade = True;
+                }
+            }
+        ?>
+        <tr>
+            <td>
+                <span class="list-name"><?= $name ?></span>
+            </td>
+            <td>
+                <span class="list-update"><?= $date ?></span>
+            </td>
+            <td>
+                <span class="list-curdate"><?= $installed ?></span>
+            </td>
+            <td>
+                <ul class="actions">
+                    <?php if ($installed == '-'): ?>
+                    <li><a href="#"
+                        class="o-icon-install sidebar-content"
+                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-add', 'name' => $name])) ?>"
+                        aria-label="<?= $escape($translate('Add')) ?>"
+                        title="<?= $escape($translate('Add')) ?>"></a></li>
+                    <?php else: ?>
+                        <?php if ($mayupgrade): ?>
+                    <li><a href="#"
+                        class="o-icon-upgrade sidebar-content"
+                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-upgrade', 'name' => $name])) ?>"
+                        aria-label="<?= $escape($translate('Upgrade')) ?>"
+                        title="<?= $escape($translate('Upgrade')) ?>"></a></li>
+                        <?php endif; ?>
+                    <li><a href="#"
+                        class="o-icon-delete sidebar-content"
+                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-delete-confirm', 'name' => $name])) ?>"
+                        aria-label="<?= $escape($translate('Delete')) ?>"
+                        title="<?= $escape($translate('Delete')) ?>"></a></li>
+                    <?php endif; ?>
+                    <li><a href="#"
+                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-details', 'name' => $name])) ?>"
+                        class="o-icon-more sidebar-content"
+                        aria-label="<?= $escape($translate('Details')) ?>"
+                        title="<?= $escape($translate('Details')) ?>"></a></li>
+                </ul>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<div class="sidebar">
+    <a href="#"
+        class="sidebar-close o-icon-close"
+        aria-label="<?= $escape($translate('Close')) ?>"
+        title="<?= $escape($translate('Close')) ?>"></a>
+    <div class="sidebar-content"></div>
+</div>
+<?php else: ?>
+<div class="no-resources">
+    <p><?= $translate('Updates no found.') ?></p>   
+</div>
+<?php endif; ?>

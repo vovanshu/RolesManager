@@ -49,7 +49,7 @@ return [
                         'add',
                     ],
                     'change_native' => [
-                        'mod',
+                        'change-native',
                     ],
                     'edit' => [
                         'edit',
@@ -137,7 +137,7 @@ return [
             Form\Element\RoleSelect::class => Service\Form\Element\RoleSelectFactory::class,
             'RolesManager\Form\Element\RoleNativeSelect' => Service\Form\Element\RoleNativeSelectFactory::class,
             Form\RoleAddForm::class => Service\Form\RoleAddFormFactory::class,
-            Form\RoleModForm::class => Service\Form\RoleModFormFactory::class,
+            // Form\RoleModForm::class => Service\Form\RoleModFormFactory::class,
             Form\RoleEditForm::class => Service\Form\RoleEditFormFactory::class,
         ],
     ],
@@ -237,6 +237,7 @@ return [
     // and modify options as you want.
     'RolesManager' => [
         'debug' => False,
+        'repository_rules' => 'https://github.com/vovanshu/RolesManager/raw/refs/heads/main/config/permissions.php',
         'backups' => OMEKA_PATH.'/files/backup/RolesManager/',
         'imports' => OMEKA_PATH.'/files/import/RolesManager/',
         'settings' => [

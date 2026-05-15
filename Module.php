@@ -17,8 +17,6 @@ require_once __DIR__ . '/src/TraitModule.php';
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\ModuleManager\ModuleEvent;
-use Laminas\ModuleManager\ModuleManager;
-use Laminas\Mvc\MvcEvent;
 use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Module\AbstractModule;
 use Omeka\Permissions\Acl;
@@ -37,12 +35,6 @@ class Module extends AbstractModule
     use TraitGeneral;
     use TraitModule;
 
-
-    public function init(ModuleManager $moduleManager): void
-    {
-        $moduleManager->getEventManager()->attach(ModuleEvent::EVENT_MERGE_CONFIG, [$this, 'onEventMergeConfig']);
-    }
-
     public function onEventMergeConfig(ModuleEvent $event): void
     {
 
@@ -50,8 +42,14 @@ class Module extends AbstractModule
             $permissions = [];
             $listperms = (include $this->modulePath() . '/config/permissions.php');
             foreach($listperms as $name => $dt){
-                if(file_exists($this->modulePath() . '/config/permissions/'.$name.'.php')){
-                    $permissions = array_merge_recursive($permissions, (include $this->modulePath() . '/config/permissions/'.$name.'.php'));
+                $filename = $this->modulePath() . '/config/permissions/'.$name.'.php';
+                if(file_exists($filename)){
+                    try {
+                        $permissions = array_merge_recursive($permissions, (include $filename));
+                    } catch (\Exception $e) {
+                        $this->getLogger()->err($e->getMessage());
+                    }
+                    
                 }
             }
             if(!empty($permissions)){
@@ -63,15 +61,6 @@ class Module extends AbstractModule
                 $configListener->setMergedConfig($config);
             }
         }
-
-    }
-
-    public function onBootstrap(MvcEvent $event): void
-    {
-
-        parent::onBootstrap($event);
-        $this->setMvcEvent($event);
-        $this->addDefAclRules();
 
     }
 
@@ -201,12 +190,6 @@ class Module extends AbstractModule
             'view.show.after',
             [$this, 'viewUserShowAfter']
         );
-
-        // $sharedEventManager->attach(
-        //     'Omeka\Form\SettingForm',
-        //     'form.add_elements',
-        //     [$this, 'filterSettingFormElement']
-        // );
 
         $sharedEventManager->attach(
             'Omeka\Form\ResourceForm',

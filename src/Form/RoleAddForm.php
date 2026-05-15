@@ -29,22 +29,46 @@ class RoleAddForm extends Form
 
         $this->setAttribute('id', 'role-form');
 
+        $typesAddAction = [
+            'parentRole' => 'Parent Role', // @translate
+            'roleAStpl' => 'Role as Template', // @translate
+        ];
+
+        if ($this->getAcl()->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'change-native') && $this->getNativeRolesForMod()){
+            $typesAddAction['changeNative'] = 'Change native'; // @translate
+        }
+
         $this->add([
-            'name' => 'usingSelectedRole',
+            'name' => 'typeAddAction',
             'type' => 'radio',
             'options' => [
-                'label' => 'Choose what Role Selector will be using', // @translate
-                'value_options' => [
-                    'parent' => 'Parent Role', // @translate
-                    'template' => 'Role as Template', // @translate
-                ],
+                'label' => 'Add action type', // @translate
+                'value_options' => $typesAddAction,
             ],
             'attributes' => [
-                'id' => 'usingSelectedRole',
-                'value' => 'parent'
+                'id' => 'typeAddAction',
+                'value' => 'parentRole'
             ],
         ]);
-
+        if ($this->getAcl()->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'change-native') && $this->getNativeRolesForMod()){
+            $this->add([
+                'name' => 'o:changeNative',
+                'type' => 'Select',
+                'attributes' => [
+                    // 'value' => $userId ? $this->userSettings->get('default_item_sites', null, $userId) : [],
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select role for edit permissions', // @translate
+                    // 'multiple' => true,
+                    'id' => 'changeNative',
+                    'required' => true
+                ],
+                'options' => [
+                    'label' => 'Role', // @translate
+                    'info' => 'Select role for modification his options and permissions.', // @translate
+                    'value_options' => $this->getNativeRolesForMod(),
+                ],
+            ]);
+        }
         $this->add([
                 'name' => 'o:parentRole',
                 'type' => ParentRoleSelect::class,

@@ -1,216 +1,68 @@
-@media screen {
-    header nav .roles:before,
-    .roles .subhead::before,
-    #roles .no-resources:before,
-    .roles .no-resources:before {
-        content:"";
-    }
-    #roles .property {
-        display: inherit;
-    }
-    .roles .role .actions,
-    #role-resources .actions {
-        float: right;
-    }
-    #role-resources.empty,
-    #role-resources+.no-resources {
-        display:none;
-    }
-    #role-resources.empty+.no-resources {
-        display:block;
-        padding:0 24px;
-    }
-    #role-resources.empty+.no-resources:before {
-        content:"";
-    }
-    #role-resources tr.delete {
-        background-color:#fcc;
-    }
-    .roles .resource-details .role-internal-id {
-        font-size: 0.7em;
-    }
-
-    .role .role-list {
-        margin: 0;
-    }
-
-	.role-deactivated {
-		font-style: italic;
-		text-decoration: line-through;
-	}
-	
-    .role .role-comment.no-comment,
-    .roles .role-comment.no-comment {
-        font-style: italic;
-    }
-    .resource-details .internal-id {
-        font-size: small;
-        font-style: italic;
-    }
-	
-	#filter-display-values-list .row, #hide-properties-in-item-form-list .row {
-		display: flex;
-	}
-
-	p {
-		margin-top: 0;
-	}
-
-    @media (min-width:641px) {
-        .roles.browse table th:nth-child(1n+2),
-        .roles.browse table td:nth-child(1n+2) {
-            text-align: right;
-        }
-        .roles.browse table th:nth-child(1n+2) *,
-        .roles.browse table td:nth-child(1n+2) * {
-            text-align: right;
-            float: right;
-        }
-        .roles.browse table th:first-child,
-        .roles.browse table td:first-child {
-            max-width: 40%;
-        }
-        .roles.browse table th:last-child,
-        .roles.browse table td:last-child {
-            min-width: 10%;
-        }
-    }
-
-    .roles table .resource-name {
-        display: inline-block;
-        vertical-align: bottom;
-        margin-left: .5em;
-        opacity: .5;
-    }
-
-    .roles .single.actions {
-        float: right;
-    }
-    .roles .single.actions a::before {
-        text-align: inherit;
-    }
-    .roles .single.actions .o-icon-transmit::before {
-        background: url('../img/waiting-mini.gif') no-repeat scroll 3px 3px transparent !important;
-    }
-    .roles .role-name[contenteditable=true].o-icon-transmit::before,
-    .roles .no-action::before {
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-        vertical-align: top;
-        border: 0;
-        box-shadow: none;
-        opacity: .5;
-        text-align: inherit;
-    }
-    .roles.meta-role .single.actions,
-    .roles.meta-role .no-action::before {
-        float: right;
-    }
-
-    .roles.meta-role span,
-    .roles .meta-role span {
-        display: inline;
-        hyphens: auto;
-        word-wrap: break-word;
-    }
-
-    .roles.meta-role::before,
-    .roles .status-toggle::before,
-    .roles .resource-name::before {
-        display: inline-block;
-        font-family: "Font Awesome 5 Free";
-        padding-left: 3px;
-        padding-right: 3px;
-        width: 24px;
-    }
-    .roles .resource-name.resource::before {
-        content: "";
-    }
-    .roles .resource-name.no-resource::before {
-        content: "❌";
-    }
-    .roles .resource-name.item-set::before {
-        content: "";
-    }
-    .roles .resource-name.item::before {
-        content: "";
-    }
-    .roles .resource-name.media::before {
-        content: "";
-    }
-    .roles .o-icon-proposed::before {
-        color: #FFA500;
-        content: "";
-    }
-    .roles .o-icon-allowed::before {
-        color: #FFA500;
-        content: "";
-    }
-    .roles .o-icon-approved::before {
-        color: #00FF00;
-        content: "";
-    }
-    .roles .o-icon-rejected::before {
-        color: #FF0000;
-        content: "";
-    }
-    .roles .o-icon-undefined::before {
-        color: #FF0000;
-        content: "";
-    }
-    .roles .o-icon-none::before {
-        color: #FFFFFF;
-        content: "";
-    }
-    .roles .o-icon-transmit::before {
-        background: url('../img/waiting-mini.gif') no-repeat scroll 12px 3px transparent !important;
-        color: #000000;
-        content: "";
-        cursor: progress;
-    }
-
-    .roles .role-name[contenteditable="true"] {
-        background: inherit;
-        border: hidden;
-        display: inline-block;
-        min-height: unset;
-        max-height: 3em;
-        padding: inherit;
-        width: 84%;
-    }
-    .roles .role-name[contenteditable=true]:hover,
-    .roles .role-name[contenteditable=true]:focus {
-        outline: 1px dotted rgba(0,0,0,0.15);
-    }
-    .roles .role-name[contenteditable="true"]:active {
-        display: inline;
-        outline: 1px dashed rgba(0,0,0,0.15);
-        overflow: hidden;
-        white-space: nowrap;
-    }
-    .roles .role-name[contenteditable="true"]:active br {
-        display:none;
-    }
-    .roles .role-name[contenteditable="true"]:active * {
-        display:inline;
-        white-space:nowrap;
-    }
-    .roles .role-name[contenteditable=true].o-icon-transmit::before {
-        background: url('../img/waiting-mini.gif') no-repeat scroll 3px 3px transparent !important;
-    }
-
-    form fieldset#roles td {
-        display: block;
-    }
+.collapsed::after {
+    content: "" / "";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    padding-left: 6px;
+    padding-right: 3px;
+}
+ .expanded::after {
+    content: "" / "";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    padding-left: 5px;
 }
 
-@media screen and (max-width: 640px) {
-    fieldset.section>#role-resources.empty+.no-resources {
-        display:none;
-    }
-    fieldset.section.mobile-active>#role-resources.empty+.no-resources {
-        display:block;
-        margin-top:48px;
-    }
+/* #page-action-menu .expand::after {
+    padding-left: 4px;
+}
+#page-action-menu {
+    display:inline-block;
+    position:relative
+} */
+ul.collapsible-menu {
+    display:none;
+    list-style:none;
+    border:1px solid #dfdfdf;
+    background-color:#fff;
+    border-radius:3px;
+    text-align:left;
+    padding:0;
+    position:relative;
+    box-shadow:0 0 5px #dfdfdf;
+    position:absolute;
+    width:auto;
+    white-space:nowrap;
+    margin:12px -50px
+}
+ul.collapsible-menu::before {
+    content:"";
+    position:absolute;
+    bottom:calc(100% - 1px);
+    right:12px;
+    width:0;
+    height:0;
+    border-bottom:12px solid #fff;
+    border-left:6px solid transparent;
+    border-right:6px solid transparent
+}
+ul.collapsible-menu::after {
+    content:"";
+    position:absolute;
+    bottom:calc(100% - 1px);
+    right:11px;
+    width:0;
+    height:0;
+    border-bottom:14px solid #dfdfdf;
+    border-left:7px solid transparent;
+    border-right:7px solid transparent;
+    z-index:-1
+}
+ul.collapsible-menu a,
+ul.collapsible-menu .inactive {
+    padding:6px 12px 5px;
+    display:block;
+    position:relative
+}
+ul.collapsible-menu .inactive {
+    color:#dfdfdf
 }

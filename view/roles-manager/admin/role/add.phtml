@@ -6,10 +6,12 @@
 
 $plugins = $this->getHelperPluginManager();
 $translate = $plugins->get('translate');
+$assetUrl = $plugins->get('assetUrl');
 
 $this->htmlElement('body')->appendAttribute('class', 'roles add');
 
-// $this->headScript()->appendFile($this->assetUrl('js/advanced-search.js', 'Omeka'), 'text/javascript', ['defer' => 'defer']);
+$this->headScript()->appendFile($assetUrl('js/roles-add.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
+
 $form->prepare();
 echo $this->pageTitle($translate('New role'), 1, $translate('Roles'));
 echo $this->form()->openTag($form);

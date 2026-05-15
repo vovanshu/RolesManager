@@ -68,7 +68,7 @@ class SettingsController extends AbstractActionController
     public function updoctrineAction()
     {
 
-        if($this->getConf('developing')){
+        if ($this->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')){
             $params = [
                 'process' => 'UpdateDoctrine',
             ];
@@ -84,6 +84,50 @@ class SettingsController extends AbstractActionController
             $this->messenger()->addError($message);
         }
         return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'edit']);
+
+    }
+
+    public function uplocaletplAction()
+    {
+
+        if ($this->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')){
+            $params = [
+                'process' => 'UpdateLocaleTemplate',
+            ];
+            $this->jobDispatcher()->dispatch(\RolesManager\Job\UpdateLocaleTemplate::class, $params);
+            $message = new Message(
+                'Update Locale template add to Jobs.' // @translate
+            );
+            $this->messenger()->addSuccess($message);
+        }else{
+            $message = new Message(
+                'Update Locale template not allowed.' // @translate
+            );
+            $this->messenger()->addError($message);
+        }
+        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'edit']);
+
+    }
+
+    public function uprulesAction()
+    {
+
+        $path = $this->getConf('repository_rules');
+        $uplist = [];
+        $curlist = [];
+        $cont = file_get_contents($path);
+        if(!empty($cont)){
+            $tempFilePath = tempnam(sys_get_temp_dir(), 'roles_manager_rules_list');
+            file_put_contents($tempFilePath, $cont);
+            $uplist = (include $tempFilePath);
+        }
+        if(file_exists($this->modulePath() . '/config/permissions.php')){
+            $curlist = (include $this->modulePath() . '/config/permissions.php');           
+        }
+        $view = new ViewModel;
+        $view->setVariable('update_list', $uplist);
+        $view->setVariable('current_list', $curlist);
+        return $view;
 
     }
 

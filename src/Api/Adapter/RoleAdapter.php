@@ -76,121 +76,121 @@ class RoleAdapter extends AbstractEntityAdapter
         return Roles::class;
     }
 
-    public function buildQuery(QueryBuilder $qb, array $query): void
-    {
-        $expr = $qb->expr();
+    // public function buildQuery(QueryBuilder $qb, array $query): void
+    // {
+    //     $expr = $qb->expr();
 
-        if (isset($query['name'])) {
-            $this->buildQueryValuesItself($qb, $query['name'], 'name');
-        }
+    //     if (isset($query['name'])) {
+    //         $this->buildQueryValuesItself($qb, $query['name'], 'name');
+    //     }
 
-        if (isset($query['comment'])) {
-            $this->buildQueryValuesItself($qb, $query['comment'], 'comment');
-        }
+    //     if (isset($query['comment'])) {
+    //         $this->buildQueryValuesItself($qb, $query['comment'], 'comment');
+    //     }
 
-        // All roles for these entities ("OR"). If multiple, mixed with "AND",
-        // so, for mixed resources, use "resource_id".
-        $mapResourceTypes = [
-            'user_id' => User::class,
-            'resource_id' => Resource::class,
-            'item_set_id' => ItemSet::class,
-            'item_id' => Item::class,
-            'media_id' => Media::class,
-        ];
-        $subQueryKeys = array_intersect_key($mapResourceTypes, $query);
-        foreach ($subQueryKeys as $queryKey => $resourceType) {
-            if ($queryKey === 'user_id') {
-                $roleEntity = RoleUser::class;
-                $roleEntityColumn = 'user';
-            } else {
-                $roleEntity = RoleResource::class;
-                $roleEntityColumn = 'resource';
-            }
-            $entities = is_array($query[$queryKey]) ? $query[$queryKey] : [$query[$queryKey]];
-            $entities = array_filter($entities, 'is_numeric');
-            if (empty($entities)) {
-                continue;
-            }
-            $roleEntityAlias = $this->createAlias();
-            $entityAlias = $this->createAlias();
-            $qb
-                // Note: This query may be used if the annotation is set in
-                // core on Resource. In place, the relation is recreated.
-                // ->innerJoin(
-                //     $alias . ($queryKey === 'user_id' ?  '.users' : '.resources'),
-                //     $entityAlias, 'WITH',
-                //     $expr->in("$entityAlias.id", $this->createNamedParameter($qb, $entities))
-                // );
-                ->innerJoin(
-                    $roleEntity,
-                    $roleEntityAlias,
-                    'WITH',
-                    $expr->andX(
-                        $expr->eq($roleEntityAlias . '.role', 'omeka_root.id'),
-                        $expr->in(
-                            $roleEntityAlias . '.' . $roleEntityColumn,
-                            $this->createNamedParameter($qb, $entities)
-                        )
-                    )
-                );
-            // This check avoids bad result for bad request mixed ids.
-            if (!in_array($queryKey, ['user_id', 'resource_id'])) {
-                $resourceAlias = $this->createAlias();
-                $qb
-                    ->innerJoin(
-                        $resourceType,
-                        $resourceAlias,
-                        'WITH',
-                        $expr->eq(
-                            $roleEntityAlias . '.resource',
-                            $resourceAlias . '.id'
-                        )
-                    );
-            }
-        }
+    //     // All roles for these entities ("OR"). If multiple, mixed with "AND",
+    //     // so, for mixed resources, use "resource_id".
+    //     $mapResourceTypes = [
+    //         'user_id' => User::class,
+    //         'resource_id' => Resource::class,
+    //         'item_set_id' => ItemSet::class,
+    //         'item_id' => Item::class,
+    //         'media_id' => Media::class,
+    //     ];
+    //     $subQueryKeys = array_intersect_key($mapResourceTypes, $query);
+    //     foreach ($subQueryKeys as $queryKey => $resourceType) {
+    //         if ($queryKey === 'user_id') {
+    //             $roleEntity = RoleUser::class;
+    //             $roleEntityColumn = 'user';
+    //         } else {
+    //             $roleEntity = RoleResource::class;
+    //             $roleEntityColumn = 'resource';
+    //         }
+    //         $entities = is_array($query[$queryKey]) ? $query[$queryKey] : [$query[$queryKey]];
+    //         $entities = array_filter($entities, 'is_numeric');
+    //         if (empty($entities)) {
+    //             continue;
+    //         }
+    //         $roleEntityAlias = $this->createAlias();
+    //         $entityAlias = $this->createAlias();
+    //         $qb
+    //             // Note: This query may be used if the annotation is set in
+    //             // core on Resource. In place, the relation is recreated.
+    //             // ->innerJoin(
+    //             //     $alias . ($queryKey === 'user_id' ?  '.users' : '.resources'),
+    //             //     $entityAlias, 'WITH',
+    //             //     $expr->in("$entityAlias.id", $this->createNamedParameter($qb, $entities))
+    //             // );
+    //             ->innerJoin(
+    //                 $roleEntity,
+    //                 $roleEntityAlias,
+    //                 'WITH',
+    //                 $expr->andX(
+    //                     $expr->eq($roleEntityAlias . '.role', 'omeka_root.id'),
+    //                     $expr->in(
+    //                         $roleEntityAlias . '.' . $roleEntityColumn,
+    //                         $this->createNamedParameter($qb, $entities)
+    //                     )
+    //                 )
+    //             );
+    //         // This check avoids bad result for bad request mixed ids.
+    //         if (!in_array($queryKey, ['user_id', 'resource_id'])) {
+    //             $resourceAlias = $this->createAlias();
+    //             $qb
+    //                 ->innerJoin(
+    //                     $resourceType,
+    //                     $resourceAlias,
+    //                     'WITH',
+    //                     $expr->eq(
+    //                         $roleEntityAlias . '.resource',
+    //                         $resourceAlias . '.id'
+    //                     )
+    //                 );
+    //         }
+    //     }
 
-        if (array_key_exists('resource_type', $query)) {
-            $mapResourceTypes = [
-                'users' => User::class,
-                'resources' => Resource::class,
-                'item_sets' => ItemSet::class,
-                'items' => Item::class,
-                'media' => Media::class,
-            ];
-            if (isset($mapResourceTypes[$query['resource_type']])) {
-                $entityJoinClass = $query['resource_type'] === 'users'
-                    ? RoleUser::class
-                    : RoleResource::class;
-                $entityJoinAlias = $this->createAlias();
-                $qb
-                    ->innerJoin(
-                        $entityJoinClass,
-                        $entityJoinAlias,
-                        'WITH',
-                        $expr->eq(
-                            "$entityJoinAlias.role",
-                            'omeka_root'
-                        )
-                    );
-                if (!in_array($query['resource_type'], ['users', 'resources'])) {
-                    $entityAlias = $this->createAlias();
-                    $qb
-                        ->innerJoin(
-                            $mapResourceTypes[$query['resource_type']],
-                            $entityAlias,
-                            'WITH',
-                            $expr->eq(
-                                $entityJoinClass . '.resource',
-                                $entityAlias . '.id'
-                            )
-                        );
-                }
-            } elseif ($query['resource_type'] !== '') {
-                $qb
-                    ->andWhere('1 = 0');
-            }
-        }
-    }
+    //     if (array_key_exists('resource_type', $query)) {
+    //         $mapResourceTypes = [
+    //             'users' => User::class,
+    //             'resources' => Resource::class,
+    //             'item_sets' => ItemSet::class,
+    //             'items' => Item::class,
+    //             'media' => Media::class,
+    //         ];
+    //         if (isset($mapResourceTypes[$query['resource_type']])) {
+    //             $entityJoinClass = $query['resource_type'] === 'users'
+    //                 ? RoleUser::class
+    //                 : RoleResource::class;
+    //             $entityJoinAlias = $this->createAlias();
+    //             $qb
+    //                 ->innerJoin(
+    //                     $entityJoinClass,
+    //                     $entityJoinAlias,
+    //                     'WITH',
+    //                     $expr->eq(
+    //                         "$entityJoinAlias.role",
+    //                         'omeka_root'
+    //                     )
+    //                 );
+    //             if (!in_array($query['resource_type'], ['users', 'resources'])) {
+    //                 $entityAlias = $this->createAlias();
+    //                 $qb
+    //                     ->innerJoin(
+    //                         $mapResourceTypes[$query['resource_type']],
+    //                         $entityAlias,
+    //                         'WITH',
+    //                         $expr->eq(
+    //                             $entityJoinClass . '.resource',
+    //                             $entityAlias . '.id'
+    //                         )
+    //                     );
+    //             }
+    //         } elseif ($query['resource_type'] !== '') {
+    //             $qb
+    //                 ->andWhere('1 = 0');
+    //         }
+    //     }
+    // }
 
     public function sortQuery(QueryBuilder $qb, array $query): void
     {

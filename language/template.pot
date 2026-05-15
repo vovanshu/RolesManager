@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 11:26+0300\n"
+"POT-Creation-Date: 2026-05-14 16:51+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: view/roles-manager/admin/import/prepare.phtml:11
 #: view/roles-manager/admin/role/import.phtml:14
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:12
+#: view/roles-manager/admin/settings/edit.phtml:15
 #: view/roles-manager/admin/settings/restore.phtml:14
 msgid "Roles Manager"
 msgstr ""
@@ -42,14 +42,14 @@ msgstr ""
 #: view/roles-manager/admin/import/prepare.phtml:16
 #: view/roles-manager/admin/role/add.phtml:14
 #: view/roles-manager/admin/role/browse.phtml:42
-#: view/roles-manager/admin/role/edit.phtml:27
-#: view/roles-manager/admin/role/edit.phtml:30
+#: view/roles-manager/admin/role/edit.phtml:26
+#: view/roles-manager/admin/role/edit.phtml:29
 #: view/roles-manager/admin/role/import.phtml:17
 #: view/roles-manager/admin/role/mod.phtml:16
 #: view/roles-manager/admin/role/show.phtml:16
 #: view/roles-manager/admin/settings/backuping.phtml:17
 #: view/roles-manager/admin/settings/backups.phtml:18
-#: view/roles-manager/admin/settings/edit.phtml:17
+#: view/roles-manager/admin/settings/edit.phtml:50
 #: view/roles-manager/admin/settings/restore.phtml:17
 #: view/roles-manager/admin/settings/test.phtml:13
 #: view/roles-manager/admin/settings/test.phtml:16
@@ -117,32 +117,32 @@ msgstr ""
 msgid "Total users"
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:59
+#: view/roles-manager/admin/role/browse.phtml:56
 msgid "Change native"
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:81
+#: view/roles-manager/admin/role/browse.phtml:78
 msgid "There are no roles."
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:114
-#: view/roles-manager/admin/role/browse.phtml:115
+#: view/roles-manager/admin/role/browse.phtml:111
+#: view/roles-manager/admin/role/browse.phtml:112
 msgid "Edit name"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:22
+#: view/roles-manager/admin/role/edit.phtml:21
 msgid "Permissions"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:23
+#: view/roles-manager/admin/role/edit.phtml:22
 msgid "No display values"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:24
+#: view/roles-manager/admin/role/edit.phtml:23
 msgid "Hide properties in item form"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:27
+#: view/roles-manager/admin/role/edit.phtml:26
 msgid "Edit role"
 msgstr ""
 
@@ -172,7 +172,7 @@ msgstr ""
 
 #: view/roles-manager/admin/settings/backuping.phtml:19
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:20
+#: view/roles-manager/admin/settings/edit.phtml:29
 #: view/roles-manager/admin/settings/restore.phtml:14
 #: view/roles-manager/admin/settings/restore.phtml:19
 msgid "Backups"
@@ -199,8 +199,20 @@ msgstr ""
 msgid "File %s backup content"
 msgstr ""
 
-#: view/roles-manager/admin/settings/edit.phtml:23
+#: view/roles-manager/admin/settings/edit.phtml:20
+msgid "Maintenance"
+msgstr ""
+
+#: view/roles-manager/admin/settings/edit.phtml:34
+msgid "Update rules"
+msgstr ""
+
+#: view/roles-manager/admin/settings/edit.phtml:39
 msgid "Update Doctrine"
+msgstr ""
+
+#: view/roles-manager/admin/settings/edit.phtml:44
+msgid "Update Locale template"
 msgstr ""
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:6
@@ -225,52 +237,60 @@ msgid "Update Doctrine Module not allowed."
 msgstr ""
 
 #: src/Controller/Admin/SettingsController.php:99
+msgid "Update Locale template add to Jobs."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:104
+msgid "Update Locale template not allowed."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:121
 msgid "Backup data users"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:113
+#: src/Controller/Admin/SettingsController.php:135
 msgid "At the begin show your owned"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:127
+#: src/Controller/Admin/SettingsController.php:149
 msgid "Viewer can assign items"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:140 src/Form/RoleEditForm.php:37
+#: src/Controller/Admin/SettingsController.php:162 src/Form/RoleEditForm.php:37
 #: src/Form/RoleEditForm.php:463
 msgid "List site selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:153 src/Form/RoleEditForm.php:41
+#: src/Controller/Admin/SettingsController.php:175 src/Form/RoleEditForm.php:41
 #: src/Form/RoleEditForm.php:517
 msgid "List item set selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:167
+#: src/Controller/Admin/SettingsController.php:189
 msgid "Addition role information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:182
+#: src/Controller/Admin/SettingsController.php:204
 msgid "Addition user information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:208
+#: src/Controller/Admin/SettingsController.php:230
 msgid "Settings save successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:263
+#: src/Controller/Admin/SettingsController.php:285
 msgid "Restore successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:266
+#: src/Controller/Admin/SettingsController.php:288
 msgid "Restore failed!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:269
+#: src/Controller/Admin/SettingsController.php:291
 msgid "Restore failed - file no found!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:301
+#: src/Controller/Admin/SettingsController.php:323
 msgid "File backup successfully deleted."
 msgstr ""
 
@@ -849,59 +869,59 @@ msgstr ""
 msgid "Request too long to process."
 msgstr ""
 
-#: config/module.config.php:262
+#: config/module.config.php:263
 msgid "Fulltext"
 msgstr ""
 
-#: config/module.config.php:264
+#: config/module.config.php:265
 msgid "Properties improved"
 msgstr ""
 
-#: config/module.config.php:265
+#: config/module.config.php:266
 msgid "Filters"
 msgstr ""
 
-#: config/module.config.php:270
+#: config/module.config.php:271
 msgid "Site improved"
 msgstr ""
 
-#: config/module.config.php:272
+#: config/module.config.php:273
 msgid "Has original"
 msgstr ""
 
-#: config/module.config.php:273
+#: config/module.config.php:274
 msgid "Has thumbnails"
 msgstr ""
 
-#: config/module.config.php:275
+#: config/module.config.php:276
 msgid "Owner improved"
 msgstr ""
 
-#: config/module.config.php:277
+#: config/module.config.php:278
 msgid "Visibility radio"
 msgstr ""
 
-#: config/module.config.php:278
+#: config/module.config.php:279
 msgid "Ids"
 msgstr ""
 
-#: config/module.config.php:279
+#: config/module.config.php:280
 msgid "Media ingester"
 msgstr ""
 
-#: config/module.config.php:280
+#: config/module.config.php:281
 msgid "Media types"
 msgstr ""
 
-#: config/module.config.php:281
+#: config/module.config.php:282
 msgid "Media types improved"
 msgstr ""
 
-#: config/module.config.php:282
+#: config/module.config.php:283
 msgid "data-type-geography"
 msgstr ""
 
-#: config/module.config.php:283
+#: config/module.config.php:284
 msgid "numeric-data-types-advanced-search"
 msgstr ""
 

@@ -9,7 +9,6 @@ $translate = $plugins->get('translate');
 
 $this->htmlElement('body')->appendAttribute('class', 'roles mod');
 
-// $this->headScript()->appendFile($this->assetUrl('js/advanced-search.js', 'Omeka'), 'text/javascript', ['defer' => 'defer']);
 $form->prepare();
 ?>
 

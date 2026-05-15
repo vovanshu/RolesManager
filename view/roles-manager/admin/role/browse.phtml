@@ -52,12 +52,6 @@ $batchDeleteRight = False;
 <form method="post" id="batch-form" class="disable-unsaved-warning">
 
 <div id="page-actions">
-    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\ImportController', 'import')): ?>
-        <a href="<?= $this->url('admin/roles-manager-import', ['action' => 'browse']) ?>" class="button"><?= $translate('Import') ?></a>
-    <?php endif; ?>
-    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'change-native') && $nativeRoles): ?>
-    <?= $hyperlink($translate('Change native'), $this->url('admin/roles', ['action' => 'mod'],), ['class' => 'button']) ?>
-    <?php endif; ?>
     <?php if ($createRight): ?>
     <?= $hyperlink($translate('Add'), $this->url('admin/roles', ['action' => 'add']), ['class' => 'button']) ?>
     <?php endif; ?>
@@ -90,9 +84,9 @@ $batchDeleteRight = False;
                 <?php if ($batchDeleteRight): ?>
                 <input type="checkbox" class="select-all">
                 <?php endif; ?>
-                <?= $translate('Name') ?>
+                <?= $translate('Label') ?>
             </th>
-            <th><?= $translate('Label') ?></th>
+            <th><?= $translate('Name') ?></th>
             <th><?= $translate('Users') ?></th>
         </tr>
     </thead>
@@ -106,7 +100,7 @@ $batchDeleteRight = False;
                 <?php if ($batchDeleteRight && (!$role->created() || ($role->created() && empty($role->countUser())))): ?>
                     <input type="checkbox" name="resource_ids[]" value="<?= $role->id() ?>">
                 <?php endif; ?>
-                <span class="role-name<?= $role->active() ? '' : ' role-deactivated' ?>" ><?= $name; ?></span>
+                <span class="role-label<?= $role->active() ? '' : ' role-deactivated' ?>"><?= $translate($role->label()); ?></span>
                 <ul class="actions">
                     <?php if ($role->userIsAllowed('update')): ?>
                     <li><a href="<?= $this->url('admin/roles', ['action' => 'edit', 'id' => $role->id()]) ?>"
@@ -129,7 +123,7 @@ $batchDeleteRight = False;
                 </ul>
             </td>
             <td>
-                <span class="role-label"><?= $translate($role->label()); ?></span>
+                <span class="role-name" ><?= $name; ?></span>
             </td>
             <td><?php if (!empty($role->countUser())){ echo $hyperlink($role->countUser(), $role->urlToUsers(), ['class' => 'role-browse-user']); } ?>
             </td>

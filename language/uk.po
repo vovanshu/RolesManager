@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RolesManager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-12 12:19+0300\n"
+"POT-Creation-Date: 2026-05-14 16:51+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -15,11 +15,11 @@ msgstr ""
 "X-Domain: RolesManager\n"
 "X-Generator: Poedit 3.9\n"
 
-#: Module.php:555 Module.php:565 Module.php:592
+#: Module.php:515 Module.php:525 Module.php:552
 msgid "Show only mine"
 msgstr ""
 
-#: Module.php:558 Module.php:568 Module.php:594
+#: Module.php:518 Module.php:528 Module.php:554
 msgid "Show all"
 msgstr "Показати все"
 
@@ -29,7 +29,7 @@ msgstr "Показати все"
 #: view/roles-manager/admin/import/prepare.phtml:11
 #: view/roles-manager/admin/role/import.phtml:14
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:12
+#: view/roles-manager/admin/settings/edit.phtml:15
 #: view/roles-manager/admin/settings/restore.phtml:14
 msgid "Roles Manager"
 msgstr "Менеджер ролей"
@@ -40,14 +40,14 @@ msgstr "Менеджер ролей"
 #: view/roles-manager/admin/import/prepare.phtml:16
 #: view/roles-manager/admin/role/add.phtml:14
 #: view/roles-manager/admin/role/browse.phtml:42
-#: view/roles-manager/admin/role/edit.phtml:27
-#: view/roles-manager/admin/role/edit.phtml:30
+#: view/roles-manager/admin/role/edit.phtml:26
+#: view/roles-manager/admin/role/edit.phtml:29
 #: view/roles-manager/admin/role/import.phtml:17
 #: view/roles-manager/admin/role/mod.phtml:16
 #: view/roles-manager/admin/role/show.phtml:16
 #: view/roles-manager/admin/settings/backuping.phtml:17
 #: view/roles-manager/admin/settings/backups.phtml:18
-#: view/roles-manager/admin/settings/edit.phtml:17
+#: view/roles-manager/admin/settings/edit.phtml:50
 #: view/roles-manager/admin/settings/restore.phtml:17
 #: view/roles-manager/admin/settings/test.phtml:13
 #: view/roles-manager/admin/settings/test.phtml:16
@@ -115,32 +115,32 @@ msgstr ""
 msgid "Total users"
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:59
+#: view/roles-manager/admin/role/browse.phtml:56
 msgid "Change native"
 msgstr "Змінити вбудовану"
 
-#: view/roles-manager/admin/role/browse.phtml:81
+#: view/roles-manager/admin/role/browse.phtml:78
 msgid "There are no roles."
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:114
-#: view/roles-manager/admin/role/browse.phtml:115
+#: view/roles-manager/admin/role/browse.phtml:111
+#: view/roles-manager/admin/role/browse.phtml:112
 msgid "Edit name"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:22
+#: view/roles-manager/admin/role/edit.phtml:21
 msgid "Permissions"
 msgstr "Привілегії"
 
-#: view/roles-manager/admin/role/edit.phtml:23
+#: view/roles-manager/admin/role/edit.phtml:22
 msgid "No display values"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:24
+#: view/roles-manager/admin/role/edit.phtml:23
 msgid "Hide properties in item form"
 msgstr ""
 
-#: view/roles-manager/admin/role/edit.phtml:27
+#: view/roles-manager/admin/role/edit.phtml:26
 msgid "Edit role"
 msgstr "Редагувати роль"
 
@@ -170,7 +170,7 @@ msgstr ""
 
 #: view/roles-manager/admin/settings/backuping.phtml:19
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:20
+#: view/roles-manager/admin/settings/edit.phtml:29
 #: view/roles-manager/admin/settings/restore.phtml:14
 #: view/roles-manager/admin/settings/restore.phtml:19
 msgid "Backups"
@@ -182,24 +182,36 @@ msgstr "Створення резервної копії"
 
 #: view/roles-manager/admin/settings/backups.phtml:26
 msgid "Backups file no found."
-msgstr ""
+msgstr "Резервних копій не знайдено."
 
 #: view/roles-manager/admin/settings/delete-confirm.phtml:6
 msgid "Delete backup"
-msgstr ""
+msgstr "Видалити резервну копію"
 
 #: view/roles-manager/admin/settings/details.phtml:5
 msgid "Details backup"
-msgstr ""
+msgstr "Деталі про резервну копію"
 
 #: view/roles-manager/admin/settings/details.phtml:6
 #, php-format
 msgid "File %s backup content"
 msgstr ""
 
-#: view/roles-manager/admin/settings/edit.phtml:23
+#: view/roles-manager/admin/settings/edit.phtml:20
+msgid "Maintenance"
+msgstr "Обслуговування"
+
+#: view/roles-manager/admin/settings/edit.phtml:34
+msgid "Update rules"
+msgstr "Оновити правила"
+
+#: view/roles-manager/admin/settings/edit.phtml:39
 msgid "Update Doctrine"
-msgstr "Оновити Доктринру"
+msgstr "Оновити Доктрину"
+
+#: view/roles-manager/admin/settings/edit.phtml:44
+msgid "Update Locale template"
+msgstr ""
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:6
 msgid "Restore backup"
@@ -216,59 +228,67 @@ msgstr ""
 
 #: src/Controller/Admin/SettingsController.php:77
 msgid "Update Doctrine Module add to Jobs."
-msgstr "Додано завдання для оновлення Доктринри."
+msgstr "Додано завдання для оновлення Доктрини."
 
 #: src/Controller/Admin/SettingsController.php:82
 msgid "Update Doctrine Module not allowed."
-msgstr "Оновити Доктринру не дозволено."
+msgstr "Оновити Доктрину не дозволено."
 
 #: src/Controller/Admin/SettingsController.php:99
+msgid "Update Locale template add to Jobs."
+msgstr "Додано завдання для оновлення шаблону локалізації."
+
+#: src/Controller/Admin/SettingsController.php:104
+msgid "Update Locale template not allowed."
+msgstr "Оновити шаблон локалізації не дозволено."
+
+#: src/Controller/Admin/SettingsController.php:121
 msgid "Backup data users"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:113
+#: src/Controller/Admin/SettingsController.php:135
 msgid "At the begin show your owned"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:127
+#: src/Controller/Admin/SettingsController.php:149
 msgid "Viewer can assign items"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:140 src/Form/RoleEditForm.php:37
+#: src/Controller/Admin/SettingsController.php:162 src/Form/RoleEditForm.php:37
 #: src/Form/RoleEditForm.php:463
 msgid "List site selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:153 src/Form/RoleEditForm.php:41
+#: src/Controller/Admin/SettingsController.php:175 src/Form/RoleEditForm.php:41
 #: src/Form/RoleEditForm.php:517
 msgid "List item set selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:167
+#: src/Controller/Admin/SettingsController.php:189
 msgid "Addition role information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:182
+#: src/Controller/Admin/SettingsController.php:204
 msgid "Addition user information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:208
+#: src/Controller/Admin/SettingsController.php:230
 msgid "Settings save successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:263
+#: src/Controller/Admin/SettingsController.php:285
 msgid "Restore successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:266
+#: src/Controller/Admin/SettingsController.php:288
 msgid "Restore failed!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:269
+#: src/Controller/Admin/SettingsController.php:291
 msgid "Restore failed - file no found!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:301
+#: src/Controller/Admin/SettingsController.php:323
 msgid "File backup successfully deleted."
 msgstr ""
 
@@ -324,8 +344,6 @@ msgid "Select this if you want new role copy permissions."
 msgstr ""
 
 #: src/Controller/Admin/ImportController.php:305
-#, fuzzy
-#| msgid "Parent role"
 msgid "parent-role"
 msgstr "Батьківська роль"
 
@@ -398,40 +416,40 @@ msgstr ""
 msgid "Omeka\\Mailer"
 msgstr ""
 
-#: src/TraitModule.php:87 src/TraitModule.php:372
+#: src/TraitModule.php:78 src/TraitModule.php:363
 msgid "This module requires the module \"{module}\"."
 msgstr ""
 
-#: src/TraitModule.php:92
+#: src/TraitModule.php:83
 msgid "This module requires modules \"{modules}\"."
 msgstr ""
 
-#: src/TraitModule.php:102
+#: src/TraitModule.php:93
 msgid ""
 "This module cannot install its tables, because they exist already. Try to "
 "remove them first."
 msgstr ""
 
-#: src/TraitModule.php:280
+#: src/TraitModule.php:271
 msgid "The module removed tables \"{tables}\" from a previous broken install."
 msgstr ""
 
-#: src/TraitModule.php:367
+#: src/TraitModule.php:358
 msgid ""
 "This module requires the module \"{module}\", version {version} or above."
 msgstr ""
 
-#: src/TraitModule.php:480
+#: src/TraitModule.php:471
 msgid ""
 "The module \"{module}\" was automatically deactivated because the "
 "dependencies are unavailable."
 msgstr ""
 
-#: src/TraitModule.php:499
+#: src/TraitModule.php:490
 msgid "The directory \"{path}\" is not writeable."
 msgstr ""
 
-#: src/TraitModule.php:510
+#: src/TraitModule.php:501
 msgid "The directory \"{path}\" is not writeable: {error}."
 msgstr ""
 

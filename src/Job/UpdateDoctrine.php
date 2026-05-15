@@ -5,16 +5,19 @@ namespace RolesManager\Job;
 use Omeka\Job\AbstractJob;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
+use RolesManager\TraitGeneral;
 
 class UpdateDoctrine extends AbstractJob
 {
+
+    use TraitGeneral;
 
     public function perform(): void
     {
 
         $moduleName = 'RolesManager';
         $modulePath = implode(DIRECTORY_SEPARATOR, [OMEKA_PATH, 'modules', $moduleName]);
-        $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
+        $entityManager = $this->getEntityManager();
         $classMetadatas = $entityManager->getMetadataFactory()->getAllMetadata();
         $moduleClassMetadatas = [];
         $moduleTables = [];
@@ -34,27 +37,27 @@ class UpdateDoctrine extends AbstractJob
         }
 
         if (!$moduleClassMetadatas) {
-            echo "There are no database entities for the $moduleName module.";
+            $this->getLogger()->err("There are no database entities for the $moduleName module.");
             exit;
         }
 
         $dest = implode(DIRECTORY_SEPARATOR, [$modulePath, 'data', 'doctrine-proxies']);
         if (!file_exists($dest)) {
             if (!mkdir($dest, 0755, true)) {
-                echo "Couldn't create a directory at $dest!\n";
+                $this->getLogger()->err("Couldn't create a directory at $dest!\n");
                 exit(1);
             }
         }
 
         if (!is_dir($dest)) {
-            echo "$dest exists, but isn't a directory!\n";
+            $this->getLogger()->err("$dest exists, but isn't a directory!\n");
             exit(1);
         }
 
 
         $entityManager->getProxyFactory()->generateProxyClasses($moduleClassMetadatas, $dest);
 
-        echo "Proxies created at $dest.\n";
+        $notice = "Proxies created at $dest.\n";
 
         $schemaTool = new SchemaTool($entityManager);
         $schema = $schemaTool->getSchemaFromMetadata($classMetadatas);
@@ -74,7 +77,8 @@ class UpdateDoctrine extends AbstractJob
         $statements = $schema->toSql($entityManager->getConnection()->getDatabasePlatform());
         $statements[] = '';
 
-        echo "SQL:\n\n" . implode(';' . PHP_EOL, $statements);
+        $notice .= "SQL:\n\n" . implode(';' . PHP_EOL, $statements);
+        $this->getLogger()->notice($notice);
 
     }
 

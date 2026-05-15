@@ -169,20 +169,31 @@ class RoleController extends AbstractActionController
             $data['o:created'] = True;
             $form->setData($data);
             if ($form->isValid()) {
-                if($data['usingSelectedRole'] == 'template' && !empty($data['o:roleAStpl'])){
-                    $needRole = $data['o:roleAStpl'];
-                }
-                if($data['usingSelectedRole'] == 'parent' && !empty($data['o:parentRole'])){
-                    $needRole = $data['o:parentRole'];
-                    $data['o:parent'] = $data['o:parentRole'];
-                }
-                $tpl = $this->api()->searchOne('roles', ['name' => $needRole]);
-                if($tpl->getTotalResults()){
-                    $trplrole = $tpl->getContent()->jsonSerialize();
-                    $data['o:options'] = $trplrole['o:options'];
-                    if($data['usingSelectedRole'] == 'template' && !empty($data['o:roleAStpl'])){
-                        $data['o:allow'] = $trplrole['o:allow'];
-                        $data['o:deny'] = $trplrole['o:deny'];
+                if($data['typeAddAction'] == 'changeNative' && !empty($data['o:changeNative'])){
+                    $RoleLabels = $this->getAcl()->getRoleLabels();
+                    $data['o:name'] = $data['o:changeNative'];
+                    $data['o:created'] = False;
+                    if(empty($data['o:label']) && !empty($label = $RoleLabels[$data['o:changeNative']])){
+                        $data['o:label'] = $label;
+                    }
+                }else{
+                    if($data['typeAddAction'] == 'roleAStpl' && !empty($data['o:roleAStpl'])){
+                        $needRole = $data['o:roleAStpl'];
+                    }
+                    if($data['typeAddAction'] == 'parentRole' && !empty($data['o:parentRole'])){
+                        $needRole = $data['o:parentRole'];
+                        $data['o:parent'] = $data['o:parentRole'];
+                    }
+                    if(!empty($needRole)){
+                        $tpl = $this->api()->searchOne('roles', ['name' => $needRole]);
+                        if($tpl->getTotalResults()){
+                            $trplrole = $tpl->getContent()->jsonSerialize();
+                            $data['o:options'] = $trplrole['o:options'];
+                            if($data['usingSelectedRole'] == 'template' && !empty($data['o:roleAStpl'])){
+                                $data['o:allow'] = $trplrole['o:allow'];
+                                $data['o:deny'] = $trplrole['o:deny'];
+                            }
+                        }
                     }
                 }
                 $response = $this->api($form)->create('roles', $data);
@@ -202,46 +213,46 @@ class RoleController extends AbstractActionController
 
     }
 
-    public function modAction()
-    {
+    // public function modAction()
+    // {
 
-        if (!$this->userIsAllowed(RoleController::class, 'change-native')) {
-            throw new Exception\PermissionDeniedException;
-        }
+    //     if (!$this->userIsAllowed(RoleController::class, 'change-native')) {
+    //         throw new Exception\PermissionDeniedException;
+    //     }
 
-        $form = $this->getForm(RoleModForm::class);
-        $view = new ViewModel;
-        $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
-        $form->setAttribute('enctype', 'multipart/form-data');
-        $form->setAttribute('id', 'mod-role');
-        if ($this->getRequest()->isPost()) {
-            $RoleLabels = $this->getAcl()->getRoleLabels();
-            $data = $this->params()->fromPost();
-            $data['o:created'] = False;
-            if(empty($data['o:label']) && !empty($label = $RoleLabels[$data['o:name']])){
-                $data['o:label'] = $label;
-            }
-            $form->setData($data);
-            if ($form->isValid()) {
-                $response = $this->api($form)->create('roles', $data);
-                if ($response) {
-                    if(!empty($data['o:options'])){
-                        $this->setUserSettings($data['o:name'], $data['o:options']);
-                    }
-                    $message = new Message(
-                        'Role successfully created.' // @translate
-                    );
-                    $this->messenger()->addSuccess($message);
-                    return $this->redirect()->toRoute('admin/roles', ['action' => 'edit', 'id' => $response->getContent()->id()]);
-                }
-            } else {
-                $this->messenger()->addFormErrors($form);
-            }
-        }
-        $view->setVariable('form', $form);
-        return $view;
+    //     $form = $this->getForm(RoleModForm::class);
+    //     $view = new ViewModel;
+    //     $form->setAttribute('action', $this->url()->fromRoute(null, [], true));
+    //     $form->setAttribute('enctype', 'multipart/form-data');
+    //     $form->setAttribute('id', 'mod-role');
+    //     if ($this->getRequest()->isPost()) {
+    //         $RoleLabels = $this->getAcl()->getRoleLabels();
+    //         $data = $this->params()->fromPost();
+    //         $data['o:created'] = False;
+    //         if(empty($data['o:label']) && !empty($label = $RoleLabels[$data['o:name']])){
+    //             $data['o:label'] = $label;
+    //         }
+    //         $form->setData($data);
+    //         if ($form->isValid()) {
+    //             $response = $this->api($form)->create('roles', $data);
+    //             if ($response) {
+    //                 if(!empty($data['o:options'])){
+    //                     $this->setUserSettings($data['o:name'], $data['o:options']);
+    //                 }
+    //                 $message = new Message(
+    //                     'Role successfully created.' // @translate
+    //                 );
+    //                 $this->messenger()->addSuccess($message);
+    //                 return $this->redirect()->toRoute('admin/roles', ['action' => 'edit', 'id' => $response->getContent()->id()]);
+    //             }
+    //         } else {
+    //             $this->messenger()->addFormErrors($form);
+    //         }
+    //     }
+    //     $view->setVariable('form', $form);
+    //     return $view;
 
-    }
+    // }
 
     public function editAction()
     {

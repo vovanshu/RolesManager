@@ -12,10 +12,9 @@ $assetUrl = $plugins->get('assetUrl');
 
 $this->htmlElement('body')->appendAttribute('class', 'roles edit');
 
-$this->headLink()->appendStylesheet($assetUrl('css/roles.css', 'RolesManager'));
-$this->headScript()->appendFile($assetUrl('js/roles.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
+$this->headLink()->appendStylesheet($assetUrl('css/roles-edit.css', 'RolesManager'));
+$this->headScript()->appendFile($assetUrl('js/roles-edit.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
 
-// $this->headScript()->appendFile($this->assetUrl('js/advanced-search.js', 'Omeka'), 'text/javascript', ['defer' => 'defer']);
 $form->prepare();
 $sectionNavs['general'] = $translate('General');
 if(empty($parent)){
@@ -28,6 +27,7 @@ if(empty($parent)){
 <?= $this->form()->openTag($form) ?>
 <div id="page-actions">
     <?= $hyperlink($translate('Roles'), $this->url('admin/roles', [], false), ['class' => 'button']) ?>
+    <?php echo $this->cancelButton(); ?>
     <button type="submit"><?= $translate('Save') ?></button>
 </div>
 <?php echo $this->sectionNav($sectionNavs, 'view.edit.section_nav' ); ?>
