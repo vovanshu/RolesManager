@@ -7,8 +7,8 @@ $assetUrl = $plugins->get('assetUrl');
 
 $this->htmlElement('body')->appendAttribute('class', 'settings edit');
 
-$this->headLink()->appendStylesheet($assetUrl('css/roles.css', 'RolesManager'));
-$this->headScript()->appendFile($assetUrl('js/roles.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
+$this->headLink()->appendStylesheet($assetUrl('css/settings.css', 'RolesManager'));
+$this->headScript()->appendFile($assetUrl('js/settings.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
 
 $form->prepare();
 ?>

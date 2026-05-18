@@ -14,9 +14,6 @@ $assetUrl = $plugins->get('assetUrl');
 
 $this->htmlElement('body')->appendAttribute('class', 'roles browse');
 
-$this->headLink()->appendStylesheet($assetUrl('css/roles.css', 'RolesManager'));
-$this->headScript()->appendFile($assetUrl('js/roles.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
-
 $sortHeadings = [
     [
         'label' => $translate('Name'),

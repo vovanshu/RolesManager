@@ -66,3 +66,11 @@ ul.collapsible-menu .inactive {
 ul.collapsible-menu .inactive {
     color:#dfdfdf
 }
+ul.collapsible-menu li:hover {
+    background-color: #ae00ff;
+    color: #fff;
+}
+
+ul.collapsible-menu li a:hover {
+    color: #fff;
+}
