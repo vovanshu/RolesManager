@@ -291,13 +291,6 @@ trait TraitCommon
 
     }
 
-    public function getOps($name, $default = Null)
-    {
-
-        return 'Function deprecated used for - '.$name;   
-
-    }
-
     public function getSets($name, $callback = [])
     {
         

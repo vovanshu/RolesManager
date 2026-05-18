@@ -18,7 +18,7 @@ class SiteSelector extends AbstractHelper
         }
 
         $sites = $view->api()->search('sites', $query)->getContent();
-        if($RolesManager->getCurrentRoleOps('o:withoutowner_site_selector') == 'true' || $RolesManager->getSets('withoutowner_site_selector') == 'true'){
+        if($RolesManager->getCurrentRoleOps('o:withoutowner_site_selector') == 'true' || $RolesManager->getSets('roles_manager_withoutowner_site_selector') == 'true'){
             $allowedSites = [];
             foreach ($sites as $site) {
                 if ($site->userIsAllowed('can-assign-items')) {
