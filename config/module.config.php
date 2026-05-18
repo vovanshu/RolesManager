@@ -237,7 +237,7 @@ return [
     // and modify options as you want.
     'RolesManager' => [
         'debug' => False,
-        'repository_rules' => 'https://github.com/vovanshu/RolesManager/raw/refs/heads/main/config/permissions.php',
+        'repository_rules' => 'https://github.com/vovanshu/RolesManager/raw/refs/heads/main/config/',
         'backups' => OMEKA_PATH.'/files/backup/RolesManager/',
         'imports' => OMEKA_PATH.'/files/import/RolesManager/',
         'settings' => [
@@ -248,15 +248,6 @@ return [
             'roles_manager_withoutowner_item_set_selector' => 'false',
             'roles_manager_addition_role_information' => '',
             'roles_manager_addition_user_information' => '',
-        ],
-        'options' => [
-            'backup_users' => 'roles_manager_backup_users',
-            'show_owned' => 'roles_manager_show_owned',
-            'viewer_can_assign_items' => 'roles_manager_viewer_can_assign_items',
-            'withoutowner_site_selector' => 'roles_manager_withoutowner_site_selector',
-            'withoutowner_item_set_selector' => 'roles_manager_withoutowner_item_set_selector',
-            'addition_role_information' => 'roles_manager_addition_role_information',
-            'addition_user_information' => 'roles_manager_addition_user_information',
         ],
         'partials_AdvancedSearch' => [
             'common/advanced-search/sort' => 'Sort', // @translate

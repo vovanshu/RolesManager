@@ -109,25 +109,220 @@ class SettingsController extends AbstractActionController
 
     }
 
+    public function rulesAddAction()
+    {
+
+        $name = $this->params('name');
+        if($this->getUpdateRolesManagerRules($name)){
+            $message = new Message(
+                'Rules %s add successfully.', // @translate
+                $name
+            );
+            $message->setEscapeHtml(false);
+            $this->messenger()->addSuccess($message);
+        }else{
+            $message = new Message(
+                'Rules %s add failed.', // @translate
+                $name
+            );
+            $message->setEscapeHtml(false);
+            $this->messenger()->addError($message);
+        }
+        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+
+    }
+
+    public function rulesUpgradeAction()
+    {
+
+        $name = $this->params('name');
+        if($this->getUpdateRolesManagerRules($name)){
+            $message = new Message(
+                'Rules %s upgrade successfully.', // @translate
+                $name
+            );
+            $message->setEscapeHtml(false);
+            $this->messenger()->addSuccess($message);
+        }else{
+            $message = new Message(
+                'Rules %s upgrade failed.', // @translate
+                $name
+            );
+            $message->setEscapeHtml(false);
+            $this->messenger()->addError($message);
+        }
+        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+
+    }
+
+    public function rulesUpgradeAllAction()
+    {
+
+        $uplist = $this->getUpdateRolesManagerRulesList();
+        if(!empty($uplist)){
+            if(file_exists($this->modulePath() . '/config/permissions.php')){
+                foreach($uplist as $name => $time){
+                    $curlist = (include $this->modulePath() . '/config/permissions.php');
+                    if(!empty($curlist[$name]) && (strtotime($time) > strtotime($curlist[$name]))){
+                        if(!$this->getUpdateRolesManagerRules($name)){
+                            $this->messenger()->addError('Upgrade all rules failed!'); // @translate
+                            break;
+                        }
+                    }
+                }
+                $this->messenger()->addSuccess('Upgrade all rules successfully!'); // @translate
+            }else{
+                foreach($uplist as $name => $time){
+                    if(!$this->getUpdateRolesManagerRules($name)){
+                        $this->messenger()->addError('Add all rules failed!'); // @translate
+                        break;
+                    }
+                }
+                $this->messenger()->addSuccess('Add all rules successfully!'); // @translate
+            }
+        }else{
+            $this->messenger()->addError('Upgrade or Add all rules failed!'); // @translate
+        }
+
+        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+
+    }
+
+
+    public function rulesDeleteConfirmAction()
+    {
+
+        $name = $this->params('name');
+        $form = $this->getForm(ConfirmForm::class);
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-settings', ['action' => 'rules-delete', 'name' => $name]));
+        $view = new ViewModel();
+        $view->setVariable('form', $form);
+        $view->setVariable('name', $name);
+        $view->setTemplate('roles-manager/admin/settings/rules-delete-confirm');
+        return $view->setTerminal(true);
+
+    }
+
+    public function rulesDeleteAction()
+    {
+
+        if ($this->getRequest()->isPost()) {
+            $form = $this->getForm(ConfirmForm::class);
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $name = $this->params('name');
+                $dest = $this->modulePath() . '/config/permissions/'.$name.'.php';
+                if (unlink($dest)) {
+                    $this->setCurListPermissions($name);
+                    $this->messenger()->addSuccess('File rules successfully deleted.'); // @translate
+                }
+            } else {
+                $this->messenger()->addFormErrors($form);
+            }
+        }
+        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+
+    }
+
     public function uprulesAction()
     {
 
-        $path = $this->getConf('repository_rules');
-        $uplist = [];
+        $uplist = $this->getUpdateRolesManagerRulesList();
         $curlist = [];
-        $cont = file_get_contents($path);
-        if(!empty($cont)){
-            $tempFilePath = tempnam(sys_get_temp_dir(), 'roles_manager_rules_list');
-            file_put_contents($tempFilePath, $cont);
-            $uplist = (include $tempFilePath);
-        }
         if(file_exists($this->modulePath() . '/config/permissions.php')){
-            $curlist = (include $this->modulePath() . '/config/permissions.php');           
+            $curlist = (include $this->modulePath() . '/config/permissions.php');
         }
         $view = new ViewModel;
         $view->setVariable('update_list', $uplist);
         $view->setVariable('current_list', $curlist);
+        $view->setVariable('cache', $this->getConf('imports').'cache-permissions.php');
         return $view;
+
+    }
+
+    private function getUpdateRolesManagerRulesList()
+    {
+        
+        $dest = $this->getConf('imports');
+        if(!file_exists($dest)){
+            mkdir($dest, 0755, true);
+        }
+        $dest .= 'cache-permissions.php';
+        if(file_exists($dest) && filectime($dest) > time() - 1800){
+            $rc = (include $dest);
+            if(!empty($rc) && is_array($rc)){
+                return $rc;
+            }
+        }
+        $path = $this->getConf('repository_rules');
+        $path .= 'permissions.php';
+        $cont = file_get_contents($path);
+        if(!empty($cont)){
+            file_put_contents($dest, $cont);
+            $rc = (include $dest);
+            if(!empty($rc) && is_array($rc)){
+                return $rc;
+            }
+        }
+        return [];
+
+    }
+
+    private function setCurListPermissions($name, $uplist = Null)
+    {
+
+        $curlist = [];
+        if(file_exists($this->modulePath() . '/config/permissions.php')){
+            $curlist = (include $this->modulePath() . '/config/permissions.php');
+        }
+        $str = "<?php declare(strict_types=1);\r\n\r\nreturn [\r\n";
+        if(!empty($curlist)){
+            foreach($curlist as $k => $time){
+                if(!empty($uplist)){
+                    if(!empty($uplist[$k]) && $k == $name){
+                        $time = $uplist[$k];
+                        unset($uplist[$k]);
+                    }
+                    $str .= "    '$k' => '$time',\r\n";
+                }elseif($k !== $name){
+                    $str .= "    '$k' => '$time',\r\n";
+                }
+            }
+        }
+        if(!empty($uplist[$name])){
+            foreach($uplist as $k => $time){
+                if($k == $name){
+                    $str .= "    '$k' => '$time',\r\n";
+                }
+            }
+        }
+        $str .= "];\r\n";
+        file_put_contents($this->modulePath() . '/config/permissions.php', $str);
+
+    }
+
+    private function getUpdateRolesManagerRules($name)
+    {
+        
+        $path = $this->getConf('repository_rules');
+        $path .= 'permissions/'.$name.'.php';
+        $cont = file_get_contents($path);
+        if(!empty($cont)){
+            $dest = $this->modulePath() . '/config/permissions';
+            if(!file_exists($dest)){
+                mkdir($dest, 0755, true);
+            }
+            $dest .= '/'.$name.'.php';
+            if(file_exists($dest)){
+                unlink($dest);
+            }
+            if(file_put_contents($dest, $cont)){
+                $uplist = $this->getUpdateRolesManagerRulesList();
+                $this->setCurListPermissions($name, $uplist);
+                return True;
+            }
+        }
+        return False;
 
     }
 
@@ -137,7 +332,7 @@ class SettingsController extends AbstractActionController
         $form = $this->getForm(Form::class);
 
         $form->add([
-            'name' => $this->getOps('backup_users'),
+            'name' => 'roles_manager_backup_users',
             'type' => 'checkbox',
             'options' => [
                 'label' => 'Backup data users', // @translate
@@ -145,13 +340,13 @@ class SettingsController extends AbstractActionController
                 'unchecked_value' => 'false',
             ],
             'attributes' => [
-                'id' => $this->getOps('backup_users'),
-                'value' => $this->getSets('backup_users')
+                'id' => 'roles_manager_backup_users',
+                'value' => $this->getSets('roles_manager_backup_users')
             ],
         ]);
 
         $form->add([
-            'name' => $this->getOps('show_owned'),
+            'name' => 'roles_manager_show_owned',
             'type' => 'checkbox',
             'options' => [
                 'label' => 'At the begin show your owned', // @translate
@@ -159,13 +354,13 @@ class SettingsController extends AbstractActionController
                 'unchecked_value' => 'false',
             ],
             'attributes' => [
-                'id' => $this->getOps('show_owned'),
-                'value' => $this->getSets('show_owned')
+                'id' => 'roles_manager_show_owned',
+                'value' => $this->getSets('roles_manager_show_owned')
             ],
         ]);
 
         $form->add([
-            'name' => $this->getOps('viewer_can_assign_items'),
+            'name' => 'roles_manager_viewer_can_assign_items',
             'type' => 'checkbox',
             'options' => [
                 'label' => 'Viewer can assign items', // @translate
@@ -173,12 +368,12 @@ class SettingsController extends AbstractActionController
                 'unchecked_value' => 'false',
             ],
             'attributes' => [
-                'id' => $this->getOps('viewer_can_assign_items'),
-                'value' => $this->getSets('viewer_can_assign_items')
+                'id' => 'roles_manager_viewer_can_assign_items',
+                'value' => $this->getSets('roles_manager_viewer_can_assign_items')
             ],
         ]);
         $form->add([
-            'name' => $this->getOps('withoutowner_site_selector'),
+            'name' => 'roles_manager_withoutowner_site_selector',
             'type' => 'checkbox',
             'options' => [
                 'label' => 'List site selector without owner', // @translate
@@ -186,12 +381,12 @@ class SettingsController extends AbstractActionController
                 'unchecked_value' => 'false',
             ],
             'attributes' => [
-                'id' => $this->getOps('withoutowner_site_selector'),
-                'value' => $this->getSets('withoutowner_site_selector')
+                'id' => 'roles_manager_withoutowner_site_selector',
+                'value' => $this->getSets('roles_manager_withoutowner_site_selector')
             ],
         ]);
         $form->add([
-            'name' => $this->getOps('withoutowner_item_set_selector'),
+            'name' => 'roles_manager_withoutowner_item_set_selector',
             'type' => 'checkbox',
             'options' => [
                 'label' => 'List item set selector without owner', // @translate
@@ -199,51 +394,51 @@ class SettingsController extends AbstractActionController
                 'unchecked_value' => 'false',
             ],
             'attributes' => [
-                'id' => $this->getOps('withoutowner_item_set_selector'),
-                'value' => $this->getSets('withoutowner_item_set_selector')
+                'id' => 'roles_manager_withoutowner_item_set_selector',
+                'value' => $this->getSets('roles_manager_withoutowner_item_set_selector')
             ],
         ]);
         $form->add([
-            'name' => $this->getOps('addition_role_information'),
+            'name' => 'roles_manager_addition_role_information',
             'type' => 'textarea',
             'options' => [
                 'as_key_value' => True,
                 'label' => 'Addition role information', // @translate
             ],
             'attributes' => [
-                'id' => $this->getOps('addition_role_information'),
+                'id' => 'roles_manager_addition_role_information',
                 'required' => false,
                 'class' => 'textarea',
                 'rows' => 12,
-                'value' => $this->getSets('addition_role_information', [$this, 'arrayToTextList'])
+                'value' => $this->getSets('roles_manager_addition_role_information', [$this, 'arrayToTextList'])
             ],
         ]);
         $form->add([
-            'name' => $this->getOps('addition_user_information'),
+            'name' => 'roles_manager_addition_user_information',
             'type' => 'textarea',
             'options' => [
                 'as_key_value' => True,
                 'label' => 'Addition user information', // @translate
             ],
             'attributes' => [
-                'id' => $this->getOps('addition_user_information'),
+                'id' => 'roles_manager_addition_user_information',
                 'required' => false,
                 'class' => 'textarea',
                 'rows' => 12,
-                'value' => $this->getSets('addition_user_information', [$this, 'arrayToTextList'])
+                'value' => $this->getSets('roles_manager_addition_user_information', [$this, 'arrayToTextList'])
             ],
         ]);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
-            if(!empty($post[$this->getOps('addition_role_information')])){
-                $post[$this->getOps('addition_role_information')] = $this->textListToArray($post[$this->getOps('addition_role_information')]);
+            if(!empty($post['roles_manager_addition_role_information'])){
+                $post['roles_manager_addition_role_information'] = $this->textListToArray($post['roles_manager_addition_role_information']);
             }
-            if(!empty($post[$this->getOps('addition_user_information')])){
-                $post[$this->getOps('addition_user_information')] = $this->textListToArray($post[$this->getOps('addition_user_information')]);
+            if(!empty($post['roles_manager_addition_user_information'])){
+                $post['roles_manager_addition_user_information'] = $this->textListToArray($post['roles_manager_addition_user_information']);
             }
-            foreach($this->getConf('options') as $key){
+            foreach($this->getConf('settings') as $key => $defval){
                 if(isset($post[$key])){
                     $this->setSets($key, $post[$key]);
                 }
@@ -276,14 +471,14 @@ class SettingsController extends AbstractActionController
     public function backupingAction()
     {
 
-        $options = $this->getConf('options');
-        if($this->getSets('backup_users') == 'true'){
+        $settings = $this->getConf('settings');
+        if($this->getSets('roles_manager_backup_users') == 'true'){
             $tables = ['roles', 'user', 'user_setting', 'api_key'];
         }else{
             $tables = ['roles'];
         }
         $path = $this->getConf('backups');
-        $r = $this->backuping_data($options, $tables, $path);
+        $r = $this->backuping_data($settings, $tables, $path);
         $view = new ViewModel;
         $view->setVariable('result', $r);
         return $view;
@@ -397,7 +592,7 @@ class SettingsController extends AbstractActionController
 
     }
 
-    private function backuping_data($options, $tables, $path) 
+    private function backuping_data($settings, $tables, $path) 
     {
 
         $time_zone = $this->getSets('time_zone');
@@ -415,8 +610,8 @@ class SettingsController extends AbstractActionController
         $result .= "--\n-- Backup Settings\n--\n\n";
 
         $oi = 1;
-        foreach($options as $key => $name){
-            $value = $this->getSets($key);
+        foreach($settings as $name => $defval){
+            $value = $this->getSets($name);
             if(!empty($value)){
                 if(is_array($value)){
                     $value = json_encode($value);

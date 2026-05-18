@@ -254,9 +254,9 @@ class Module extends AbstractModule
 
         if($ADMIN){
 
-            if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
+            if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('roles_manager_show_owned') == 'true'){
                 $viewall = False;
-                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets') || $this->getSets('show_owned') == 'true'){
+                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $ResourceName == 'items') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $ResourceName == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $ResourceName == 'item_sets') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $ResourceName == 'assets') || $this->getSets('roles_manager_show_owned') == 'true'){
                     if(isset($args['__original_query']['owner_id']) || isset($args['__original_query']['all_item_set'])){
                         $viewall = True;
                     }elseif(isset($args['owner_id']) || isset($args['all_item_set'])){
@@ -351,7 +351,7 @@ class Module extends AbstractModule
         $request = $event->getParam('request');
         $user = $event->getParam('response')->getContent();
         $userId = $user->getId();
-        if(!empty($adusrinf = $this->getSets('addition_user_information'))){
+        if(!empty($adusrinf = $this->getSets('roles_manager_addition_user_information'))){
             foreach($adusrinf as $key => $label){
                 $this->setUserSets($userId, $key, $request->getValue('o:'.$key));
             }
@@ -403,7 +403,7 @@ class Module extends AbstractModule
 
     protected function viewUserData(PhpRenderer $view, UserRepresentation $user, $partial): void
     {
-        if(!empty($fields = $this->getSets('addition_user_information'))){
+        if(!empty($fields = $this->getSets('roles_manager_addition_user_information'))){
             $userSettings = $this->getUserSettings();
             $userSettings->setTargetId($user->id());
             echo $view->partial(
@@ -487,7 +487,7 @@ class Module extends AbstractModule
         if(!empty($params['__ADMIN__']) && !empty($params['__CONTROLLER__']) && !empty($params['action'])){
             $controller = $params['__CONTROLLER__'];
             if($params['action'] == 'browse'){
-                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $controller == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $controller == 'item-set') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $controller == 'asset') || $this->getSets('show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
+                if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $controller == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $controller == 'item-set') || (!empty($this->getCurrentRoleOps('o:allowviewallassets')) && $controller == 'asset') || $this->getSets('roles_manager_show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
                     $vars = $view->vars();
                     $need = '<div id="page-actions">';
                     $add = '<div id="page-actions">';
@@ -524,7 +524,7 @@ class Module extends AbstractModule
     public function addActionsToMediaBrowse(Event $event): void
     {
 
-        if(!empty($this->getCurrentRoleOps('o:allowviewallmedias')) || $this->getSets('show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
+        if(!empty($this->getCurrentRoleOps('o:allowviewallmedias')) || $this->getSets('roles_manager_show_owned') == 'true' && !$this->getCurrentRoleOps('o:showonlyallowed')){
             $view = $event->getTarget();
             $params = $view->params()->fromRoute();
             $args = $view->params()->fromQuery();
@@ -556,8 +556,8 @@ class Module extends AbstractModule
                 $partials = array_intersect_key($partials, $ops);
             }
         }
-        if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('show_owned') == 'true'){
-            if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $resourceType == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $resourceType == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $resourceType == 'itemSet') || $this->getSets('show_owned') == 'true'){
+        if(!empty($this->getCurrentRoleOps('o:showonlyallowed')) || $this->getSets('roles_manager_show_owned') == 'true'){
+            if((!empty($this->getCurrentRoleOps('o:allowviewallitems')) && $resourceType == 'item') || (!empty($this->getCurrentRoleOps('o:allowviewallmedias')) && $resourceType == 'media') || (!empty($this->getCurrentRoleOps('o:allowviewallitemsets')) && $resourceType == 'itemSet') || $this->getSets('roles_manager_show_owned') == 'true'){
                 array_unshift($partials, 'common/advanced-search/owner-hidden');                
             }
         }        

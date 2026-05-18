@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 16:51+0300\n"
+"POT-Creation-Date: 2026-05-18 09:40+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Module.php:515 Module.php:525 Module.php:552
+#: Module.php:498 Module.php:508 Module.php:535
 msgid "Show only mine"
 msgstr ""
 
-#: Module.php:518 Module.php:528 Module.php:554
+#: Module.php:501 Module.php:511 Module.php:537
 msgid "Show all"
 msgstr ""
 
@@ -33,6 +33,7 @@ msgstr ""
 #: view/roles-manager/admin/settings/backups.phtml:15
 #: view/roles-manager/admin/settings/edit.phtml:15
 #: view/roles-manager/admin/settings/restore.phtml:14
+#: view/roles-manager/admin/settings/uprules.phtml:15
 msgid "Roles Manager"
 msgstr ""
 
@@ -40,12 +41,11 @@ msgstr ""
 #: view/roles-manager/admin/import/config.phtml:16
 #: view/roles-manager/admin/import/import.phtml:17
 #: view/roles-manager/admin/import/prepare.phtml:16
-#: view/roles-manager/admin/role/add.phtml:14
+#: view/roles-manager/admin/role/add.phtml:16
 #: view/roles-manager/admin/role/browse.phtml:42
 #: view/roles-manager/admin/role/edit.phtml:26
 #: view/roles-manager/admin/role/edit.phtml:29
 #: view/roles-manager/admin/role/import.phtml:17
-#: view/roles-manager/admin/role/mod.phtml:16
 #: view/roles-manager/admin/role/show.phtml:16
 #: view/roles-manager/admin/settings/backuping.phtml:17
 #: view/roles-manager/admin/settings/backups.phtml:18
@@ -53,6 +53,7 @@ msgstr ""
 #: view/roles-manager/admin/settings/restore.phtml:17
 #: view/roles-manager/admin/settings/test.phtml:13
 #: view/roles-manager/admin/settings/test.phtml:16
+#: view/roles-manager/admin/settings/uprules.phtml:18
 msgid "Roles"
 msgstr ""
 
@@ -64,6 +65,7 @@ msgstr ""
 #: view/roles-manager/admin/import/browse.phtml:34
 #: view/roles-manager/admin/role/import.phtml:33
 #: view/roles-manager/admin/settings/backups.phtml:34
+#: view/roles-manager/admin/settings/uprules.phtml:34
 msgid "Actions"
 msgstr ""
 
@@ -99,7 +101,7 @@ msgstr ""
 msgid "Upload new file"
 msgstr ""
 
-#: view/roles-manager/admin/role/add.phtml:14
+#: view/roles-manager/admin/role/add.phtml:16
 msgid "New role"
 msgstr ""
 
@@ -117,16 +119,12 @@ msgstr ""
 msgid "Total users"
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:56
-msgid "Change native"
-msgstr ""
-
-#: view/roles-manager/admin/role/browse.phtml:78
+#: view/roles-manager/admin/role/browse.phtml:75
 msgid "There are no roles."
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:111
-#: view/roles-manager/admin/role/browse.phtml:112
+#: view/roles-manager/admin/role/browse.phtml:108
+#: view/roles-manager/admin/role/browse.phtml:109
 msgid "Edit name"
 msgstr ""
 
@@ -144,10 +142,6 @@ msgstr ""
 
 #: view/roles-manager/admin/role/edit.phtml:26
 msgid "Edit role"
-msgstr ""
-
-#: view/roles-manager/admin/role/mod.phtml:16
-msgid "Change native role"
 msgstr ""
 
 #: view/roles-manager/admin/role/show-details.phtml:25
@@ -228,6 +222,22 @@ msgstr ""
 msgid "TEST"
 msgstr ""
 
+#: view/roles-manager/admin/settings/uprules.phtml:15
+msgid "Update Rules"
+msgstr ""
+
+#: view/roles-manager/admin/settings/uprules.phtml:32
+msgid "Date Repository"
+msgstr ""
+
+#: view/roles-manager/admin/settings/uprules.phtml:33
+msgid "Date Installed"
+msgstr ""
+
+#: view/roles-manager/admin/settings/uprules.phtml:98
+msgid "Updates no found."
+msgstr ""
+
 #: src/Controller/Admin/SettingsController.php:77
 msgid "Update Doctrine Module add to Jobs."
 msgstr ""
@@ -244,53 +254,63 @@ msgstr ""
 msgid "Update Locale template not allowed."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:121
+#: src/Controller/Admin/SettingsController.php:122
+#, php-format
+msgid "Rules %s upgrade successfully."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:129
+#, php-format
+msgid "Rules %s upgrade failed."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:243
 msgid "Backup data users"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:135
+#: src/Controller/Admin/SettingsController.php:257
 msgid "At the begin show your owned"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:149
+#: src/Controller/Admin/SettingsController.php:271
 msgid "Viewer can assign items"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:162 src/Form/RoleEditForm.php:37
+#: src/Controller/Admin/SettingsController.php:284 src/Form/RoleEditForm.php:37
 #: src/Form/RoleEditForm.php:463
 msgid "List site selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:175 src/Form/RoleEditForm.php:41
+#: src/Controller/Admin/SettingsController.php:297 src/Form/RoleEditForm.php:41
 #: src/Form/RoleEditForm.php:517
 msgid "List item set selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:189
+#: src/Controller/Admin/SettingsController.php:311
 msgid "Addition role information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:204
+#: src/Controller/Admin/SettingsController.php:326
 msgid "Addition user information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:230
+#: src/Controller/Admin/SettingsController.php:352
 msgid "Settings save successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:285
+#: src/Controller/Admin/SettingsController.php:407
 msgid "Restore successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:288
+#: src/Controller/Admin/SettingsController.php:410
 msgid "Restore failed!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:291
+#: src/Controller/Admin/SettingsController.php:413
 msgid "Restore failed - file no found!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:323
+#: src/Controller/Admin/SettingsController.php:445
 msgid "File backup successfully deleted."
 msgstr ""
 
@@ -341,7 +361,7 @@ msgstr ""
 msgid "Parent Role as Template"
 msgstr ""
 
-#: src/Controller/Admin/ImportController.php:288 src/Form/RoleAddForm.php:76
+#: src/Controller/Admin/ImportController.php:288 src/Form/RoleAddForm.php:100
 msgid "Select this if you want new role copy permissions."
 msgstr ""
 
@@ -405,12 +425,15 @@ msgstr ""
 msgid "Delete of all roles is not supported currently."
 msgstr ""
 
-#: src/Controller/Admin/RoleController.php:191
-#: src/Controller/Admin/RoleController.php:232
+#: src/Controller/Admin/RoleController.php:202
 msgid "Role successfully created."
 msgstr ""
 
-#: src/Controller/Admin/RoleController.php:318
+#: src/Controller/Admin/RoleController.php:211
+msgid "form"
+msgstr ""
+
+#: src/Controller/Admin/RoleController.php:329
 msgid "Role successfully update."
 msgstr ""
 
@@ -418,40 +441,40 @@ msgstr ""
 msgid "Omeka\\Mailer"
 msgstr ""
 
-#: src/TraitModule.php:78 src/TraitModule.php:363
+#: src/TraitModule.php:114 src/TraitModule.php:399
 msgid "This module requires the module \"{module}\"."
 msgstr ""
 
-#: src/TraitModule.php:83
+#: src/TraitModule.php:119
 msgid "This module requires modules \"{modules}\"."
 msgstr ""
 
-#: src/TraitModule.php:93
+#: src/TraitModule.php:129
 msgid ""
 "This module cannot install its tables, because they exist already. Try to "
 "remove them first."
 msgstr ""
 
-#: src/TraitModule.php:271
+#: src/TraitModule.php:307
 msgid "The module removed tables \"{tables}\" from a previous broken install."
 msgstr ""
 
-#: src/TraitModule.php:358
+#: src/TraitModule.php:394
 msgid ""
 "This module requires the module \"{module}\", version {version} or above."
 msgstr ""
 
-#: src/TraitModule.php:471
+#: src/TraitModule.php:507
 msgid ""
 "The module \"{module}\" was automatically deactivated because the "
 "dependencies are unavailable."
 msgstr ""
 
-#: src/TraitModule.php:490
+#: src/TraitModule.php:526
 msgid "The directory \"{path}\" is not writeable."
 msgstr ""
 
-#: src/TraitModule.php:501
+#: src/TraitModule.php:537
 msgid "The directory \"{path}\" is not writeable: {error}."
 msgstr ""
 
@@ -555,13 +578,13 @@ msgstr ""
 msgid "List disallowed media types"
 msgstr ""
 
-#: src/Form/RoleEditForm.php:121 src/Form/RoleAddForm.php:53
-#: src/Form/RoleAddForm.php:70
+#: src/Form/RoleEditForm.php:121 src/Form/RoleAddForm.php:77
+#: src/Form/RoleAddForm.php:94
 msgid "Select Role..."
 msgstr ""
 
-#: src/Form/RoleEditForm.php:125 src/Form/RoleAddForm.php:38
-#: src/Form/RoleAddForm.php:57
+#: src/Form/RoleEditForm.php:125 src/Form/RoleAddForm.php:33
+#: src/Form/RoleAddForm.php:81
 msgid "Parent Role"
 msgstr ""
 
@@ -573,8 +596,7 @@ msgstr ""
 msgid "Imitation fields"
 msgstr ""
 
-#: src/Form/RoleEditForm.php:158 src/Form/RoleAddForm.php:108
-#: src/Form/RoleModForm.php:61
+#: src/Form/RoleEditForm.php:158 src/Form/RoleAddForm.php:132
 msgid "Select this if you want new role to be active."
 msgstr ""
 
@@ -666,24 +688,28 @@ msgstr ""
 msgid "Specified separately"
 msgstr ""
 
-#: src/Form/RoleAddForm.php:36
-msgid "Choose what Role Selector will be using"
-msgstr ""
-
-#: src/Form/RoleAddForm.php:39 src/Form/RoleAddForm.php:75
+#: src/Form/RoleAddForm.php:34 src/Form/RoleAddForm.php:99
 msgid "Role as Template"
 msgstr ""
 
-#: src/Form/RoleAddForm.php:58
-msgid "Select Parent Role for create associated permissions and copy options."
+#: src/Form/RoleAddForm.php:38 config/module.config.php:13
+msgid "Change native"
 msgstr ""
 
-#: src/Form/RoleModForm.php:34
+#: src/Form/RoleAddForm.php:45
+msgid "Add action type"
+msgstr ""
+
+#: src/Form/RoleAddForm.php:60
 msgid "Select role for edit permissions"
 msgstr ""
 
-#: src/Form/RoleModForm.php:41
+#: src/Form/RoleAddForm.php:67
 msgid "Select role for modification his options and permissions."
+msgstr ""
+
+#: src/Form/RoleAddForm.php:82
+msgid "Select Parent Role for create associated permissions and copy options."
 msgstr ""
 
 #: src/Form/UserInformationFieldset.php:12
@@ -869,59 +895,59 @@ msgstr ""
 msgid "Request too long to process."
 msgstr ""
 
-#: config/module.config.php:263
+#: config/module.config.php:254
 msgid "Fulltext"
 msgstr ""
 
-#: config/module.config.php:265
+#: config/module.config.php:256
 msgid "Properties improved"
 msgstr ""
 
-#: config/module.config.php:266
+#: config/module.config.php:257
 msgid "Filters"
 msgstr ""
 
-#: config/module.config.php:271
+#: config/module.config.php:262
 msgid "Site improved"
 msgstr ""
 
-#: config/module.config.php:273
+#: config/module.config.php:264
 msgid "Has original"
 msgstr ""
 
-#: config/module.config.php:274
+#: config/module.config.php:265
 msgid "Has thumbnails"
 msgstr ""
 
-#: config/module.config.php:276
+#: config/module.config.php:267
 msgid "Owner improved"
 msgstr ""
 
-#: config/module.config.php:278
+#: config/module.config.php:269
 msgid "Visibility radio"
 msgstr ""
 
-#: config/module.config.php:279
+#: config/module.config.php:270
 msgid "Ids"
 msgstr ""
 
-#: config/module.config.php:280
+#: config/module.config.php:271
 msgid "Media ingester"
 msgstr ""
 
-#: config/module.config.php:281
+#: config/module.config.php:272
 msgid "Media types"
 msgstr ""
 
-#: config/module.config.php:282
+#: config/module.config.php:273
 msgid "Media types improved"
 msgstr ""
 
-#: config/module.config.php:283
+#: config/module.config.php:274
 msgid "data-type-geography"
 msgstr ""
 
-#: config/module.config.php:284
+#: config/module.config.php:275
 msgid "numeric-data-types-advanced-search"
 msgstr ""
 

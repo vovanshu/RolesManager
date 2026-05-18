@@ -465,8 +465,8 @@ class RoleEditForm extends Form
             ],
             'attributes' => [
                 'id' => 'withoutowner_site_selector',
-                'disabled' => !empty($this->getSets('withoutowner_site_selector')) ? 'disabled' : False,
-                'value' => !empty($this->getSets('withoutowner_site_selector')) ? 1 : 0
+                'disabled' => !empty($this->getSets('roles_manager_withoutowner_site_selector')) ? 'disabled' : False,
+                'value' => !empty($this->getSets('roles_manager_withoutowner_site_selector')) ? 1 : 0
             ]
         ]);
         $this->allow_empty[]['options'] = 'o:withoutowner_site_selector';
@@ -519,8 +519,8 @@ class RoleEditForm extends Form
             ],
             'attributes' => [
                 'id' => 'withoutowner_item_set_selector',
-                'disabled' => !empty($this->getSets('withoutowner_item_set_selector')) ? 'disabled' : False,
-                'value' => !empty($this->getSets('withoutowner_item_set_selector')) ? 1 : 0
+                'disabled' => !empty($this->getSets('roles_manager_withoutowner_item_set_selector')) ? 'disabled' : False,
+                'value' => !empty($this->getSets('roles_manager_withoutowner_item_set_selector')) ? 1 : 0
             ]
         ]);
         $this->allow_empty[]['options'] = 'o:withoutowner_item_set_selector';
@@ -648,7 +648,7 @@ class RoleEditForm extends Form
             ]
         ]);
         
-        if(!empty($aops = $this->getSets('addition_role_information'))){
+        if(!empty($aops = $this->getSets('roles_manager_addition_role_information'))){
             foreach($aops as $aoname => $aolabel)
             $optionsFieldset->add([
                 'name' => 'o:'.$aoname,

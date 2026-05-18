@@ -127,7 +127,7 @@ class UserForm extends Form
 
         $userId = $this->getOption('user_id');
 
-        if(!empty($adusrinf = $this->getSets('addition_user_information'))){
+        if(!empty($adusrinf = $this->getSets('roles_manager_addition_user_information'))){
             $formFieldset = $this->get('user-information');
             foreach($adusrinf as $opname => $oplabel){
                 $formFieldset->add([

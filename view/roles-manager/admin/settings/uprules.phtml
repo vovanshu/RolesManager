@@ -57,16 +57,14 @@ $this->htmlElement('body')->appendAttribute('class', 'permissions restore');
             <td>
                 <ul class="actions">
                     <?php if ($installed == '-'): ?>
-                    <li><a href="#"
-                        class="o-icon-install sidebar-content"
-                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-add', 'name' => $name])) ?>"
+                    <li><a href="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-add', 'name' => $name])) ?>"
+                        class="o-icon-install"
                         aria-label="<?= $escape($translate('Add')) ?>"
                         title="<?= $escape($translate('Add')) ?>"></a></li>
                     <?php else: ?>
                         <?php if ($mayupgrade): ?>
-                    <li><a href="#"
-                        class="o-icon-upgrade sidebar-content"
-                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-upgrade', 'name' => $name])) ?>"
+                    <li><a href="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-upgrade', 'name' => $name])) ?>"
+                        class="o-icon-upgrade"
                         aria-label="<?= $escape($translate('Upgrade')) ?>"
                         title="<?= $escape($translate('Upgrade')) ?>"></a></li>
                         <?php endif; ?>
@@ -76,11 +74,6 @@ $this->htmlElement('body')->appendAttribute('class', 'permissions restore');
                         aria-label="<?= $escape($translate('Delete')) ?>"
                         title="<?= $escape($translate('Delete')) ?>"></a></li>
                     <?php endif; ?>
-                    <li><a href="#"
-                        data-sidebar-content-url="<?= $escape($this->url('admin/roles-manager-settings', ['action' => 'rules-details', 'name' => $name])) ?>"
-                        class="o-icon-more sidebar-content"
-                        aria-label="<?= $escape($translate('Details')) ?>"
-                        title="<?= $escape($translate('Details')) ?>"></a></li>
                 </ul>
             </td>
         </tr>
