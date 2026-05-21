@@ -22,15 +22,33 @@ class IndexController extends AbstractActionController
         }
 
         $sitesResponse = $this->api()->search('sites', $siteQuery);
-        $itemsResponse = $this->api()->search('items', ['limit' => 0]);
+        $itemsResponse = $this->api()->search('items', ['limit' => 0, 'owner_id' => '']);
+        $itemCount = $itemsResponse->getTotalResults();
+        if($this->getServiceLocator()->has('ItemsReview')){
+            $ItemsReview = $this->getServiceLocator()->get('ItemsReview');
+            if($ItemsReview->roleIsContributor()){
+                $myItemsResponse = $this->api()->search('items', ['owner_id' => $this->getCurrentUserID()]);
+                $myItemCount = $myItemsResponse->getTotalResults();
+                $itemCount = $this->translate('Your').': '.$myItemCount.' / '.$this->translate('Total').': '.$itemCount;
+            }
+        }
+
         $itemSetsResponse = $this->api()->search('item_sets', ['limit' => 0]);
         $vocabulariesResponse = $this->api()->search('vocabularies', ['limit' => 0]);
         $resourceTemplatesResponse = $this->api()->search('resource_templates', ['limit' => 0]);
 
+        $itemSetCount = $itemSetsResponse->getTotalResults();
+        $allowed = $this->getCurrentRoleOps('o:allowed_item_sets');
+        if(!empty($allowed) && is_array($allowed)){
+            $allowedItemSetsResponse = $this->api()->search('item_sets', ['id' => join(',', $allowed)]);
+            $allowedItemSetsCount = $allowedItemSetsResponse->getTotalResults();
+            $itemSetCount = $this->translate('Your').': '.$allowedItemSetsCount.' / '.$this->translate('Total').': '.$itemSetCount;
+        }
+
         $view = new ViewModel;
         $view->setVariable('sites', $sitesResponse->getContent());
-        $view->setVariable('itemCount', $itemsResponse->getTotalResults());
-        $view->setVariable('itemSetCount', $itemSetsResponse->getTotalResults());
+        $view->setVariable('itemCount', $itemCount);
+        $view->setVariable('itemSetCount', $itemSetCount);
         $view->setVariable('vocabularyCount', $vocabulariesResponse->getTotalResults());
         $view->setVariable('resourceTemplateCount', $resourceTemplatesResponse->getTotalResults());
         $view->setTemplate('omeka/admin/index/browse');

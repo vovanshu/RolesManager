@@ -97,7 +97,7 @@ class RoleAddForm extends Form
                 ],
                 'options' => [
                     'label' => 'Role as Template', // @translate
-                    'info' => 'Select this if you want new role copy permissions.', // @translate
+                    'info' => 'Select this if you need to copy permissions to a new role.', // @translate
                     'name_as_value' => true,
                     'RoleCurrentUser' => $this->getRoleCurrentUser(),
                 ],

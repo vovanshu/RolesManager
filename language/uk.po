@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RolesManager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-14 16:51+0300\n"
+"POT-Creation-Date: 2026-05-21 11:53+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -15,13 +15,23 @@ msgstr ""
 "X-Domain: RolesManager\n"
 "X-Generator: Poedit 3.9\n"
 
-#: Module.php:515 Module.php:525 Module.php:552
+#: Module.php:504 Module.php:514 Module.php:541
 msgid "Show only mine"
-msgstr ""
+msgstr "Показати тільки мої"
 
-#: Module.php:518 Module.php:528 Module.php:554
+#: Module.php:507 Module.php:517 Module.php:543
 msgid "Show all"
 msgstr "Показати все"
+
+#: src/Controller/Admin/IndexController.php:32
+#: src/Controller/Admin/IndexController.php:45
+msgid "Your"
+msgstr "Ваші"
+
+#: src/Controller/Admin/IndexController.php:32
+#: src/Controller/Admin/IndexController.php:45
+msgid "Total"
+msgstr "Вього"
 
 #: view/roles-manager/admin/import/browse.phtml:15
 #: view/roles-manager/admin/import/config.phtml:11
@@ -29,8 +39,9 @@ msgstr "Показати все"
 #: view/roles-manager/admin/import/prepare.phtml:11
 #: view/roles-manager/admin/role/import.phtml:14
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:15
+#: view/roles-manager/admin/settings/edit.phtml:32
 #: view/roles-manager/admin/settings/restore.phtml:14
+#: view/roles-manager/admin/settings/uprules.phtml:15
 msgid "Roles Manager"
 msgstr "Менеджер ролей"
 
@@ -38,95 +49,92 @@ msgstr "Менеджер ролей"
 #: view/roles-manager/admin/import/config.phtml:16
 #: view/roles-manager/admin/import/import.phtml:17
 #: view/roles-manager/admin/import/prepare.phtml:16
-#: view/roles-manager/admin/role/add.phtml:14
-#: view/roles-manager/admin/role/browse.phtml:42
+#: view/roles-manager/admin/role/add.phtml:16
+#: view/roles-manager/admin/role/browse.phtml:39
 #: view/roles-manager/admin/role/edit.phtml:26
 #: view/roles-manager/admin/role/edit.phtml:29
 #: view/roles-manager/admin/role/import.phtml:17
-#: view/roles-manager/admin/role/mod.phtml:16
 #: view/roles-manager/admin/role/show.phtml:16
 #: view/roles-manager/admin/settings/backuping.phtml:17
 #: view/roles-manager/admin/settings/backups.phtml:18
-#: view/roles-manager/admin/settings/edit.phtml:50
+#: view/roles-manager/admin/settings/edit.phtml:51
 #: view/roles-manager/admin/settings/restore.phtml:17
 #: view/roles-manager/admin/settings/test.phtml:13
 #: view/roles-manager/admin/settings/test.phtml:16
+#: view/roles-manager/admin/settings/uprules.phtml:18
 msgid "Roles"
 msgstr "Ролі"
 
 #: view/roles-manager/admin/import/browse.phtml:26
 #: view/roles-manager/admin/role/import.phtml:25
 msgid "Files for importing no found."
-msgstr ""
+msgstr "Файли для імпорту не знайдено."
 
 #: view/roles-manager/admin/import/browse.phtml:34
 #: view/roles-manager/admin/role/import.phtml:33
 #: view/roles-manager/admin/settings/backups.phtml:34
+#: view/roles-manager/admin/settings/uprules.phtml:34
 msgid "Actions"
-msgstr ""
+msgstr "Дії"
 
 #: view/roles-manager/admin/import/browse.phtml:54
 #: view/roles-manager/admin/import/undo-confirm.phtml:6
 msgid "Undo import"
-msgstr ""
+msgstr "Скасувати імпорт"
 
 #: view/roles-manager/admin/import/config.phtml:11
 msgid "Config for import"
-msgstr ""
+msgstr "Конфігурація для імпорту"
 
 #: view/roles-manager/admin/import/delete-confirm.phtml:6
 msgid "Delete file"
-msgstr ""
+msgstr "Видалити файл"
 
 #: view/roles-manager/admin/import/delete-confirm.phtml:7
 #: view/roles-manager/admin/settings/delete-confirm.phtml:7
 #, php-format
 msgid "Are you sure you would like to delete the file %s?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити файл %s?"
 
 #: view/roles-manager/admin/import/prepare.phtml:11
 msgid "Prepare for import"
-msgstr ""
+msgstr "Підготовка до імпорту"
 
 #: view/roles-manager/admin/import/undo-confirm.phtml:7
 #, php-format
 msgid "Are you sure you would like to undo import entries from the file %s?"
-msgstr ""
+msgstr "Ви впевнені, що хочете скасувати імпорт записів з файлу %s?"
 
 #: view/roles-manager/admin/import/upload.phtml:6
 msgid "Upload new file"
-msgstr ""
+msgstr "Завантажити новий файл"
 
-#: view/roles-manager/admin/role/add.phtml:14
+#: view/roles-manager/admin/role/add.phtml:16
 msgid "New role"
-msgstr ""
+msgstr "Нова роль"
 
 #: view/roles-manager/admin/role/batch-delete-confirm.phtml:12
 #: view/roles-manager/admin/role/delete-confirm.phtml:7
 msgid "Delete roles"
-msgstr ""
+msgstr "Видалити ролі"
 
 #: view/roles-manager/admin/role/batch-delete-confirm.phtml:13
 #: view/roles-manager/admin/role/delete-confirm.phtml:8
 msgid "Are you sure you would like to delete the selected roles?"
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити вибрані ролі?"
 
-#: view/roles-manager/admin/role/browse.phtml:30
+#: view/roles-manager/admin/role/browse.phtml:27
 msgid "Total users"
-msgstr ""
+msgstr "Загальна кількість користувачів"
 
-#: view/roles-manager/admin/role/browse.phtml:56
-msgid "Change native"
-msgstr "Змінити вбудовану"
-
-#: view/roles-manager/admin/role/browse.phtml:78
+#: view/roles-manager/admin/role/browse.phtml:72
 msgid "There are no roles."
-msgstr ""
+msgstr "Немає ролей."
 
-#: view/roles-manager/admin/role/browse.phtml:111
-#: view/roles-manager/admin/role/browse.phtml:112
+#: view/roles-manager/admin/role/browse.phtml:105
+#: view/roles-manager/admin/role/browse.phtml:106
 msgid "Edit name"
-msgstr ""
+msgstr "Редагувати ім'я"
 
 #: view/roles-manager/admin/role/edit.phtml:21
 msgid "Permissions"
@@ -134,19 +142,15 @@ msgstr "Привілегії"
 
 #: view/roles-manager/admin/role/edit.phtml:22
 msgid "No display values"
-msgstr ""
+msgstr "No display values"
 
 #: view/roles-manager/admin/role/edit.phtml:23
 msgid "Hide properties in item form"
-msgstr ""
+msgstr "Приховати властивості у формі елемента"
 
 #: view/roles-manager/admin/role/edit.phtml:26
 msgid "Edit role"
 msgstr "Редагувати роль"
-
-#: view/roles-manager/admin/role/mod.phtml:16
-msgid "Change native role"
-msgstr ""
 
 #: view/roles-manager/admin/role/show-details.phtml:25
 msgid "Count"
@@ -154,23 +158,23 @@ msgstr "Кількість"
 
 #: view/roles-manager/admin/role/show.phtml:21
 msgid "Back to role list"
-msgstr ""
+msgstr "Назад до списку ролей"
 
 #: view/roles-manager/admin/role/show.phtml:34
 msgid "Internal id"
-msgstr ""
+msgstr "Внутрішній ідентифікатор"
 
 #: view/roles-manager/admin/settings/backuping.phtml:14
 msgid "Backup permissions"
-msgstr ""
+msgstr "Дозволи на резервне копіювання"
 
 #: view/roles-manager/admin/settings/backuping.phtml:14
 msgid "Permission"
-msgstr ""
+msgstr "Дозвіл"
 
 #: view/roles-manager/admin/settings/backuping.phtml:19
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:29
+#: view/roles-manager/admin/settings/edit.phtml:18
 #: view/roles-manager/admin/settings/restore.phtml:14
 #: view/roles-manager/admin/settings/restore.phtml:19
 msgid "Backups"
@@ -195,36 +199,61 @@ msgstr "Деталі про резервну копію"
 #: view/roles-manager/admin/settings/details.phtml:6
 #, php-format
 msgid "File %s backup content"
-msgstr ""
+msgstr "Вміст резервної копії файлу %s"
 
-#: view/roles-manager/admin/settings/edit.phtml:20
-msgid "Maintenance"
-msgstr "Обслуговування"
-
-#: view/roles-manager/admin/settings/edit.phtml:34
+#: view/roles-manager/admin/settings/edit.phtml:21
 msgid "Update rules"
 msgstr "Оновити правила"
 
-#: view/roles-manager/admin/settings/edit.phtml:39
+#: view/roles-manager/admin/settings/edit.phtml:24
 msgid "Update Doctrine"
-msgstr "Оновити Доктрину"
+msgstr "Оновити Doctrine"
 
-#: view/roles-manager/admin/settings/edit.phtml:44
+#: view/roles-manager/admin/settings/edit.phtml:27
 msgid "Update Locale template"
-msgstr ""
+msgstr "Оновити шаблон локалізації"
+
+#: view/roles-manager/admin/settings/edit.phtml:38
+msgid "Maintenance"
+msgstr "Обслуговування"
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:6
 msgid "Restore backup"
-msgstr ""
+msgstr "Відновити резервну копію"
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:7
 #, php-format
 msgid "Are you sure you would like to restore data from file %s?"
-msgstr ""
+msgstr "Ви впевнені, що хочете відновити дані з файлу %s?"
+
+#: view/roles-manager/admin/settings/rules-delete-confirm.phtml:6
+msgid "Delete rules"
+msgstr "Видалити правила"
+
+#: view/roles-manager/admin/settings/rules-delete-confirm.phtml:7
+#, php-format
+msgid "Are you sure you would like to delete the rules for %s?"
+msgstr "Ви впевнені, що хочете видалити правила для %s?"
 
 #: view/roles-manager/admin/settings/test.phtml:13
 msgid "TEST"
 msgstr ""
+
+#: view/roles-manager/admin/settings/uprules.phtml:15
+msgid "Update Rules"
+msgstr "Оновити правила"
+
+#: view/roles-manager/admin/settings/uprules.phtml:32
+msgid "Date Repository"
+msgstr "Дата сховища"
+
+#: view/roles-manager/admin/settings/uprules.phtml:33
+msgid "Date Installed"
+msgstr "Дата встановлення"
+
+#: view/roles-manager/admin/settings/uprules.phtml:93
+msgid "Updates no found."
+msgstr "Оновлення не знайдено."
 
 #: src/Controller/Admin/SettingsController.php:77
 msgid "Update Doctrine Module add to Jobs."
@@ -242,84 +271,131 @@ msgstr "Додано завдання для оновлення шаблону �
 msgid "Update Locale template not allowed."
 msgstr "Оновити шаблон локалізації не дозволено."
 
-#: src/Controller/Admin/SettingsController.php:121
+#: src/Controller/Admin/SettingsController.php:118
+#, php-format
+msgid "Rules %s add successfully."
+msgstr "Правила %s успішно додано."
+
+#: src/Controller/Admin/SettingsController.php:125
+#, php-format
+msgid "Rules %s add failed."
+msgstr "Не вдалося додати правила %s."
+
+#: src/Controller/Admin/SettingsController.php:141
+#, php-format
+msgid "Rules %s upgrade successfully."
+msgstr "Правила %s успішно оновлено."
+
+#: src/Controller/Admin/SettingsController.php:148
+#, php-format
+msgid "Rules %s upgrade failed."
+msgstr "Не вдалося оновити правила %s."
+
+#: src/Controller/Admin/SettingsController.php:168
+msgid "Upgrade all rules failed!"
+msgstr "Не вдалося оновити всі правила!"
+
+#: src/Controller/Admin/SettingsController.php:173
+msgid "Upgrade all rules successfully!"
+msgstr "Оновлення всіх правил успішне!"
+
+#: src/Controller/Admin/SettingsController.php:177
+msgid "Add all rules failed!"
+msgstr "Додати всі правила не вдалося!"
+
+#: src/Controller/Admin/SettingsController.php:181
+msgid "Add all rules successfully!"
+msgstr "Усі правила успішно додано!"
+
+#: src/Controller/Admin/SettingsController.php:184
+msgid "Upgrade or Add all rules failed!"
+msgstr "Не вдалося оновити або додати всі правила!"
+
+#: src/Controller/Admin/SettingsController.php:217
+msgid "File rules successfully deleted."
+msgstr "Правила файлу успішно видалено."
+
+#: src/Controller/Admin/SettingsController.php:338
 msgid "Backup data users"
-msgstr ""
+msgstr "Користувачі резервних копій даних"
 
-#: src/Controller/Admin/SettingsController.php:135
+#: src/Controller/Admin/SettingsController.php:352
 msgid "At the begin show your owned"
-msgstr ""
+msgstr "На початку покажіть свою власність"
 
-#: src/Controller/Admin/SettingsController.php:149
+#: src/Controller/Admin/SettingsController.php:366
 msgid "Viewer can assign items"
-msgstr ""
+msgstr "Глядач може призначати елементи"
 
-#: src/Controller/Admin/SettingsController.php:162 src/Form/RoleEditForm.php:37
+#: src/Controller/Admin/SettingsController.php:379 src/Form/RoleEditForm.php:37
 #: src/Form/RoleEditForm.php:463
 msgid "List site selector without owner"
-msgstr ""
+msgstr "Селектор сайтів зі списком без власника"
 
-#: src/Controller/Admin/SettingsController.php:175 src/Form/RoleEditForm.php:41
+#: src/Controller/Admin/SettingsController.php:392 src/Form/RoleEditForm.php:41
 #: src/Form/RoleEditForm.php:517
 msgid "List item set selector without owner"
-msgstr ""
+msgstr "Селектор набору елементів списку без власника"
 
-#: src/Controller/Admin/SettingsController.php:189
+#: src/Controller/Admin/SettingsController.php:406
 msgid "Addition role information"
-msgstr ""
+msgstr "Додаткова інформація про роль"
 
-#: src/Controller/Admin/SettingsController.php:204
+#: src/Controller/Admin/SettingsController.php:421
 msgid "Addition user information"
-msgstr ""
+msgstr "Додаткова інформація про користувача"
 
-#: src/Controller/Admin/SettingsController.php:230
+#: src/Controller/Admin/SettingsController.php:447
 msgid "Settings save successfully."
-msgstr ""
+msgstr "Налаштування збержено успішно."
 
-#: src/Controller/Admin/SettingsController.php:285
+#: src/Controller/Admin/SettingsController.php:502
 msgid "Restore successfully."
-msgstr ""
+msgstr "Відновлення успішне."
 
-#: src/Controller/Admin/SettingsController.php:288
+#: src/Controller/Admin/SettingsController.php:505
 msgid "Restore failed!"
-msgstr ""
+msgstr "Відновлення не вдалося!"
 
-#: src/Controller/Admin/SettingsController.php:291
+#: src/Controller/Admin/SettingsController.php:508
 msgid "Restore failed - file no found!"
-msgstr ""
+msgstr "Відновлення не вдалося — файл не знайдено!"
 
-#: src/Controller/Admin/SettingsController.php:323
+#: src/Controller/Admin/SettingsController.php:540
 msgid "File backup successfully deleted."
-msgstr ""
+msgstr "Файл резервної копії успішно видалено."
 
 #: src/Controller/Admin/ImportController.php:70
 #: src/Controller/Admin/ImportController.php:240
 #: src/Controller/Admin/ImportController.php:253
 msgid "File for import"
-msgstr ""
+msgstr "Файл для імпорту"
 
 #: src/Controller/Admin/ImportController.php:80
 msgid "Select type data for import"
-msgstr ""
+msgstr "Виберіть тип даних для імпорту"
 
 #: src/Controller/Admin/ImportController.php:86
 #: src/Controller/Admin/ImportController.php:265
 #: src/Controller/Admin/ImportController.php:278
 msgid "Type import"
-msgstr ""
+msgstr "Типу імпорту"
 
 #: src/Controller/Admin/ImportController.php:96
 msgid "Select role will be default for users or template for roles."
 msgstr ""
+"Виберіть роль, яка буде використовуватися за замовчуванням для користувачів, "
+"або шаблон для ролей."
 
 #: src/Controller/Admin/ImportController.php:102
+#: src/Controller/Admin/ImportController.php:305
 msgid "Parent role"
 msgstr "Батьківська роль"
 
 #: src/Controller/Admin/ImportController.php:111
 #: src/Controller/Admin/ImportController.php:317
 msgid "Delimiter"
-msgstr ""
+msgstr "Роздільник"
 
 #: src/Controller/Admin/ImportController.php:124
 msgid "enclosure"
@@ -333,19 +409,15 @@ msgstr ""
 #: src/Controller/Admin/ImportController.php:150
 #: src/Controller/Admin/ImportController.php:353
 msgid "Multi-value separator"
-msgstr ""
+msgstr "Роздільник кількох значень"
 
 #: src/Controller/Admin/ImportController.php:287
 msgid "Parent Role as Template"
-msgstr ""
+msgstr "Батьківська роль як шаблон"
 
-#: src/Controller/Admin/ImportController.php:288 src/Form/RoleAddForm.php:76
-msgid "Select this if you want new role copy permissions."
-msgstr ""
-
-#: src/Controller/Admin/ImportController.php:305
-msgid "parent-role"
-msgstr "Батьківська роль"
+#: src/Controller/Admin/ImportController.php:288 src/Form/RoleAddForm.php:100
+msgid "Select this if you need to copy permissions to a new role."
+msgstr "Виберіть це, якщо вам потрібно скопіювати дозволи в нову роль."
 
 #: src/Controller/Admin/ImportController.php:329
 msgid "Enclosure"
@@ -353,23 +425,25 @@ msgstr ""
 
 #: src/Controller/Admin/ImportController.php:362
 msgid "Search Item Sets by"
-msgstr ""
+msgstr "Пошук за наборами елементів"
 
 #: src/Controller/Admin/ImportController.php:363
 msgid "Select property to use for searching Item Sets."
 msgstr ""
+"Виберіть властивість, яку потрібно використовувати для пошуку наборів "
+"елементів."
 
 #: src/Controller/Admin/ImportController.php:378
 msgid "Search Role by"
-msgstr ""
+msgstr "Пошук ролі за"
 
 #: src/Controller/Admin/ImportController.php:379
 msgid "Select property to use for searching Role."
-msgstr ""
+msgstr "Виберіть властивість, яку потрібно використовувати для пошуку ролі."
 
 #: src/Controller/Admin/ImportController.php:424
 msgid "Relation to value"
-msgstr ""
+msgstr "Зв'язок зі значенням"
 
 #: src/Controller/Admin/ImportController.php:441
 msgid "Count rows"
@@ -377,81 +451,89 @@ msgstr "Кількість рядків"
 
 #: src/Controller/Admin/ImportController.php:646
 msgid "File successfully uploaded."
-msgstr ""
+msgstr "Файл успішно завантажено."
 
 #: src/Controller/Admin/ImportController.php:680
 msgid "File successfully deleted."
-msgstr ""
+msgstr "Файл успішно видалено."
 
 #: src/Controller/Admin/ImportController.php:749
 msgid "Entries was undo import."
-msgstr ""
+msgstr "Імпорт записів скасовано."
 
 #: src/Controller/Admin/RoleController.php:78
 msgid "Role successfully deleted."
-msgstr ""
+msgstr "Роль успішно видалено."
 
 #: src/Controller/Admin/RoleController.php:134
 msgid "You must select at least one role to batch delete."
-msgstr ""
+msgstr "Ви повинні вибрати принаймні одну роль для пакетного видалення."
 
 #: src/Controller/Admin/RoleController.php:144
 msgid "Roles successfully deleted."
-msgstr ""
+msgstr "Ролі успішно видалено."
 
 #: src/Controller/Admin/RoleController.php:156
 msgid "Delete of all roles is not supported currently."
-msgstr ""
+msgstr "Видалення всіх ролей наразі не підтримується."
 
-#: src/Controller/Admin/RoleController.php:191
-#: src/Controller/Admin/RoleController.php:232
+#: src/Controller/Admin/RoleController.php:202
 msgid "Role successfully created."
-msgstr ""
+msgstr "Роль успішно створено."
 
-#: src/Controller/Admin/RoleController.php:318
+#: src/Controller/Admin/RoleController.php:211
+msgid "form"
+msgstr "форма"
+
+#: src/Controller/Admin/RoleController.php:329
 msgid "Role successfully update."
-msgstr ""
+msgstr "Роль успішно оновлено."
 
 #: src/Job/SendMail.php:27
 msgid "Omeka\\Mailer"
 msgstr ""
 
-#: src/TraitModule.php:78 src/TraitModule.php:363
+#: src/TraitModule.php:114 src/TraitModule.php:399
 msgid "This module requires the module \"{module}\"."
-msgstr ""
+msgstr "Цей модуль потребує модуля \"{module}\"."
 
-#: src/TraitModule.php:83
+#: src/TraitModule.php:119
 msgid "This module requires modules \"{modules}\"."
-msgstr ""
+msgstr "Цей модуль вимагає модулів \"{modules}\"."
 
-#: src/TraitModule.php:93
+#: src/TraitModule.php:129
 msgid ""
 "This module cannot install its tables, because they exist already. Try to "
 "remove them first."
 msgstr ""
+"Цей модуль не може встановити свої таблиці, оскільки вони вже існують. "
+"Спочатку спробуйте їх видалити."
 
-#: src/TraitModule.php:271
+#: src/TraitModule.php:307
 msgid "The module removed tables \"{tables}\" from a previous broken install."
 msgstr ""
+"Модуль видалив таблиці \"{tables}\" з попередньої несправної інсталяції."
 
-#: src/TraitModule.php:358
+#: src/TraitModule.php:394
 msgid ""
 "This module requires the module \"{module}\", version {version} or above."
-msgstr ""
+msgstr "Цей модуль вимагає модуля \"{module}\", версії {version} або вище."
 
-#: src/TraitModule.php:471
+#: src/TraitModule.php:507
 msgid ""
 "The module \"{module}\" was automatically deactivated because the "
 "dependencies are unavailable."
 msgstr ""
+"Модуль \"{module}\" було автоматично деактивовано, оскільки залежності "
+"недоступні."
 
-#: src/TraitModule.php:490
+#: src/TraitModule.php:526
 msgid "The directory \"{path}\" is not writeable."
-msgstr ""
+msgstr "Каталог \"{path}\" не доступний для запису."
 
-#: src/TraitModule.php:501
+#: src/TraitModule.php:537
 msgid "The directory \"{path}\" is not writeable: {error}."
-msgstr ""
+msgstr "Каталог \"{path}\" не доступний для запису: {error}."
 
 #: src/Form/RoleEditForm.php:24 src/Form/RoleEditForm.php:265
 msgid "Show only allowed"
@@ -459,194 +541,219 @@ msgstr "Показати лише дозволине"
 
 #: src/Form/RoleEditForm.php:25 src/Form/RoleEditForm.php:277
 msgid "Allow view all Items"
-msgstr ""
+msgstr "Дозволити перегляд усіх елементів"
 
 #: src/Form/RoleEditForm.php:26 src/Form/RoleEditForm.php:289
 msgid "Allow view all Medias"
-msgstr ""
+msgstr "Дозволити перегляд усіх медіафайлів"
 
 #: src/Form/RoleEditForm.php:27 src/Form/RoleEditForm.php:301
 msgid "Allow view all Item Sets"
-msgstr ""
+msgstr "Дозволити перегляд усіх наборів предметів"
 
 #: src/Form/RoleEditForm.php:28 src/Form/RoleEditForm.php:313
 msgid "Allow view all Assets"
-msgstr ""
+msgstr "Дозволити перегляд усіх ресурсів"
 
 #: src/Form/RoleEditForm.php:29 src/Form/RoleEditForm.php:331
 msgid "Allowed resource template"
-msgstr ""
+msgstr "Дозволені шаблони  ресурсів"
 
 #: src/Form/RoleEditForm.php:30 src/Form/RoleEditForm.php:358
 msgid "Allowed item sets for items"
-msgstr ""
+msgstr "Дозволені набори елементів для елементів"
 
 #: src/Form/RoleEditForm.php:31 src/Form/RoleEditForm.php:376
 msgid "Allowed sites for items"
-msgstr ""
+msgstr "Дозволені сайти для елементів"
 
 #: src/Form/RoleEditForm.php:32 src/Form/RoleEditForm.php:386
 msgid "Hide Api KEYs"
-msgstr ""
+msgstr "Приховати ключі API"
 
 #: src/Form/RoleEditForm.php:33 src/Form/RoleEditForm.php:399
 msgid "Hide default resource template selector"
-msgstr ""
+msgstr "Приховати селектор шаблонів ресурсів за замовчуванням"
 
 #: src/Form/RoleEditForm.php:34 src/Form/RoleEditForm.php:421
 msgid "List partials Advanced Search"
-msgstr ""
+msgstr "Розширений пошук у списку часткових елементів"
 
 #: src/Form/RoleEditForm.php:35 src/Form/RoleEditForm.php:433
 msgid "List disallowed partials Advanced Search"
-msgstr ""
+msgstr "Список заборонених часткових змінних Розширений пошук"
 
 #: src/Form/RoleEditForm.php:36 src/Form/RoleEditForm.php:450
 msgid "Hide site selector on pages"
-msgstr ""
+msgstr "Приховати селектор сайтів на сторінках"
 
 #: src/Form/RoleEditForm.php:38 src/Form/RoleEditForm.php:478
 msgid "Remove Site browse default sort"
-msgstr ""
+msgstr "Видалити сортування за замовчуванням для перегляду сайту"
 
 #: src/Form/RoleEditForm.php:39 src/Form/RoleEditForm.php:491
 msgid "Remove Site browse columns"
-msgstr ""
+msgstr "Видалити стовпці перегляду сайту"
 
 #: src/Form/RoleEditForm.php:40 src/Form/RoleEditForm.php:504
 msgid "Hide Item Set select on pages"
-msgstr ""
+msgstr "Приховати вибір набору елементів на сторінках"
 
 #: src/Form/RoleEditForm.php:42 src/Form/RoleEditForm.php:532
 msgid "Remove Item Set browse default sort"
-msgstr ""
+msgstr "Видалити елемент Налаштувати перегляд сортування за замовчуванням"
 
 #: src/Form/RoleEditForm.php:43 src/Form/RoleEditForm.php:545
 msgid "Remove Item Set browse columns"
-msgstr ""
+msgstr "Видалити стовпці перегляду набору елементів"
 
 #: src/Form/RoleEditForm.php:44 src/Form/RoleEditForm.php:558
 msgid "Remove Item browse columns"
-msgstr ""
+msgstr "Видалити стовпці перегляду елементів"
 
 #: src/Form/RoleEditForm.php:45 src/Form/RoleEditForm.php:571
 msgid "Remove Item browse defaults"
-msgstr ""
+msgstr "Видалити налаштування перегляду за замовчуванням для елемента"
 
 #: src/Form/RoleEditForm.php:46 src/Form/RoleEditForm.php:584
 msgid "Hide advanced settings Item"
-msgstr ""
+msgstr "Приховати додаткові налаштування"
 
 #: src/Form/RoleEditForm.php:47 src/Form/RoleEditForm.php:597
 msgid "Remove Media browse columns"
-msgstr ""
+msgstr "Видалити стовпці перегляду медіафайлів"
 
 #: src/Form/RoleEditForm.php:48 src/Form/RoleEditForm.php:610
 msgid "Remove Media browse defaults"
-msgstr ""
+msgstr "Видалити налаштування перегляду медіа за замовчуванням"
 
 #: src/Form/RoleEditForm.php:49 src/Form/RoleEditForm.php:630
 msgid "List media types"
-msgstr ""
+msgstr "Список типів медіа"
 
 #: src/Form/RoleEditForm.php:50 src/Form/RoleEditForm.php:642
 msgid "List disallowed media types"
-msgstr ""
+msgstr "Список заборонених типів медіа"
 
-#: src/Form/RoleEditForm.php:121 src/Form/RoleAddForm.php:53
-#: src/Form/RoleAddForm.php:70
+#: src/Form/RoleEditForm.php:121 src/Form/RoleAddForm.php:77
+#: src/Form/RoleAddForm.php:94
 msgid "Select Role..."
-msgstr ""
+msgstr "Виберіть роль..."
 
-#: src/Form/RoleEditForm.php:125 src/Form/RoleAddForm.php:38
-#: src/Form/RoleAddForm.php:57
+#: src/Form/RoleEditForm.php:125 src/Form/RoleAddForm.php:33
+#: src/Form/RoleAddForm.php:81
 msgid "Parent Role"
-msgstr ""
+msgstr "Батьківська роль"
 
 #: src/Form/RoleEditForm.php:141
 msgid "Select imitation fields..."
-msgstr ""
+msgstr "Виберіть наслідування поля..."
 
 #: src/Form/RoleEditForm.php:145
 msgid "Imitation fields"
-msgstr ""
+msgstr "Поля які будуть наслідуватися"
 
-#: src/Form/RoleEditForm.php:158 src/Form/RoleAddForm.php:108
-#: src/Form/RoleModForm.php:61
+#: src/Form/RoleEditForm.php:158 src/Form/RoleAddForm.php:132
 msgid "Select this if you want new role to be active."
-msgstr ""
+msgstr "Виберіть це, якщо ви хочете, щоб нова роль була активною."
 
 #: src/Form/RoleEditForm.php:387
 msgid "If need hide Api KEYs on page edit user."
 msgstr ""
+"Якщо потрібно приховати ключі API на сторінці редагування користувачем."
 
 #: src/Form/RoleEditForm.php:400
 msgid "If need hide default resource template selector on page user edit."
 msgstr ""
+"За потреби приховати селектор шаблонів ресурсів за замовчуванням на "
+"сторінці, редагуваній користувачем."
 
 #: src/Form/RoleEditForm.php:415
 msgid "Select partials Advanced Search"
-msgstr ""
+msgstr "Вибрати часткові варіанти Розширений пошук"
 
 #: src/Form/RoleEditForm.php:434
 msgid "If checked List partials Advanced Search is list disallowed elements"
 msgstr ""
+"Якщо позначено, розширений пошук відображає список заборонених елементів"
 
 #: src/Form/RoleEditForm.php:451
 msgid "If need hide Site selector on pages create/edit items, users."
 msgstr ""
+"Якщо потрібно приховати селектор сайтів на сторінках створення/редагування "
+"елементів, користувачі."
 
 #: src/Form/RoleEditForm.php:479
 msgid "If need remove Site browse default sort on page edit user."
 msgstr ""
+"Якщо потрібно видалити сортування за замовчуванням для перегляду сайту на "
+"сторінці, яку редагує користувач."
 
 #: src/Form/RoleEditForm.php:492
 msgid "If need remove Site browse columns on page edit user."
 msgstr ""
+"За потреби видаліть стовпці перегляду сайту на сторінці редагування "
+"користувачем."
 
 #: src/Form/RoleEditForm.php:505
-msgid "If need hide Item Set select on pages create/edit items, users."
+msgid "If need hide Item Set selector on pages create/edit items, users."
 msgstr ""
+"Якщо потрібно приховати селектор набору елементів на сторінках створення/"
+"редагування елементів, користувачі."
 
 #: src/Form/RoleEditForm.php:533
 msgid "If need remove Item Set browse default sort on page edit user."
 msgstr ""
+"За потреби видаліть набір елементів, перегляньте сортування за замовчуванням "
+"на сторінці, редагуючи користувача."
 
 #: src/Form/RoleEditForm.php:546
 msgid "If need remove Item Set browse columns on page edit user."
 msgstr ""
+"За потреби видаліть набір елементів, перегляньте стовпці на сторінці "
+"редагування користувача."
 
 #: src/Form/RoleEditForm.php:559
 msgid "If need remove Item browse columns on page edit user."
 msgstr ""
+"За потреби видаліть елемент, перегляньте стовпці на сторінці редагування "
+"користувача."
 
 #: src/Form/RoleEditForm.php:572
 msgid "If need remove Item browse defaults on page edit user."
 msgstr ""
+"За потреби видаліть налаштування перегляду елементів за замовчуванням на "
+"сторінці, яку редагує користувач."
 
 #: src/Form/RoleEditForm.php:585
 msgid "If need hide advanced settings on page add/edit Items."
 msgstr ""
+"За потреби приховуйте розширені налаштування на сторінці додавання/"
+"редагування елементів."
 
 #: src/Form/RoleEditForm.php:598
 msgid "If need remove Media browse columns on page edit user."
 msgstr ""
+"За потреби видаліть стовпці перегляду медіа на сторінці редагування "
+"користувача."
 
 #: src/Form/RoleEditForm.php:611
 msgid "If need remove Media browse defaults on page edit user."
 msgstr ""
+"За потреби видаліть налаштування перегляду медіа за замовчуванням на "
+"сторінці редагування користувача."
 
 #: src/Form/RoleEditForm.php:624
 msgid "Select media types"
-msgstr ""
+msgstr "Виберіть типи медіа"
 
 #: src/Form/RoleEditForm.php:643
 msgid "If checked List media types is list disallowed elements"
-msgstr ""
+msgstr "Якщо позначено, «Список типів медіа» – це список заборонених елементів"
 
 #: src/Form/RoleEditForm.php:711
-msgid "Set all for it class"
-msgstr ""
+msgid "Assign everything to this class"
+msgstr "Призначити все цьому класу"
 
 #: src/Form/RoleEditForm.php:713 src/Form/RoleEditForm.php:737
 msgid "No change"
@@ -664,56 +771,62 @@ msgstr "Заборонити"
 msgid "Specified separately"
 msgstr "Вказано окремо"
 
-#: src/Form/RoleAddForm.php:36
-msgid "Choose what Role Selector will be using"
-msgstr ""
-
-#: src/Form/RoleAddForm.php:39 src/Form/RoleAddForm.php:75
+#: src/Form/RoleAddForm.php:34 src/Form/RoleAddForm.php:99
 msgid "Role as Template"
-msgstr ""
+msgstr "Роль як шаблон"
 
-#: src/Form/RoleAddForm.php:58
-msgid "Select Parent Role for create associated permissions and copy options."
-msgstr ""
+#: src/Form/RoleAddForm.php:38 config/module.config.php:13
+msgid "Change native"
+msgstr "Змінити вбудовану"
 
-#: src/Form/RoleModForm.php:34
+#: src/Form/RoleAddForm.php:45
+msgid "Add action type"
+msgstr "Додати тип дії"
+
+#: src/Form/RoleAddForm.php:60
 msgid "Select role for edit permissions"
 msgstr "Виберіть роль для редагування привілегій"
 
-#: src/Form/RoleModForm.php:41
+#: src/Form/RoleAddForm.php:67
 msgid "Select role for modification his options and permissions."
+msgstr "Виберіть роль для зміни її опцій та дозволів."
+
+#: src/Form/RoleAddForm.php:82
+msgid "Select Parent Role for create associated permissions and copy options."
 msgstr ""
+"Виберіть батьківську роль, щоб створити пов’язані дозволи та параметри "
+"копіювання."
 
 #: src/Form/UserInformationFieldset.php:12
 #: src/Form/UserInformationFieldset.php:15
 msgid "Addition information"
-msgstr ""
+msgstr "Додаткова інформація"
 
 #: src/Form/Element/ParentRoleSelect.php:94 src/Form/Element/RoleSelect.php:91
 msgid "Select roles…"
-msgstr ""
+msgstr "Виберіть ролі…"
 
 #: src/Api/Adapter/RoleAdapter.php:272
 #, php-format
 msgid "The name \"%s\" is already taken."
-msgstr ""
+msgstr "Ім'я \"%s\" вже зайняте."
 
 #: src/Api/Adapter/RoleAdapter.php:295
 #, php-format
 msgid "The name \"%s\" contains forbidden characters."
-msgstr ""
+msgstr "Ім'я \"%s\" містить заборонені символи."
 
 #: src/Api/Adapter/RoleAdapter.php:301
 msgid "A name can’t contain only numbers."
-msgstr ""
+msgstr "Ім'я не може містити лише цифри."
 
 #: src/Api/Adapter/RoleAdapter.php:309
 msgid "A name cannot be a reserved word."
-msgstr ""
+msgstr "Ім'я не може бути зарезервованим словом."
 
 #: src/Api/Adapter/RoleAdapter.php:313
 msgid "A role must have a name."
-msgstr ""
+msgstr "Роль повинна мати назву."
 
 #: config/permissions/EasyAdmin.php:8
 msgid "EasyAdmin"
@@ -721,7 +834,7 @@ msgstr ""
 
 #: config/permissions/Omeka.php:7
 msgid "Annotation"
-msgstr ""
+msgstr "Анотація"
 
 #: config/permissions/Omeka.php:32 config/permissions/CustomVocab.php:13
 msgid "Edit your owned"
@@ -729,11 +842,11 @@ msgstr "Редагувати власне"
 
 #: config/permissions/Omeka.php:33 config/permissions/CustomVocab.php:14
 msgid "Delete your owned"
-msgstr ""
+msgstr "Видалити те, що належить вам"
 
 #: config/permissions/Omeka.php:38
 msgid "Can assign items"
-msgstr ""
+msgstr "Можна призначати елементи"
 
 #: config/permissions/Omeka.php:39
 msgid "Add page"
@@ -741,7 +854,7 @@ msgstr "Створити сторінку"
 
 #: config/permissions/Omeka.php:40
 msgid "Add visualization"
-msgstr ""
+msgstr "Додати візуалізацію"
 
 #: config/permissions/Omeka.php:41
 msgid "System info"
@@ -753,15 +866,15 @@ msgstr "Налаштування теми"
 
 #: config/permissions/Omeka.php:49
 msgid "Add new property row"
-msgstr ""
+msgstr "Додати новий рядок властивості"
 
 #: config/permissions/Omeka.php:51
 msgid "Show himself"
-msgstr ""
+msgstr "Показати себе"
 
 #: config/permissions/Omeka.php:52
 msgid "Edit himself"
-msgstr ""
+msgstr "Редагувати себе"
 
 #: config/permissions/Omeka.php:53
 msgid "Edit others"
@@ -769,47 +882,47 @@ msgstr "Редагувати інших"
 
 #: config/permissions/Omeka.php:54
 msgid "Change password himself"
-msgstr ""
+msgstr "Змінити пароль самостійно"
 
 #: config/permissions/Omeka.php:55
 msgid "Change password others"
-msgstr ""
+msgstr "Зміна пароля для інших"
 
 #: config/permissions/Omeka.php:56
 msgid "Change Api-keys himself"
-msgstr ""
+msgstr "Змінити свій API-ключ"
 
 #: config/permissions/Omeka.php:57
 msgid "Change Api-keys others"
-msgstr ""
+msgstr "Зміна API-ключів інших"
 
 #: config/permissions/Omeka.php:58
 msgid "Delete himself"
-msgstr ""
+msgstr "Видалити себе"
 
 #: config/permissions/Omeka.php:59
 msgid "Delete others"
-msgstr ""
+msgstr "Видалити інші"
 
 #: config/permissions/Omeka.php:60
 msgid "Change role"
-msgstr ""
+msgstr "Змінити роль"
 
 #: config/permissions/Omeka.php:61
 msgid "Change role himself"
-msgstr ""
+msgstr "Змінити свою роль"
 
 #: config/permissions/Omeka.php:62
 msgid "Change role for admin"
-msgstr ""
+msgstr "Змінити роль адміністратора"
 
 #: config/permissions/Omeka.php:63
 msgid "Activate user"
-msgstr ""
+msgstr "Активувати користувача"
 
 #: config/permissions/Omeka.php:64
 msgid "Activate user himself"
-msgstr ""
+msgstr "Активувати свого користувача"
 
 #: config/permissions/Log.php:8
 msgid "Show your owned"
@@ -825,7 +938,7 @@ msgstr ""
 
 #: config/permissions/AdvancedResourceTemplate.php:5
 msgid "Advanced Resource Template"
-msgstr ""
+msgstr "Розширений Шаблон ресурсів"
 
 #: config/permissions/Guest.php:8
 msgid "Login"
@@ -833,7 +946,7 @@ msgstr ""
 
 #: config/permissions/Guest.php:9
 msgid "Session token"
-msgstr ""
+msgstr "Токен сесії"
 
 #: config/permissions/Guest.php:11
 msgid "Register"
@@ -857,7 +970,7 @@ msgstr ""
 
 #: config/permissions/ResourceMeta.php:5
 msgid "Resource Meta"
-msgstr ""
+msgstr "Метадані ресурсу"
 
 #: config/permissions/ResourceMeta.php:7
 msgid "labels"
@@ -867,62 +980,76 @@ msgstr ""
 msgid "Request too long to process."
 msgstr ""
 
-#: config/module.config.php:263
+#: config/module.config.php:254
 msgid "Fulltext"
 msgstr ""
 
-#: config/module.config.php:265
+#: config/module.config.php:256
 msgid "Properties improved"
-msgstr ""
+msgstr "Покращені властивості"
 
-#: config/module.config.php:266
+#: config/module.config.php:257
 msgid "Filters"
-msgstr ""
+msgstr "Фільтри"
 
-#: config/module.config.php:271
+#: config/module.config.php:262
 msgid "Site improved"
 msgstr ""
 
-#: config/module.config.php:273
+#: config/module.config.php:264
 msgid "Has original"
-msgstr ""
+msgstr "Має оригінал"
 
-#: config/module.config.php:274
+#: config/module.config.php:265
 msgid "Has thumbnails"
-msgstr ""
+msgstr "Має мініатюри"
 
-#: config/module.config.php:276
+#: config/module.config.php:267
 msgid "Owner improved"
-msgstr ""
+msgstr "Власник покращив"
 
-#: config/module.config.php:278
+#: config/module.config.php:269
 msgid "Visibility radio"
 msgstr ""
 
-#: config/module.config.php:279
+#: config/module.config.php:270
 msgid "Ids"
 msgstr ""
 
-#: config/module.config.php:280
+#: config/module.config.php:271
 msgid "Media ingester"
-msgstr ""
+msgstr "Медіа-засіб"
 
-#: config/module.config.php:281
+#: config/module.config.php:272
 msgid "Media types"
-msgstr ""
+msgstr "Типи медіа"
 
-#: config/module.config.php:282
+#: config/module.config.php:273
 msgid "Media types improved"
-msgstr ""
+msgstr "Покращено типи медіа"
 
-#: config/module.config.php:283
-msgid "data-type-geography"
-msgstr ""
+#: config/module.config.php:274
+msgid "Data type geography"
+msgstr "Тип даних географія"
 
-#: config/module.config.php:284
-msgid "numeric-data-types-advanced-search"
-msgstr ""
+#: config/module.config.php:275
+msgid "Numeric data types advanced search"
+msgstr "Розширений пошук числових типів даних"
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:3
 msgid "Confirm restore"
-msgstr ""
+msgstr "Підтвердити вілновлення"
+
+#, fuzzy
+#~ msgid "Select this if you want new role copy permissions."
+#~ msgstr "Виберіть це, якщо вам потрібно скопіювати дозволи в нову роль."
+
+#, fuzzy
+#~ msgid "Set all for it class"
+#~ msgstr "Призначити все для цього класу"
+
+#~ msgid "of"
+#~ msgstr "з"
+
+#~ msgid "parent-role"
+#~ msgstr "Батьківська роль"

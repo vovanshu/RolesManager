@@ -401,20 +401,22 @@ trait TraitCommon
     public function getRoleUser($userID)
     {
 
-        $r = $this->getUser($userID);
-        if(!empty($r['role'])){
-            return $r['role'];
-        }
-        return False;
+        return $this->getUser($userID, 'role');
 
     }
 
-    public function getUser($userID)
+    public function getUser($userID, $name = Null)
     {
 
-        $rc = $this->getConnection()->executeQuery("SELECT id, name, email, role, created FROM `user` WHERE `id` = '{$userID}' LIMIT 1;");
+        $rc = $this->getConnection()->executeQuery("SELECT id, name, email, role, created FROM `user` WHERE `id` = '{$userID}' LIMIT 1;")->fetchAssociative();
         if(!empty($rc)){
-            return $rc->fetchAssociative();
+            if(!empty($name)){
+                if(!empty($rc[$name])){
+                    return $rc[$name];
+                }
+            }else{
+                return $rc;
+            }
         }
         return False;
 
@@ -428,9 +430,19 @@ trait TraitCommon
     public function getStrConf($name, $param = Null)
     {
 
-        $rc = $this->getConf($name, $param);
+        if(is_array($name)){
+            $rc = $this->getConf(current($name), current($name));
+        }else{
+            $rc = $this->getConf($name, Null);
+        }
         if(!empty($rc)){
-            return $this->translate($rc);
+            $str = $this->translate($rc);
+            if(!empty($param)){
+                return vsprintf($str, $param);
+            }else{
+                return $str;
+            }
+            
         }
         return False;
 

@@ -502,7 +502,7 @@ class RoleEditForm extends Form
             'type' => 'checkbox',
             'options' => [
                 'label' => 'Hide Item Set select on pages', // @translate
-                'info' => 'If need hide Item Set select on pages create/edit items, users.', // @translate
+                'info' => 'If need hide Item Set selector on pages create/edit items, users.', // @translate
                 'element_group' => 'itemSet'
             ],
             'attributes' => [
@@ -708,7 +708,7 @@ class RoleEditForm extends Form
                         'type' => Element\Radio::class,
                         'options' => [
                             'element_group' => $pegk,
-                            'label' => 'Set all for it class', // @translate
+                            'label' => 'Assign everything to this class', // @translate
                             'value_options' => [
                                 '' => 'No change', // @translate
                                 'allow' => 'Allow', // @translate

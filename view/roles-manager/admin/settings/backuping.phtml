@@ -18,7 +18,7 @@ $this->htmlElement('body')->appendAttribute('class', 'permissions backup');
     <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
     <?= $hyperlink($translate('Backups'), $this->url('admin/roles-manager-settings', ['action' => 'backups']), ['class' => 'button']) ?>
 </div>
-<fieldset id="general" class="section active"></fieldset>
+<fieldset id="general" class="section active">
 <?php
 foreach($result as $k => $v){
     echo $k.' - '.$v.'<br>';

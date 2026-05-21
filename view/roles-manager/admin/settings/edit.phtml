@@ -10,41 +10,42 @@ $this->htmlElement('body')->appendAttribute('class', 'settings edit');
 $this->headLink()->appendStylesheet($assetUrl('css/settings.css', 'RolesManager'));
 $this->headScript()->appendFile($assetUrl('js/settings.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
 
+$maintenance = [];
+if ($this->userIsAllowed('RolesManager\Controller\Admin\ImportController', 'import')){
+    $maintenance[$translate('Import')] = $this->url('admin/roles-manager-import', ['action' => 'import']);
+}
+if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'backups')){
+    $maintenance[$translate('Backups')] = $this->url('admin/roles-manager-settings', ['action' => 'backups']);
+}
+if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uprules')){
+    $maintenance[$translate('Update rules')] = $this->url('admin/roles-manager-settings', ['action' => 'uprules']);
+}
+if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')){
+    $maintenance[$translate('Update Doctrine')] = $this->url('admin/roles-manager-settings', ['action' => 'updoctrine']);
+}
+if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')){
+    $maintenance[$translate('Update Locale template')] = $this->url('admin/roles-manager-settings', ['action' => 'uplocaletpl']);
+}
+
 $form->prepare();
 ?>
 <?= $this->pageTitle($translate('Settings'), 1, $translate('Roles Manager')) ?>
 <?= $this->form()->openTag($form) ?>
 
 <div id="page-actions">
-    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'maintenance')): ?>
+    <?php if (!empty($maintenance)): ?>
+        <?php if (count($maintenance) > 1): ?>
     <a href="#" id="expand-menu" class="collapsed button expand-more" aria-label="<?= $translate('Maintenance') ?>" title="<?= $translate('Maintenance') ?>" aria-expanded="false" aria-target="#maintenance-menu"><?= $translate('Maintenance') ?></a>
     <ul id="maintenance-menu" class="collapsible-menu">
+        <?php foreach ($maintenance as $title => $url): ?>
         <li>
-        <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\ImportController', 'import')): ?>
-            <a href="<?= $this->url('admin/roles-manager-import', ['action' => 'browse']) ?>" class="link"><?= $translate('Import') ?></a>
-        <?php endif; ?>
+            <a href="<?= $url ?>" class="link"><?= $title ?></a>
         </li>
-        <li>
-        <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'backups')): ?>
-            <a href="<?= $this->url('admin/roles-manager-settings', ['action' => 'backups']) ?>" class="link"><?= $translate('Backups') ?></a>
-        <?php endif; ?>
-        </li>
-            <li>
-        <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uprules')): ?>
-            <a href="<?= $this->url('admin/roles-manager-settings', ['action' => 'uprules']) ?>" class="link"><?= $translate('Update rules') ?></a>
-        <?php endif; ?>
-        </li>
-        <li>           
-        <?php if ($this->RolesManager()->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')): ?>
-            <a href="<?= $this->url('admin/roles-manager-settings', ['action' => 'updoctrine']) ?>" class="link"><?= $translate('Update Doctrine') ?></a>
-        <?php endif; ?>
-        </li>
-        <li>           
-        <?php if ($this->RolesManager()->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')): ?>
-            <a href="<?= $this->url('admin/roles-manager-settings', ['action' => 'uplocaletpl']) ?>" class="link"><?= $translate('Update Locale template') ?></a>
-        <?php endif; ?>
-        </li>
+        <?php endforeach; ?>
     </ul>
+        <?php else: ?>
+            <a href="<?= current($maintenance) ?>" class="button"><?= key($maintenance) ?></a>
+        <?php endif; ?>
     <?php endif; ?>
     <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'browse')): ?>
         <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>

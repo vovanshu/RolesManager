@@ -285,7 +285,7 @@ class ImportController extends AbstractActionController
                     'type' => 'checkbox',
                     'options' => [
                         'label' => 'Parent Role as Template', // @translate
-                        'info' => 'Select this if you want new role copy permissions.', // @translate
+                        'info' => 'Select this if you need to copy permissions to a new role.', // @translate
                     ],
                     'attributes' => [
                         'id' => 'parent-role-is-template',
@@ -302,7 +302,7 @@ class ImportController extends AbstractActionController
                     'value' => $post['parent-role'],
                 ],
                 'options' => [
-                    'label' => 'parent-role', // @translate
+                    'label' => 'Parent role', // @translate
                 ],
             ]);
 

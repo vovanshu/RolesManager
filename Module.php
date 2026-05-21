@@ -49,7 +49,6 @@ class Module extends AbstractModule
                     } catch (\Exception $e) {
                         $this->getLogger()->err($e->getMessage());
                     }
-                    
                 }
             }
             if(!empty($permissions)){
@@ -92,6 +91,13 @@ class Module extends AbstractModule
             Acl::ROLE_GLOBAL_ADMIN,
             $resources
         );
+
+    }
+
+    public function getConfigForm(PhpRenderer $renderer)
+    {
+
+        return $this->redirecToURL($renderer->url('admin/roles-manager-settings', ['action' => 'edit']));
 
     }
 
@@ -562,13 +568,6 @@ class Module extends AbstractModule
             }
         }        
         $event->setParam('partials', $partials);
-
-    }
-
-    public function getConfigForm(PhpRenderer $renderer)
-    {
-
-        return $this->redirecToURL($renderer->url('admin/roles-manager-settings', ['action' => 'edit']));
 
     }
 

@@ -271,8 +271,8 @@ return [
             'common/advanced-search/media-ingester' => 'Media ingester', // @translate
             'common/advanced-search/media-types' => 'Media types', // @translate
             'common/advanced-search/media-types-improved' => 'Media types improved', // @translate
-            'common/advanced-search/data-type-geography' => 'data-type-geography', // @translate
-            'common/numeric-data-types-advanced-search' => 'numeric-data-types-advanced-search', // @translate
+            'common/advanced-search/data-type-geography' => 'Data type geography', // @translate
+            'common/numeric-data-types-advanced-search' => 'Numeric data types advanced search', // @translate
         ],
         'imitation_fields' => ['no-display-values', 'hidden-properties-in-item-form'],
         'AllowSetRulesOnlyGlobalAdmin' => ['roles'],

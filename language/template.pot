@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-18 09:40+0300\n"
+"POT-Creation-Date: 2026-05-21 11:53+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Module.php:498 Module.php:508 Module.php:535
+#: Module.php:504 Module.php:514 Module.php:541
 msgid "Show only mine"
 msgstr ""
 
-#: Module.php:501 Module.php:511 Module.php:537
+#: Module.php:507 Module.php:517 Module.php:543
 msgid "Show all"
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:32
+#: src/Controller/Admin/IndexController.php:45
+msgid "Your"
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:32
+#: src/Controller/Admin/IndexController.php:45
+msgid "Total"
 msgstr ""
 
 #: view/roles-manager/admin/import/browse.phtml:15
@@ -31,7 +41,7 @@ msgstr ""
 #: view/roles-manager/admin/import/prepare.phtml:11
 #: view/roles-manager/admin/role/import.phtml:14
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:15
+#: view/roles-manager/admin/settings/edit.phtml:32
 #: view/roles-manager/admin/settings/restore.phtml:14
 #: view/roles-manager/admin/settings/uprules.phtml:15
 msgid "Roles Manager"
@@ -42,14 +52,14 @@ msgstr ""
 #: view/roles-manager/admin/import/import.phtml:17
 #: view/roles-manager/admin/import/prepare.phtml:16
 #: view/roles-manager/admin/role/add.phtml:16
-#: view/roles-manager/admin/role/browse.phtml:42
+#: view/roles-manager/admin/role/browse.phtml:39
 #: view/roles-manager/admin/role/edit.phtml:26
 #: view/roles-manager/admin/role/edit.phtml:29
 #: view/roles-manager/admin/role/import.phtml:17
 #: view/roles-manager/admin/role/show.phtml:16
 #: view/roles-manager/admin/settings/backuping.phtml:17
 #: view/roles-manager/admin/settings/backups.phtml:18
-#: view/roles-manager/admin/settings/edit.phtml:50
+#: view/roles-manager/admin/settings/edit.phtml:51
 #: view/roles-manager/admin/settings/restore.phtml:17
 #: view/roles-manager/admin/settings/test.phtml:13
 #: view/roles-manager/admin/settings/test.phtml:16
@@ -115,16 +125,16 @@ msgstr ""
 msgid "Are you sure you would like to delete the selected roles?"
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:30
+#: view/roles-manager/admin/role/browse.phtml:27
 msgid "Total users"
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:75
+#: view/roles-manager/admin/role/browse.phtml:72
 msgid "There are no roles."
 msgstr ""
 
-#: view/roles-manager/admin/role/browse.phtml:108
-#: view/roles-manager/admin/role/browse.phtml:109
+#: view/roles-manager/admin/role/browse.phtml:105
+#: view/roles-manager/admin/role/browse.phtml:106
 msgid "Edit name"
 msgstr ""
 
@@ -166,7 +176,7 @@ msgstr ""
 
 #: view/roles-manager/admin/settings/backuping.phtml:19
 #: view/roles-manager/admin/settings/backups.phtml:15
-#: view/roles-manager/admin/settings/edit.phtml:29
+#: view/roles-manager/admin/settings/edit.phtml:18
 #: view/roles-manager/admin/settings/restore.phtml:14
 #: view/roles-manager/admin/settings/restore.phtml:19
 msgid "Backups"
@@ -193,20 +203,20 @@ msgstr ""
 msgid "File %s backup content"
 msgstr ""
 
-#: view/roles-manager/admin/settings/edit.phtml:20
-msgid "Maintenance"
-msgstr ""
-
-#: view/roles-manager/admin/settings/edit.phtml:34
+#: view/roles-manager/admin/settings/edit.phtml:21
 msgid "Update rules"
 msgstr ""
 
-#: view/roles-manager/admin/settings/edit.phtml:39
+#: view/roles-manager/admin/settings/edit.phtml:24
 msgid "Update Doctrine"
 msgstr ""
 
-#: view/roles-manager/admin/settings/edit.phtml:44
+#: view/roles-manager/admin/settings/edit.phtml:27
 msgid "Update Locale template"
+msgstr ""
+
+#: view/roles-manager/admin/settings/edit.phtml:38
+msgid "Maintenance"
 msgstr ""
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:6
@@ -216,6 +226,15 @@ msgstr ""
 #: view/roles-manager/admin/settings/restore-confirm.phtml:7
 #, php-format
 msgid "Are you sure you would like to restore data from file %s?"
+msgstr ""
+
+#: view/roles-manager/admin/settings/rules-delete-confirm.phtml:6
+msgid "Delete rules"
+msgstr ""
+
+#: view/roles-manager/admin/settings/rules-delete-confirm.phtml:7
+#, php-format
+msgid "Are you sure you would like to delete the rules for %s?"
 msgstr ""
 
 #: view/roles-manager/admin/settings/test.phtml:13
@@ -234,7 +253,7 @@ msgstr ""
 msgid "Date Installed"
 msgstr ""
 
-#: view/roles-manager/admin/settings/uprules.phtml:98
+#: view/roles-manager/admin/settings/uprules.phtml:93
 msgid "Updates no found."
 msgstr ""
 
@@ -254,63 +273,97 @@ msgstr ""
 msgid "Update Locale template not allowed."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:122
+#: src/Controller/Admin/SettingsController.php:118
+#, php-format
+msgid "Rules %s add successfully."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:125
+#, php-format
+msgid "Rules %s add failed."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:141
 #, php-format
 msgid "Rules %s upgrade successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:129
+#: src/Controller/Admin/SettingsController.php:148
 #, php-format
 msgid "Rules %s upgrade failed."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:243
+#: src/Controller/Admin/SettingsController.php:168
+msgid "Upgrade all rules failed!"
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:173
+msgid "Upgrade all rules successfully!"
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:177
+msgid "Add all rules failed!"
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:181
+msgid "Add all rules successfully!"
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:184
+msgid "Upgrade or Add all rules failed!"
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:217
+msgid "File rules successfully deleted."
+msgstr ""
+
+#: src/Controller/Admin/SettingsController.php:338
 msgid "Backup data users"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:257
+#: src/Controller/Admin/SettingsController.php:352
 msgid "At the begin show your owned"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:271
+#: src/Controller/Admin/SettingsController.php:366
 msgid "Viewer can assign items"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:284 src/Form/RoleEditForm.php:37
+#: src/Controller/Admin/SettingsController.php:379 src/Form/RoleEditForm.php:37
 #: src/Form/RoleEditForm.php:463
 msgid "List site selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:297 src/Form/RoleEditForm.php:41
+#: src/Controller/Admin/SettingsController.php:392 src/Form/RoleEditForm.php:41
 #: src/Form/RoleEditForm.php:517
 msgid "List item set selector without owner"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:311
+#: src/Controller/Admin/SettingsController.php:406
 msgid "Addition role information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:326
+#: src/Controller/Admin/SettingsController.php:421
 msgid "Addition user information"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:352
+#: src/Controller/Admin/SettingsController.php:447
 msgid "Settings save successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:407
+#: src/Controller/Admin/SettingsController.php:502
 msgid "Restore successfully."
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:410
+#: src/Controller/Admin/SettingsController.php:505
 msgid "Restore failed!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:413
+#: src/Controller/Admin/SettingsController.php:508
 msgid "Restore failed - file no found!"
 msgstr ""
 
-#: src/Controller/Admin/SettingsController.php:445
+#: src/Controller/Admin/SettingsController.php:540
 msgid "File backup successfully deleted."
 msgstr ""
 
@@ -335,6 +388,7 @@ msgid "Select role will be default for users or template for roles."
 msgstr ""
 
 #: src/Controller/Admin/ImportController.php:102
+#: src/Controller/Admin/ImportController.php:305
 msgid "Parent role"
 msgstr ""
 
@@ -362,11 +416,7 @@ msgid "Parent Role as Template"
 msgstr ""
 
 #: src/Controller/Admin/ImportController.php:288 src/Form/RoleAddForm.php:100
-msgid "Select this if you want new role copy permissions."
-msgstr ""
-
-#: src/Controller/Admin/ImportController.php:305
-msgid "parent-role"
+msgid "Select this if you need to copy permissions to a new role."
 msgstr ""
 
 #: src/Controller/Admin/ImportController.php:329
@@ -629,7 +679,7 @@ msgid "If need remove Site browse columns on page edit user."
 msgstr ""
 
 #: src/Form/RoleEditForm.php:505
-msgid "If need hide Item Set select on pages create/edit items, users."
+msgid "If need hide Item Set selector on pages create/edit items, users."
 msgstr ""
 
 #: src/Form/RoleEditForm.php:533
@@ -669,7 +719,7 @@ msgid "If checked List media types is list disallowed elements"
 msgstr ""
 
 #: src/Form/RoleEditForm.php:711
-msgid "Set all for it class"
+msgid "Assign everything to this class"
 msgstr ""
 
 #: src/Form/RoleEditForm.php:713 src/Form/RoleEditForm.php:737
@@ -944,11 +994,11 @@ msgid "Media types improved"
 msgstr ""
 
 #: config/module.config.php:274
-msgid "data-type-geography"
+msgid "Data type geography"
 msgstr ""
 
 #: config/module.config.php:275
-msgid "numeric-data-types-advanced-search"
+msgid "Numeric data types advanced search"
 msgstr ""
 
 #: view/roles-manager/admin/settings/restore-confirm.phtml:3
