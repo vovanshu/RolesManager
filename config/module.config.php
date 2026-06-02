@@ -222,12 +222,6 @@ return [
                 'pattern' => '%s.mo',
                 'text_domain' => null,
             ],
-            [
-                'type' => 'gettext',
-                'base_dir' => OMEKA_PATH . '/files/languages/RolesManager',
-                'pattern' => '%s.mo',
-                'text_domain' => null,
-            ],
         ],
     ],
     'js_translate_strings' => [
