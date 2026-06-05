@@ -17,6 +17,8 @@ trait TraitCommon
 
     protected $connection;
 
+    protected $status;
+
     protected $settings;
 
     protected $siteSettings;
@@ -221,6 +223,19 @@ trait TraitCommon
 
     }
 
+    public function getStatus()
+    {
+
+        if($this->serviceLocator){
+            if(!$this->status){
+                $this->status = $this->getServiceLocator()->get('Omeka\Status');
+            }
+            return $this->status;
+        }
+        return;
+
+    }
+
     public function getSiteSettings()
     {
 
@@ -265,29 +280,23 @@ trait TraitCommon
         return $this->getServiceLocator()->get('Omeka\Media\Ingester\Manager');
     }
 
-    public function getConf($name = Null, $param = Null, $default = Null, $all = False)
+    public function getConf($name = Null, $param = Null, $default = False, $all = False)
     {
 
         $config = $this->getConfigs()[$this->moduleName];
         if(!empty($name)){
             if(!empty($config[$name])){
-                if(!empty($param)){
-                    if(isset($config[$name][$param])){
-                        return $config[$name][$param];
-                    }else{
-                        return $default;
-                    }
+                if(!empty($param) && isset($config[$name][$param])){
+                    return $config[$name][$param];
                 }else{
                     return $config[$name];
                 }
             }
-        }else{
-            if($all){
-                return $config;
-            }else{
-                return $default;
-            }
         }
+        if($all){
+            return $config;
+        }
+        return $default;
 
     }
 
@@ -312,12 +321,12 @@ trait TraitCommon
     public function getSiteSets($name, $siteID = Null, $callback = [])
     {
 
-        if($siteID){
-            $r = $this->getSiteSettings()->get($name, $this->getConf('settings', $name), $siteID);
-        }else{
-            $r = $this->getSiteSettings()->get($name, $this->getConf('settings', $name));
+        if(empty($siteID)){
+            $slug = $this->getStatus()->getRouteParam('site-slug');
+            $siteID = $this->getSiteID($slug);
         }
-        
+        $r = $this->getSiteSettings()->get($name, $this->getConf('settings', $name), $siteID);
+
         if(!empty($callback)){
             $r = call_user_func_array($callback, [$r]);
         }
