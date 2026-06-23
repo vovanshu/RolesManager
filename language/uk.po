@@ -31,7 +31,7 @@ msgstr "Ваші"
 #: src/Controller/Admin/IndexController.php:32
 #: src/Controller/Admin/IndexController.php:45
 msgid "Total"
-msgstr "Вього"
+msgstr "Вcього"
 
 #: view/roles-manager/admin/import/browse.phtml:15
 #: view/roles-manager/admin/import/config.phtml:11
