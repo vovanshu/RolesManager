@@ -4,6 +4,7 @@ $plugins = $this->getHelperPluginManager();
 $translate = $plugins->get('translate');
 $hyperlink = $plugins->get('hyperlink');
 $assetUrl = $plugins->get('assetUrl');
+$RolesManager = $this->RolesManager();
 
 $this->htmlElement('body')->appendAttribute('class', 'settings edit');
 
@@ -20,10 +21,10 @@ if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'ba
 if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uprules')){
     $maintenance[$translate('Update rules')] = $this->url('admin/roles-manager-settings', ['action' => 'uprules']);
 }
-if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')){
+if ($RolesManager->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')){
     $maintenance[$translate('Update Doctrine')] = $this->url('admin/roles-manager-settings', ['action' => 'updoctrine']);
 }
-if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')){
+if ($RolesManager->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')){
     $maintenance[$translate('Update Locale template')] = $this->url('admin/roles-manager-settings', ['action' => 'uplocaletpl']);
 }
 

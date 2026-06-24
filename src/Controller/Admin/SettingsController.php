@@ -19,52 +19,6 @@ class SettingsController extends AbstractActionController
         $this->setServiceLocator($serviceLocator);
     }
 
-    public function testAction()
-    {
-
-        $r = [];
-
-        $reader = new \Laminas\Config\Reader\Ini;
-        $db = $reader->fromFile(OMEKA_PATH . '/config/database.ini');
-        
-        $link = mysqli_connect($db['host'],$db['user'],$db['password'], $db['dbname']);
-        mysqli_query($link, "SET NAMES 'utf8'");
-
-        $rc = mysqli_query($link, "SHOW COLUMNS FROM roles;");
-
-        while($row = mysqli_fetch_assoc($rc)){
-            // $r['roles'][] = $row;
-            if($row['Field'] == 'allow'){
-                $r['fildExists'][] = 'allow';
-            }
-            if($row['Field'] == 'deny'){
-                $r['fildExists'][] = 'deny';
-            }
-            //     mysqli_query($link, "ALTER TABLE items_review_status DROP COLUMN contract;");
-
-        }
-
-        mysqli_query($link, "ALTER TABLE roles ADD COLUMN IF NOT EXISTS allow longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL;");
-        mysqli_query($link, "ALTER TABLE roles ADD COLUMN IF NOT EXISTS deny longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL;");
-
-
-        $rc = mysqli_query($link, "SHOW TABLES LIKE 'permissions';");
-        if(mysqli_fetch_assoc($rc)){
-            $r['permissions'] = 'exists';
-        }
-
-        $rc = mysqli_query($link, "SHOW TABLES LIKE 'roles_permissions';");
-        if(mysqli_fetch_assoc($rc)){
-            $r['roles_permissions'] = 'exists';
-        }
-
-
-        $view = new ViewModel;
-        $view->setVariable('result', $r);
-        return $view;
-
-    }
-
     public function updoctrineAction()
     {
 
@@ -335,7 +289,7 @@ class SettingsController extends AbstractActionController
             'name' => 'roles_manager_backup_users',
             'type' => 'checkbox',
             'options' => [
-                'label' => 'Backup data users', // @translate
+                'label' => 'Backup user data', // @translate
                 'checked_value' => 'true',
                 'unchecked_value' => 'false',
             ],
@@ -349,7 +303,7 @@ class SettingsController extends AbstractActionController
             'name' => 'roles_manager_show_owned',
             'type' => 'checkbox',
             'options' => [
-                'label' => 'At the begin show your owned', // @translate
+                'label' => 'At the begin showing your owned entries', // @translate
                 'checked_value' => 'true',
                 'unchecked_value' => 'false',
             ],
@@ -376,7 +330,7 @@ class SettingsController extends AbstractActionController
             'name' => 'roles_manager_withoutowner_site_selector',
             'type' => 'checkbox',
             'options' => [
-                'label' => 'List site selector without owner', // @translate
+                'label' => 'Site selector without owner', // @translate
                 'checked_value' => 'true',
                 'unchecked_value' => 'false',
             ],
@@ -389,7 +343,7 @@ class SettingsController extends AbstractActionController
             'name' => 'roles_manager_withoutowner_item_set_selector',
             'type' => 'checkbox',
             'options' => [
-                'label' => 'List item set selector without owner', // @translate
+                'label' => 'Item set selector without owner', // @translate
                 'checked_value' => 'true',
                 'unchecked_value' => 'false',
             ],
