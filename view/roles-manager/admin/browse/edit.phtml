@@ -26,7 +26,7 @@ if(empty($parent)){
 <?= $this->pageTitle($translate($data['o:label']), 1, $translate('Roles'), $translate('Edit role')) ?>
 <?= $this->form()->openTag($form) ?>
 <div id="page-actions">
-    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', [], false), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles-manager/default', [], false), ['class' => 'button']) ?>
     <?php echo $this->cancelButton(); ?>
     <button type="submit"><?= $translate('Save') ?></button>
 </div>

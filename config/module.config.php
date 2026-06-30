@@ -16,7 +16,7 @@ return [
         ],
         'rules' => [
             'roles' => [
-                'RolesManager\Controller\Admin\settingsController' => [
+                'RolesManager\Controller\Admin\Settings' => [
                     'settings' => [
                         'edit',
                     ],
@@ -41,7 +41,7 @@ return [
                         'read', 'search',
                     ],
                 ],
-                'RolesManager\Controller\Admin\RoleController' => [
+                'RolesManager\Controller\Admin\Browse' => [
                     'browse' => [
                         'browse', 'search', 'show', 'show-details',
                     ],
@@ -58,7 +58,7 @@ return [
                         'delete', 'delete-confirm',
                     ],
                 ],
-                'RolesManager\Controller\Admin\ImportController' => [
+                'RolesManager\Controller\Admin\Import' => [
                     'import' => [
                         'browse', 'search', 'show', 'upload', 'delete', 'delete-confirm', 'import'
                     ],
@@ -124,9 +124,9 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\Admin\RoleController::class => Service\Controller\Admin\RoleControllerFactory::class,
-            Controller\Admin\SettingsController::class => Service\Controller\Admin\SettingsControllerFactory::class,
-            Controller\Admin\ImportController::class => Service\Controller\Admin\ImportControllerFactory::class,
+            'RolesManager\Controller\Admin\Browse' => Service\Controller\Admin\BrowseControllerFactory::class,
+            'RolesManager\Controller\Admin\Settings' => Service\Controller\Admin\SettingsControllerFactory::class,
+            'RolesManager\Controller\Admin\Import' => Service\Controller\Admin\ImportControllerFactory::class,
             'Omeka\Controller\Admin\Index' => Service\Controller\Admin\IndexControllerFactory::class,
         ],
     ],
@@ -151,10 +151,91 @@ return [
             [
                 'label' => 'Roles Manager', // @translate
                 'class' => 'o-icon-users',
-                'route' => 'admin/roles',
-                'resource' => Controller\Admin\RoleController::class,
-                'controller' => 'roles',
+                'route' => 'admin/roles-manager/default',
+                'resource' => 'RolesManager\Controller\Admin\Browse',
+                'controller' => 'browse',
                 'privilege' => 'browse',
+                'pages' => [
+                    [
+                        'label' => 'Roles Manager', // @translate
+                        'route' => 'admin/roles-manager/default',
+                        'controller' => 'browse',
+                        'action' => 'browse',
+                        'class' => 'o-icon-items',
+                        'resource' => 'RolesManager\Controller\Admin\Browse',
+                        'visible' => false,
+                        'pages' => [
+                            [
+                                'route' => 'admin/roles-manager/default',
+                                'controller' => 'browse',
+                                'action' => 'browse',
+                                'visible' => false,
+                            ],
+                            [
+                                'route' => 'admin/roles-manager/default',
+                                'controller' => 'browse',
+                                'action' => 'add',
+                                'visible' => false,
+                            ],
+                            [
+                                'route' => 'admin/roles-manager/id',
+                                'controller' => 'browse',
+                                'action' => 'edit',
+                                'visible' => false,
+                            ],
+                            [
+                                'route' => 'admin/roles-manager/id',
+                                'controller' => 'browse',
+                                'action' => 'delete',
+                                'visible' => false,
+                            ],
+                        ],
+                    ],
+                    [
+                        'label' => 'Settings', // @translate
+                        'route' => 'admin/roles-manager/default',
+                        'controller' => 'settings',
+                        'resource' => 'RolesManager\Controller\Admin\Settings',
+                        'action' => 'edit',
+                        'visible' => false,
+                        'pages' => [
+                            [
+                                'route' => 'admin/roles-manager/default',
+                                'controller' => 'settings',
+                                'action' => 'edit',
+                                'visible' => false,
+                            ],
+                        ],
+                    ],
+                    [
+                        'label' => 'Import', // @translate
+                        'route' => 'admin/roles-manager/default',
+                        'controller' => 'import',
+                        'resource' => 'RolesManager\Controller\Admin\Import',
+                        'action' => 'browse',
+                        'visible' => false,
+                        'pages' => [
+                            [
+                                'route' => 'admin/roles-manager/default',
+                                'controller' => 'import',
+                                'action' => 'browse',
+                                'visible' => false,
+                            ],
+                            [
+                                'route' => 'admin/roles-manager/default',
+                                'controller' => 'import',
+                                'action' => 'import',
+                                'visible' => false,
+                            ],
+                            [
+                                'route' => 'admin/roles-manager/default',
+                                'controller' => 'import',
+                                'action' => 'delete',
+                                'visible' => false,
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -162,51 +243,58 @@ return [
         'routes' => [
             'admin' => [
                 'child_routes' => [
-                    'roles-manager-settings' => [
-                        'type' => \Laminas\Router\Http\Segment::class,
+                    'roles-manager' => [
+                        'type' => \Laminas\Router\Http\Literal::class,
                         'options' => [
-                            'route' => '/roles-manager-settings[/:action][/:name]',
-                            'constraints' => [
-                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'name' => '[.a-zA-Z0-9_-]*',
-                            ],
+                            'route' => '/roles-manager',
                             'defaults' => [
                                 '__NAMESPACE__' => 'RolesManager\Controller\Admin',
-                                '__CONTROLLER__' => 'settings',
-                                'controller' => Controller\Admin\SettingsController::class,
-                                'action' => 'edit',
+                                '__ADMIN__' => true,
                             ],
                         ],
-                    ],
-                    'roles-manager-import' => [
-                        'type' => \Laminas\Router\Http\Segment::class,
-                        'options' => [
-                            'route' => '/roles-manager-import[/:action][/:name]',
-                            'constraints' => [
-                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'name' => '[.a-zA-Z0-9_-]*',
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'default' => [
+                                'type' => \Laminas\Router\Http\Segment::class,
+                                'options' => [
+                                    'route' => '/:controller[/:action]',
+                                    'constraints' => [
+                                        'controller' => 'settings|browse|import',
+                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
+                                    ],
+                                    'defaults' => [
+                                        'controller' => 'browse',
+                                        'action' => 'browse',
+                                    ],
+                                ],
                             ],
-                            'defaults' => [
-                                '__NAMESPACE__' => 'RolesManager\Controller\Admin',
-                                '__CONTROLLER__' => 'roles-import',
-                                'controller' => Controller\Admin\ImportController::class,
-                                'action' => 'browse',
+                            'id' => [
+                                'type' => \Laminas\Router\Http\Segment::class,
+                                'options' => [
+                                    'route' => '/:controller/:id[/:action]',
+                                    'constraints' => [
+                                        'controller' => 'settings|browse|import',
+                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                        'id' => '\d+',
+                                    ],
+                                    'defaults' => [
+                                        'action' => 'browse',
+                                    ],
+                                ],
                             ],
-                        ],
-                    ],
-                    'roles' => [
-                        'type' => \Laminas\Router\Http\Segment::class,
-                        'options' => [
-                            'route' => '/roles[/:action][/:id]',
-                            'constraints' => [
-                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'id' => '\d+',
-                            ],
-                            'defaults' => [
-                                '__NAMESPACE__' => 'RolesManager\Controller\Admin',
-                                '__CONTROLLER__' => 'roles',
-                                'controller' => Controller\Admin\RoleController::class,
-                                'action' => 'browse',
+                            'name' => [
+                                'type' => \Laminas\Router\Http\Segment::class,
+                                'options' => [
+                                    'route' => '/:controller/:action/:name',
+                                    'constraints' => [
+                                        'controller' => 'settings|browse|import',
+                                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                        'name' => '[.a-zA-Z0-9_-]*',
+                                    ],
+                                    'defaults' => [
+                                        'action' => 'browse',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -224,9 +312,9 @@ return [
             ],
         ],
     ],
-    'js_translate_strings' => [
-        'Request too long to process.', // @translate
-    ],
+    // 'js_translate_strings' => [
+    //     'Request too long to process.', // @translate
+    // ],
     // Don't edit these options here: copy this key in your own omeka config/local.config.php
     // and modify options as you want.
     'RolesManager' => [

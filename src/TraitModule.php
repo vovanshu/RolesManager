@@ -29,14 +29,14 @@
 
 namespace RolesManager;
 
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Mvc\MvcEvent;
+use Laminas\EventManager\SharedEventManagerInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ModuleManager\ModuleEvent;
 use Laminas\ModuleManager\ModuleManager;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Omeka\Module\Exception\ModuleCannotInstallException;
 use Omeka\Stdlib\PsrMessage;
-
 
 trait TraitModule
 {
@@ -62,6 +62,7 @@ trait TraitModule
 
         $this->mvcEvent = $event;
         $this->setServiceLocator($event->getApplication()->getServiceManager());
+        $this->attachAppListeners($event->getApplication()->getEventManager());
         $this->attachListeners($this->getServiceLocator()->get('SharedEventManager'));
         $this->addDefAclRules();
 
@@ -81,6 +82,20 @@ trait TraitModule
      * Add ACL rules for this module.
      */
     protected function addDefAclRules()
+    {
+    }
+
+    /**
+     * SharedEventManager attach Aplication Listeners.
+     */
+    protected function attachAppListeners($appEventManager)
+    {
+    }
+
+    /**
+     * SharedEventManager attach Listeners.
+     */
+    protected function attachListeners(SharedEventManagerInterface $sharedEventManager)
     {
     }
 
@@ -120,7 +135,7 @@ trait TraitModule
                     ['modules' => implode('", "', $this->dependencies)]
                 );
             }
-            throw new ModuleCannotInstallException((string) $message->setTranslator($translator));
+            throw new ModuleCannotInstallException((string) $message->translate($translator));
         }
 
         $sqlFile = $this->modulePath() . '/data/install/schema.sql';
@@ -128,7 +143,7 @@ trait TraitModule
             $message = new PsrMessage(
                 'This module cannot install its tables, because they exist already. Try to remove them first.' // @translate
             );
-            throw new ModuleCannotInstallException((string) $message->setTranslator($translator));
+            throw new ModuleCannotInstallException((string) $message->translate($translator));
         }
 
         $this->execSqlFromFile($sqlFile);
@@ -173,7 +188,7 @@ trait TraitModule
         $filepath = $this->modulePath() . '/data/scripts/install.php';
         if ($this->isFileReadable($filepath)) {
             // Required for the file install.
-            /** @var \Laminas\ServiceManager\ServiceLocatorInterface $services */
+            /** @var ServiceLocatorInterface $services */
             $services = $this->getServiceLocator();
             require_once $filepath;
         }
@@ -195,7 +210,7 @@ trait TraitModule
         $filepath = $this->modulePath() . '/data/scripts/uninstall.php';
         if ($this->isFileReadable($filepath)) {
             // Required for the file uninstall.
-            /** @var \Laminas\ServiceManager\ServiceLocatorInterface $services */
+            /** @var ServiceLocatorInterface $services */
             $services = $this->getServiceLocator();
             require_once $filepath;
         }
@@ -217,7 +232,7 @@ trait TraitModule
         $filepath = $this->modulePath() . '/data/scripts/upgrade.php';
         if ($this->isFileReadable($filepath)) {
             // Required for the file upgrade.
-            /** @var \Laminas\ServiceManager\ServiceLocatorInterface $services */
+            /** @var ServiceLocatorInterface $services */
             $services = $this->getServiceLocator();
             // For compatibility with old upgrade files.
             $this->initTranslations();
@@ -228,7 +243,7 @@ trait TraitModule
     /**
      * Init translations during install and upgrade, when the config is not included early.
      *
-     * @fixme The translation are currently not included here (earlier event and factory)
+     * The translation are currently not included here (earlier event and factory)
      */
     protected function initTranslations(): self
     {
@@ -243,8 +258,8 @@ trait TraitModule
         $services = $this->getServiceLocator();
 
         /**
-         * @var \Laminas\I18n\Translator\TranslatorInterface $translator
-         * @var \Laminas\I18n\Translator\Translator $delegatedTranslator
+         * @var TranslatorInterface $translator
+         * @var Translator $delegatedTranslator
          */
         $translator = $services->get(TranslatorInterface::class);
         $delegatedTranslator = $translator->getDelegatedTranslator();
@@ -369,7 +384,7 @@ trait TraitModule
     /**
      * Check the version of a module and return a boolean or throw an exception.
      *
-     * @throws \Omeka\Module\Exception\ModuleCannotInstallException
+     * @throws ModuleCannotInstallException
      */
     protected function checkModuleAvailability(string $moduleName, ?string $version = null, bool $required = false, bool $exception = false): bool
     {
@@ -400,7 +415,7 @@ trait TraitModule
                 ['module' => $moduleName]
             );
         }
-        throw new ModuleCannotInstallException((string) $message->setTranslator($translator));
+        throw new ModuleCannotInstallException((string) $message->translate($translator));
     }
 
     /**

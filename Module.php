@@ -14,6 +14,7 @@ namespace RolesManager;
 require_once __DIR__ . '/src/TraitGeneral.php';
 require_once __DIR__ . '/src/TraitModule.php';
 
+use Laminas\Mvc\MvcEvent;
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\ModuleManager\ModuleEvent;
@@ -72,9 +73,9 @@ class Module extends AbstractModule
         $resources = [
             Entity\Roles::class,
             Api\Adapter\RoleAdapter::class,
-            Controller\Admin\RoleController::class,
-            Controller\Admin\SettingsController::class,
-            Controller\Admin\ImportController::class,
+            'RolesManager\Controller\Admin\Browse',
+            'RolesManager\Controller\Admin\Settings',
+            'RolesManager\Controller\Admin\Import',
         ];
 
         $this->getAcl()->deny(
@@ -94,22 +95,19 @@ class Module extends AbstractModule
 
     }
 
-    public function getConfigForm(PhpRenderer $renderer)
+    protected function attachAppListeners($appEventManager)
     {
 
-        return $this->redirecToURL($renderer->url('admin/roles-manager-settings', ['action' => 'edit']));
+        $appEventManager->attach(
+            MvcEvent::EVENT_ROUTE,
+            [$this->getAcl(), 'registrationAclRules'],
+            1000
+        );
 
     }
 
     public function attachListeners(SharedEventManagerInterface $sharedEventManager): void
     {
-
-        $sharedEventManager->attach(
-            'Laminas\Mvc\Application',
-            'route',
-            [$this->getAcl(), 'registrationAclRules'],
-            1000
-        );
 
         $sharedEventManager->attach(
             '*',
@@ -242,6 +240,14 @@ class Module extends AbstractModule
         );
 
     }
+
+    public function getConfigForm(PhpRenderer $renderer)
+    {
+
+        return $this->redirecToURL($renderer->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']));
+
+    }
+
 
     public function filterSearchQuery(Event $event)
     {

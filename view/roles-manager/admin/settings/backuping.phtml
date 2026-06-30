@@ -14,9 +14,9 @@ $this->htmlElement('body')->appendAttribute('class', 'permissions backup');
 <?= $this->pageTitle($translate('Backup permissions'), 1, $translate('Permission')) ?>
 
 <div id="page-actions">
-    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
-    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
-    <?= $hyperlink($translate('Backups'), $this->url('admin/roles-manager-settings', ['action' => 'backups']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles-manager', []), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Backups'), $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'backups']), ['class' => 'button']) ?>
 </div>
 <fieldset id="general" class="section active">
 <?php

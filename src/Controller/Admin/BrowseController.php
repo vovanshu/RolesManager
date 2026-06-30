@@ -8,11 +8,11 @@ use Omeka\Form\ConfirmForm;
 use Omeka\Stdlib\Message;
 use Omeka\Mvc\Exception;
 use RolesManager\Form\RoleAddForm;
-use RolesManager\Form\RoleModForm;
+// use RolesManager\Form\RoleModForm;
 use RolesManager\Form\RoleEditForm;
 use RolesManager\TraitGeneral;
 
-class RoleController extends AbstractActionController
+class BrowseController extends AbstractActionController
 {
     use TraitGeneral;
 
@@ -81,7 +81,7 @@ class RoleController extends AbstractActionController
                 $this->messenger()->addFormErrors($form);
             }
         }
-        return $this->redirect()->toRoute('admin/roles');
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'browse', 'action' => 'browse']);
 
     }
 
@@ -98,7 +98,7 @@ class RoleController extends AbstractActionController
             $view = new ViewModel();
             $view->setVariable('form', $form);
             $view->setVariable('resource', $entity);
-            $view->setTemplate('roles-manager/admin/role/delete-confirm');
+            // $view->setTemplate('roles-manager/admin/browse/delete-confirm');
             return $view->setTerminal(true);
         }
 
@@ -189,7 +189,7 @@ class RoleController extends AbstractActionController
                         if($tpl->getTotalResults()){
                             $trplrole = $tpl->getContent()->jsonSerialize();
                             $data['o:options'] = $trplrole['o:options'];
-                            if($data['usingSelectedRole'] == 'template' && !empty($data['o:roleAStpl'])){
+                            if(!empty($data['usingSelectedRole']) && $data['usingSelectedRole'] == 'template' && !empty($data['o:roleAStpl'])){
                                 $data['o:allow'] = $trplrole['o:allow'];
                                 $data['o:deny'] = $trplrole['o:deny'];
                             }
@@ -202,7 +202,7 @@ class RoleController extends AbstractActionController
                         'Role successfully created.' // @translate
                     );
                     $this->messenger()->addSuccess($message);
-                    return $this->redirect()->toRoute('admin/roles', ['action' => 'edit', 'id' => $response->getContent()->id()]);
+                    return $this->redirect()->toRoute('admin/roles-manager/id', ['controller' => 'browse', 'action' => 'edit', 'id' => $response->getContent()->id()]);
                 }
             } else {
                 $this->messenger()->addFormErrors($form);
@@ -243,7 +243,7 @@ class RoleController extends AbstractActionController
     //                     'Role successfully created.' // @translate
     //                 );
     //                 $this->messenger()->addSuccess($message);
-    //                 return $this->redirect()->toRoute('admin/roles', ['action' => 'edit', 'id' => $response->getContent()->id()]);
+    //                 return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'browse', 'action' => 'edit', 'id' => $response->getContent()->id()]);
     //             }
     //         } else {
     //             $this->messenger()->addFormErrors($form);
@@ -257,9 +257,6 @@ class RoleController extends AbstractActionController
     public function editAction()
     {
 
-        if (!$this->userIsAllowed(RoleController::class, 'edit')) {
-            throw new Exception\PermissionDeniedException;
-        }
         $entity = $this->getEntity();
         $data = $entity->jsonSerialize();
         $allowDisactive = True;

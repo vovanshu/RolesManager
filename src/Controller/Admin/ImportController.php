@@ -47,14 +47,14 @@ class ImportController extends AbstractActionController
 
         $path = $this->getConf('imports');
         $name = $this->params('name');
-        $list = glob($path.'*.*');
+        $list = glob($path.'*.csv');
         foreach ($list as $file){
             $pathinfo = pathinfo($file);
             $file_list[$pathinfo['filename']] = $pathinfo['filename'];
         }
 
         $form = $this->getForm(Form::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-import', ['action' => 'prepare']));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'prepare']));
 
         $form->add([
             'name' => 'file-import',
@@ -227,7 +227,7 @@ class ImportController extends AbstractActionController
             }
             
             $form = $this->getForm(Form::class);
-            $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-import', ['action' => 'import']));
+            $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'import']));
 
             $form->add([
                 'name' => 'file-import',
@@ -446,7 +446,7 @@ class ImportController extends AbstractActionController
             return $view;
 
         }else{
-            return $this->redirect()->toRoute('admin/roles-manager-import', ['action' => 'browse']);
+            return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']);
         }
 
     }
@@ -625,7 +625,7 @@ class ImportController extends AbstractActionController
             return $view;
 
         }else{
-            return $this->redirect()->toRoute('admin/roles-manager-import', ['action' => 'browse']);
+            return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']);
         }
 
     }
@@ -660,7 +660,7 @@ class ImportController extends AbstractActionController
             // $httpResponse->setContent(json_encode([$this->translate('Asset uploads must be POSTed.')]));
             // $httpResponse->setStatusCode(405);
         }
-        return $this->redirect()->toRoute('admin/roles-manager-import', ['action' => 'browse']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']);
 
     }
 
@@ -683,7 +683,7 @@ class ImportController extends AbstractActionController
                 $this->messenger()->addFormErrors($form);
             }
         }
-        return $this->redirect()->toRoute('admin/roles-manager-import', ['action' => 'browse']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']);
 
     }
 
@@ -693,7 +693,7 @@ class ImportController extends AbstractActionController
         $name = $this->params('name');
         $path = $this->getConf('imports');
         $form = $this->getForm(ConfirmForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-import', ['action' => 'delete', 'name' => $name]));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/name', ['controller' => 'import', 'action' => 'delete', 'name' => $name]));
         $view = new ViewModel();
         $view->setVariable('form', $form);
         $view->setVariable('file', $name);
@@ -758,7 +758,7 @@ class ImportController extends AbstractActionController
                 $this->messenger()->addFormErrors($form);
             }
         }
-        return $this->redirect()->toRoute('admin/roles-manager-import', ['action' => 'browse']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']);
 
     }
 
@@ -768,7 +768,7 @@ class ImportController extends AbstractActionController
         $name = $this->params('name');
         $path = $this->getConf('imports');
         $form = $this->getForm(ConfirmForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-import', ['action' => 'undo', 'name' => $name]));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/default', ['controller' => 'import', 'action' => 'undo', 'name' => $name]));
         $view = new ViewModel();
         $view->setVariable('form', $form);
         $view->setVariable('file', $name);

@@ -286,8 +286,10 @@ trait TraitCommon
         $config = $this->getConfigs()[$this->moduleName];
         if(!empty($name)){
             if(!empty($config[$name])){
-                if(!empty($param) && isset($config[$name][$param])){
-                    return $config[$name][$param];
+                if(!empty($param)){
+                    if(isset($config[$name][$param])){
+                        return $config[$name][$param];
+                    }
                 }else{
                     return $config[$name];
                 }
@@ -344,9 +346,9 @@ trait TraitCommon
     public function getSiteID($slug)
     {
 
-        $rc = $this->getConnection()->executeQuery("SELECT id FROM `site` WHERE `slug` = '{$slug}' LIMIT 1;")->fetchAssociative();
-        if(!empty($rc['id'])){
-            return $rc['id'];
+        $rc = $this->getConnection()->executeQuery("SELECT id FROM `site` WHERE `slug` = '{$slug}' LIMIT 1;")->fetchOne();
+        if(!empty($rc)){
+            return $rc;
         }
         return False;
         
@@ -454,6 +456,13 @@ trait TraitCommon
             
         }
         return False;
+
+    }
+
+    public function translate($str)
+    {
+
+        return $this->getServiceLocator()->get('MvcTranslator')->translate($str);
 
     }
 

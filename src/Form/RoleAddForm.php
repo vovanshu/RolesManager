@@ -34,7 +34,7 @@ class RoleAddForm extends Form
             'roleAStpl' => 'Role as Template', // @translate
         ];
 
-        if ($this->getAcl()->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'change-native') && $this->getNativeRolesForMod()){
+        if ($this->getAcl()->userIsAllowed('RolesManager\Controller\Admin\Browse', 'change-native') && $this->getNativeRolesForMod()){
             $typesAddAction['changeNative'] = 'Change native'; // @translate
         }
 
@@ -50,7 +50,7 @@ class RoleAddForm extends Form
                 'value' => 'parentRole'
             ],
         ]);
-        if ($this->getAcl()->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'change-native') && $this->getNativeRolesForMod()){
+        if ($this->getAcl()->userIsAllowed('RolesManager\Controller\Admin\Browse', 'change-native') && $this->getNativeRolesForMod()){
             $this->add([
                 'name' => 'o:changeNative',
                 'type' => 'Select',

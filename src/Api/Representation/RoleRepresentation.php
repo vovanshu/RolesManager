@@ -27,7 +27,7 @@ class RoleRepresentation extends AbstractEntityRepresentation
 
     public function getControllerName()
     {
-        return 'role';
+        return 'roles';
     }
 
     public function getJsonLdType()
@@ -145,8 +145,9 @@ class RoleRepresentation extends AbstractEntityRepresentation
     {
         $url = $this->getViewHelper('Url');
         return $url(
-            'admin/roles',
+            'admin/roles-manager/id',
             [
+                'controller' => 'browse',
                 'action' => $action ?: 'show',
                 'id' => $this->id(),
             ],
@@ -170,7 +171,10 @@ class RoleRepresentation extends AbstractEntityRepresentation
         $url = $this->getViewHelper('Url');
         return $url(
             'admin/default',
-            ['controller' => 'user', 'action' => 'browse'],
+            [
+                'controller' => 'user',
+                'action' => 'browse'
+            ],
             [
                 'query' => ['role' => $this->name()],
                 'force_canonical' => false,

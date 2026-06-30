@@ -12,10 +12,10 @@ $form->prepare();
 <?= $this->form()->openTag($form) ?>
 
 <div id="page-actions">
-    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'browse')): ?>
-        <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\Browse', 'browse')): ?>
+        <?= $hyperlink($translate('Roles'), $this->url('admin/roles-manager', []), ['class' => 'button']) ?>
     <?php endif; ?>
-    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']), ['class' => 'button']) ?>
     <?php echo $this->cancelButton(); ?>
     <button type="submit"><?= $translate('View') ?></button>
 </div>

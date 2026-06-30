@@ -28,10 +28,10 @@ $sortHeadings = [
         'value' => 'users',
     ],
 ];
-$createRight = $this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'add');
-// $editRight = $this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'update');
-$deleteRight = $this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'delete');
-// $batchDeleteRight = $this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'batch-delete');
+$createRight = $this->userIsAllowed('RolesManager\Controller\Admin\Browse', 'add');
+// $editRight = $this->userIsAllowed('RolesManager\Controller\Admin\Browse', 'update');
+$deleteRight = $this->userIsAllowed('RolesManager\Controller\Admin\Browse', 'delete');
+// $batchDeleteRight = $this->userIsAllowed('RolesManager\Controller\Admin\Browse', 'batch-delete');
 $batchDeleteRight = False;
 
 ?>
@@ -50,7 +50,7 @@ $batchDeleteRight = False;
 
 <div id="page-actions">
     <?php if ($createRight): ?>
-    <?= $hyperlink($translate('Add'), $this->url('admin/roles', ['action' => 'add']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Add'), $this->url('admin/roles-manager/default', ['controller' => 'browse', 'action' => 'add']), ['class' => 'button']) ?>
     <?php endif; ?>
 <?php if ($roles): ?>
     <?php if ($batchDeleteRight): ?>
@@ -61,8 +61,8 @@ $batchDeleteRight = False;
         title="<?= $escape($translate('Delete')) ?>"><?= $escape($translate('Delete')) ?></a>
     <?php endif; ?>
 <?php endif; ?>
-    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'edit')): ?>
-        <a href="<?= $this->url('admin/roles-manager-settings', ['action' => 'edit']) ?>" class="button"><?= $translate('Configure') ?></a>
+    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'edit')): ?>
+        <a href="<?= $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']) ?>" class="button"><?= $translate('Configure') ?></a>
     <?php endif; ?>
 </div>
 
@@ -100,7 +100,7 @@ $batchDeleteRight = False;
                 <span class="role-label<?= $role->active() ? '' : ' role-deactivated' ?>"><?= $translate($role->label()); ?></span>
                 <ul class="actions">
                     <?php if ($role->userIsAllowed('update')): ?>
-                    <li><a href="<?= $this->url('admin/roles', ['action' => 'edit', 'id' => $role->id()]) ?>"
+                    <li><a href="<?= $role->url('edit') ?>"
                         class="o-icon-edit"
                         aria-label="<?= $escape($translate('Edit name')) ?>"
                         title="<?= $escape($translate('Edit name')) ?>"></a></li>

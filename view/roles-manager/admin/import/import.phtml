@@ -13,9 +13,9 @@ $this->pageTitle($translate('Import'), 1, $translate('Roles Manager'));
 ?>
 
 <div id="page-actions">
-    <?= $hyperlink($translate('Import'), $this->url('admin/roles-manager-import', ['action' => 'browse']), ['class' => 'button']) ?>
-    <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
-    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager-settings', ['action' => 'edit']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Import'), $this->url('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Roles'), $this->url('admin/roles-manager', []), ['class' => 'button']) ?>
+    <?= $hyperlink($translate('Configure'), $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']), ['class' => 'button']) ?>
 </div>
 
 <?php

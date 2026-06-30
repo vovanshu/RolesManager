@@ -12,20 +12,20 @@ $this->headLink()->appendStylesheet($assetUrl('css/settings.css', 'RolesManager'
 $this->headScript()->appendFile($assetUrl('js/settings.js', 'RolesManager'), 'text/javascript', ['defer' => 'defer']);
 
 $maintenance = [];
-if ($this->userIsAllowed('RolesManager\Controller\Admin\ImportController', 'import')){
-    $maintenance[$translate('Import')] = $this->url('admin/roles-manager-import', ['action' => 'import']);
+if ($this->userIsAllowed('RolesManager\Controller\Admin\Import', 'import')){
+    $maintenance[$translate('Import')] = $this->url('admin/roles-manager/default', ['controller' => 'import', 'action' => 'browse']);
 }
-if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'backups')){
-    $maintenance[$translate('Backups')] = $this->url('admin/roles-manager-settings', ['action' => 'backups']);
+if ($this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'backups')){
+    $maintenance[$translate('Backups')] = $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'backups']);
 }
-if ($this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uprules')){
-    $maintenance[$translate('Update rules')] = $this->url('admin/roles-manager-settings', ['action' => 'uprules']);
+if ($this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'uprules')){
+    $maintenance[$translate('Update rules')] = $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'uprules']);
 }
-if ($RolesManager->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')){
-    $maintenance[$translate('Update Doctrine')] = $this->url('admin/roles-manager-settings', ['action' => 'updoctrine']);
+if ($RolesManager->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'updoctrine')){
+    $maintenance[$translate('Update Doctrine')] = $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'updoctrine']);
 }
-if ($RolesManager->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')){
-    $maintenance[$translate('Update Locale template')] = $this->url('admin/roles-manager-settings', ['action' => 'uplocaletpl']);
+if ($RolesManager->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'uplocaletpl')){
+    $maintenance[$translate('Update Locale template')] = $this->url('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'uplocaletpl']);
 }
 
 $form->prepare();
@@ -48,8 +48,8 @@ $form->prepare();
             <a href="<?= current($maintenance) ?>" class="button"><?= key($maintenance) ?></a>
         <?php endif; ?>
     <?php endif; ?>
-    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\RoleController', 'browse')): ?>
-        <?= $hyperlink($translate('Roles'), $this->url('admin/roles', []), ['class' => 'button']) ?>
+    <?php if ($this->userIsAllowed('RolesManager\Controller\Admin\Browse', 'browse')): ?>
+        <?= $hyperlink($translate('Roles'), $this->url('admin/roles-manager/default', []), ['class' => 'button']) ?>
     <?php endif; ?>
     <button type="submit"><?= $translate('Save') ?></button>
 </div>

@@ -1,7 +1,7 @@
 <?php
 namespace RolesManager\Permissions;
 
-use Laminas\EventManager\Event;
+use Laminas\Mvc\MvcEvent;
 use RolesManager\TraitGeneral;
 
 class Acl extends \Omeka\Permissions\Acl
@@ -54,7 +54,7 @@ class Acl extends \Omeka\Permissions\Acl
 
      }
 
-    public function registrationAclRules(Event $event)
+    public function registrationAclRules(MvcEvent $event)
     {
 
         if($this->getConf('debug')){

@@ -22,7 +22,7 @@ class SettingsController extends AbstractActionController
     public function updoctrineAction()
     {
 
-        if ($this->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'updoctrine')){
+        if ($this->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'updoctrine')){
             $params = [
                 'process' => 'UpdateDoctrine',
             ];
@@ -37,14 +37,14 @@ class SettingsController extends AbstractActionController
             );
             $this->messenger()->addError($message);
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'edit']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']);
 
     }
 
     public function uplocaletplAction()
     {
 
-        if ($this->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\SettingsController', 'uplocaletpl')){
+        if ($this->isAppDevMode() && $this->userIsAllowed('RolesManager\Controller\Admin\Settings', 'uplocaletpl')){
             $params = [
                 'process' => 'UpdateLocaleTemplate',
             ];
@@ -59,7 +59,7 @@ class SettingsController extends AbstractActionController
             );
             $this->messenger()->addError($message);
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'edit']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'edit']);
 
     }
 
@@ -82,7 +82,7 @@ class SettingsController extends AbstractActionController
             $message->setEscapeHtml(false);
             $this->messenger()->addError($message);
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'uprules']);
 
     }
 
@@ -105,7 +105,7 @@ class SettingsController extends AbstractActionController
             $message->setEscapeHtml(false);
             $this->messenger()->addError($message);
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'uprules']);
 
     }
 
@@ -138,7 +138,7 @@ class SettingsController extends AbstractActionController
             $this->messenger()->addError('Upgrade or Add all rules failed!'); // @translate
         }
 
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'uprules']);
 
     }
 
@@ -148,7 +148,7 @@ class SettingsController extends AbstractActionController
 
         $name = $this->params('name');
         $form = $this->getForm(ConfirmForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-settings', ['action' => 'rules-delete', 'name' => $name]));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/name', ['controller' => 'settings', 'action' => 'rules-delete', 'name' => $name]));
         $view = new ViewModel();
         $view->setVariable('form', $form);
         $view->setVariable('name', $name);
@@ -174,7 +174,7 @@ class SettingsController extends AbstractActionController
                 $this->messenger()->addFormErrors($form);
             }
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'uprules']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'uprules']);
 
     }
 
@@ -440,7 +440,6 @@ class SettingsController extends AbstractActionController
     }
     
     public function restoreAction()
-
     {
 
         $name = $this->params('name');
@@ -461,7 +460,7 @@ class SettingsController extends AbstractActionController
         }else{
             $this->messenger()->addError('Restore failed - file no found!'); // @translate
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'backups']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'backups']);
     }
 
     public function restoreConfirmAction()
@@ -471,12 +470,12 @@ class SettingsController extends AbstractActionController
         $path = $this->getConf('backups');
         $info = $this->infoAboutBackup($path.$name);
         $form = $this->getForm(ConfirmForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-settings', ['action' => 'restore', 'name' => $name]));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/name', ['controller' => 'settings', 'action' => 'restore', 'name' => $name]));
         $view = new ViewModel();
         $view->setVariable('form', $form);
         $view->setVariable('file', $name);
         $view->setVariable('info', $info);
-        $view->setTemplate('roles-manager/admin/settings/restore-confirm');
+        // $view->setTemplate('roles-manager/admin/settings/restore-confirm');
         return $view->setTerminal(true);
 
     }
@@ -497,7 +496,7 @@ class SettingsController extends AbstractActionController
                 $this->messenger()->addFormErrors($form);
             }
         }
-        return $this->redirect()->toRoute('admin/roles-manager-settings', ['action' => 'backups']);
+        return $this->redirect()->toRoute('admin/roles-manager/default', ['controller' => 'settings', 'action' => 'backups']);
 
     }
 
@@ -508,12 +507,12 @@ class SettingsController extends AbstractActionController
         $path = $this->getConf('backups');
         $info = $this->infoAboutBackup($path.$name);
         $form = $this->getForm(ConfirmForm::class);
-        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager-settings', ['action' => 'delete', 'name' => $name]));
+        $form->setAttribute('action', $this->url()->fromRoute('admin/roles-manager/name', ['controller' => 'settings', 'action' => 'delete', 'name' => $name]));
         $view = new ViewModel();
         $view->setVariable('form', $form);
         $view->setVariable('file', $name);
         $view->setVariable('info', $info);
-        $view->setTemplate('roles-manager/admin/settings/delete-confirm');
+        // $view->setTemplate('roles-manager/admin/settings/delete-confirm');
         return $view->setTerminal(true);
 
     }
